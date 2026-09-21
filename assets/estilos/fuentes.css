@@ -1,0 +1,134 @@
+/** Esencialmente debe ser usada para titulares
+y cuerpos de texto regulares de materiales
+institucionales y de comunicación. */
+@font-face {
+    font-family: 'Geist';
+    src: url('../fuentes/geist/Geist-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+/** Principalmente debe ser usada en mensajes
+con carácter más técnico.
+También puede utilizarse en cuerpos de
+texto corto, como en algún mensaje de
+redes sociales. 
+*/
+@font-face {
+    font-family: 'Imb Plex Mono';
+    src: url('../fuentes/ibm_plex_mono/IBMPlexMono-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Imb Plex Mono';
+    src: url('../fuentes/ibm_plex_mono/IBMPlexMono-ThinItalic.ttf') format('truetype');
+    font-weight: 100;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Imb Plex Mono';
+    src: url('../fuentes/ibm_plex_mono/IBMPlexMono-ExtraLight.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Imb Plex Mono';
+    src: url('../fuentes/ibm_plex_mono/IBMPlexMono-ExtraLightItalic.ttf') format('truetype');
+    font-weight: 200;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Imb Plex Mono';
+    src: url('../fuentes/ibm_plex_mono/IBMPlexMono-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Imb Plex Mono';
+    src: url('../fuentes/ibm_plex_mono/IBMPlexMono-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+  font-family: 'Imb Plex Mono';
+  src: url('../fuentes/ibm_plex_mono/IBMPlexMono-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Imb Plex Mono';
+  src: url('../fuentes/ibm_plex_mono/IBMPlexMono-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+    font-family: 'Imb Plex Mono';
+    src: url('../fuentes/ibm_plex_mono/IBMPlexMono-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Imb Plex Mono';
+    src: url('../fuentes/ibm_plex_mono/IBMPlexMono-MediumItalic.ttf') format('truetype');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Imb Plex Mono';
+    src: url('../fuentes/ibm_plex_mono/IBMPlexMono-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Imb Plex Mono';
+    src: url('../fuentes/ibm_plex_mono/IBMPlexMono-SemiBoldItalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Imb Plex Mono';
+    src: url('../fuentes/ibm_plex_mono/IBMPlexMono-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Imb Plex Mono';
+    src: url('../fuentes/ibm_plex_mono/IBMPlexMono-BoldItalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+
+/** Específicamente es para titulares de comunicación.
+No se recomienda su uso en ningún otro tipo
+de mensaje. */
+@font-face {
+    font-family: 'Stardos Stencil';
+    src: url('../fuentes/stardos_stencil/StardosStencil-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Stardos Stencil';
+    src: url('../fuentes/stardos_stencil/StardosStencil-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
