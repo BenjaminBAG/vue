@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario Operativo Obra-Administración (Cronológico)</title>
+
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Carga de html2pdf -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- Importación de Fuentes Google Fonts (Geist e IBM Plex Mono únicamente) -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+    <!-- CSS personalizado e integración de variables de marca -->
+    <style>
+        :root {
+            --primary-red-white: #ffffff;
+            --primary-black-color: #000000;
+            --primary-orange-color: #ef7a6b;
+            --primary-green-color: #38814b;
+            --primary-blue-color: #3f81ac;
+            --primary-gray-color: #616160;
+            --primary-beige-color: #d9d8d6;
+            
+            --font-regular: 'Geist', sans-serif;
+            --font-body-social: 'IBM Plex Mono', monospace;
+        }
+
+        /* Estilos Base y Tipografías */
+        body {
+            font-family: var(--font-regular);
+            background-color: var(--primary-beige-color);
+            color: var(--primary-black-color);
+        }
+
+        .font-geist {
+            font-family: var(--font-regular);
+        }
+
+        .font-mono-tech {
+            font-family: var(--font-body-social);
+        }
+
+        /* Efectos para tarjetas de tarea */
+        .task-card-item {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
+            position: relative;
+            z-index: 10;
+            page-break-inside: avoid;
+        }
+        .task-card-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+            z-index: 20;
+        }
+
+        /* Estilos para el modo móvil (Timeline) */
+        .mobile-task-item {
+            transition: all 0.2s ease;
+            page-break-inside: avoid;
+        }
+        .mobile-task-item:hover {
+            transform: translateX(4px);
+            background-color: #ffffff;
+        }
+
+        /* Estilos para la línea de tiempo en modo escritorio */
+        #desktop-timeline {
+            display: grid;
+            grid-template-columns: 100px repeat(6, 1fr); 
+            gap: 1px;
+            background-color: var(--primary-gray-color);
+            overflow: hidden;
+            border: 2px solid var(--primary-black-color);
+        }
+        
+        .timeline-header, .timeline-cell {
+            border-right: 1px dashed var(--primary-gray-color);
+        }
+        
+        /* Estilo para el encabezado del día interactivo */
+        .day-header {
+            cursor: pointer;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            padding: 12px;
+            font-family: var(--font-regular);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        .day-header:hover {
+            background-color: var(--primary-blue-color) !important; 
+        }
+        .day-header.highlighted-day {
+            background-color: var(--primary-orange-color) !important; 
+            box-shadow: inset 0 0 0 2px var(--primary-black-color);
+            z-index: 1; 
+        }
+        
+        /* Indicador de 'Hoy' */
+        #today-indicator {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: var(--primary-orange-color);
+            border: 3px solid var(--primary-black-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            z-index: 30;
+            transition: left 0.3s ease, top 0.3s ease;
+            display: none; 
+        }
+
+        .timeline-cell {
+            background-color: var(--primary-red-white);
+            min-height: 85px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .timeline-cell:last-child, .timeline-header:last-child {
+             border-right: none;
+        }
+        
+        /* Estilo para la columna lateral izquierda de HORA */
+        .time-row-header {
+            background-color: #ebeae8;
+            border-right: 4px solid var(--primary-black-color);
+            padding: 10px 4px;
+            font-family: var(--font-body-social);
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--primary-black-color);
+            transition: all 0.3s ease;
+            border-bottom: 1px dashed var(--primary-gray-color);
+        }
+        
+        /* Estilo de resaltado de hora al hacer clic en un día */
+        .time-row-header.highlighted-task {
+            background-color: #fce8e5;
+            color: var(--primary-black-color);
+            border-right-color: var(--primary-orange-color) !important;
+        }
+        
+        /* Estilos para elementos no seleccionados (Filtro de día) */
+        .non-selected-day {
+            opacity: 0.25 !important;
+            filter: grayscale(1) !important;
+        }
+        
+        /* Estilos para el filtro de categorías */
+        .category-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .category-checkbox {
+            display: none;
+        }
+        .category-label {
+            padding: 8px 16px;
+            background-color: var(--primary-red-white);
+            color: var(--primary-black-color);
+            border: 1px solid var(--primary-black-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-body-social);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .category-checkbox:checked + .category-label {
+            background-color: var(--primary-black-color);
+            color: var(--primary-red-white);
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+
+    <!-- Configuración de Tailwind CSS adaptada a la marca -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-white': '#ffffff',
+                        'brand-black': '#000000',
+                        'brand-orange': '#ef7a6b',
+                        'brand-green': '#38814b',
+                        'brand-blue': '#3f81ac',
+                        'brand-gray': '#616160',
+                        'brand-beige': '#d9d8d6',
+
+                        // Asignación de compatibilidad con datos dinámicos
+                        'c-azul': '#3f81ac',
+                        'c-rojo': '#ef7a6b',
+                        'c-amarillo': '#38814b',
+                        'c-naranja': '#ef7a6b',
+                        'c-verde': '#38814b',
+                        'c-morado': '#3f81ac',
+                        'c-rosa': '#ef7a6b',
+                        'c-cian': '#3f81ac',
+                        'c-lima': '#38814b',
+                        'c-indigo': '#3f81ac',
+                        'c-amber': '#ef7a6b',
+                        'c-esmeralda': '#38814b',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="antialiased font-geist">
+
+    <!-- MODAL (Ventana emergente para detalles de la tarea) -->
+    <div id="task-modal" class="fixed inset-0 bg-black/80 z-50 hidden items-center justify-center p-4 backdrop-blur-sm" onclick="closeModal()">
+        <div class="bg-brand-white max-w-lg w-full p-6 md:p-8 shadow-2xl border-2 border-brand-black transition-all transform scale-95" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-start mb-4 border-b border-brand-black pb-3">
+                <h3 id="modal-title" class="text-2xl font-bold font-geist text-brand-black tracking-tight"></h3>
+                <button onclick="closeModal()" class="text-brand-gray hover:text-brand-black transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-center text-sm bg-brand-beige/40 p-3 border border-brand-gray/30 font-mono-tech">
+                    <i data-lucide="calendar" class="w-5 h-5 mr-2 text-brand-blue"></i>
+                    <span id="modal-day-time" class="font-medium text-brand-black"></span>
+                </div>
+                <div class="border-t border-gray-200 pt-3">
+                    <p class="font-semibold text-brand-black mb-1 flex items-center"><i data-lucide="users" class="w-4 h-4 mr-2 text-brand-gray"></i>Responsables:</p>
+                    <p id="modal-responsables" class="text-brand-gray text-sm pl-6"></p>
+                </div>
+                <div class="border-t border-gray-200 pt-3">
+                    <p class="font-semibold text-brand-black mb-1 flex items-center"><i data-lucide="file-text" class="w-4 h-4 mr-2 text-brand-gray"></i>Detalles:</p>
+                    <p id="modal-detalles" class="text-brand-gray text-sm pl-6"></p>
+                </div>
+                <div class="border-t border-gray-200 pt-3">
+                    <p class="font-semibold text-brand-green mb-1 flex items-center"><i data-lucide="check-circle" class="w-4 h-4 mr-2"></i>Efectos (Éxito):</p>
+                    <p id="modal-efectos" class="text-brand-gray text-sm pl-6"></p>
+                </div>
+                <div class="border-t border-gray-200 pt-3">
+                    <p class="font-semibold text-brand-orange mb-1 flex items-center"><i data-lucide="alert-triangle" class="w-4 h-4 mr-2"></i>Efectos de incumplimiento:</p>
+                    <p id="modal-incumplimiento" class="text-brand-gray text-sm pl-6"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <main class="py-10 md:py-14 px-4 sm:px-6 lg:px-8">
+        <div id="export-content">
+            <div class="max-w-6xl mx-auto text-center">
+                <div class="inline-block bg-brand-black text-brand-white px-3 py-1 text-xs font-mono-tech uppercase tracking-widest mb-4">
+                    <i data-lucide="clock" class="w-3.5 h-3.5 mr-1.5 inline-block align-middle"></i>
+                    Cronograma Operativo
+                </div>
+                <img src="https://drive.google.com/thumbnail?sz=w10000&id=152lrixvwF-vwpgjJBrYzquUzch92X31t" width="400px" height="auto" />
+                <h1 class="text-3xl md:text-5xl font-extrabold font-geist text-brand-black mb-3 tracking-tight">
+                    Calendario Semanal Obra y Administración
+                </h1>
+                <p class="text-base text-brand-gray mb-8 max-w-3xl mx-auto">
+                    Visualización temporal de entregas y procesos. Organizado cronológicamente para garantizar la continuidad operativa.
+                </p>
+            </div>
+
+            <!-- Filtro de categorías -->
+            <div id="category-filter-container" class="max-w-6xl mx-auto mb-8 hidden">
+                <h3 class="text-xs font-mono-tech uppercase tracking-wider text-brand-black mb-3 text-center">Filtrar flujo:</h3>
+                <div class="category-filter" id="category-filter"></div>
+            </div>
+
+            <!-- Vista de Escritorio -->
+            <div id="desktop-timeline-container" class="hidden lg:block max-w-6xl mx-auto p-4 bg-brand-white shadow-md border-2 border-brand-black relative">
+                
+                <div id="today-indicator"></div>
+
+                <div class="flex justify-between items-center mb-4 border-b-2 border-brand-black pb-3">
+                    <h2 id="timeline-title" class="text-xl font-bold font-geist text-brand-black tracking-tight">Línea de Tiempo Semanal (Cronológica)</h2>
+                    <button id="clear-filter-btn" onclick="clearDayHighlight()" class="text-xs font-mono-tech text-brand-black hover:bg-brand-orange hover:text-white transition hidden bg-brand-beige px-3 py-1.5 border border-brand-black">
+                        <i data-lucide="x-circle" class="w-4 h-4 mr-1 inline-block align-middle"></i>
+                        Ver toda la semana
+                    </button>
+                </div>
+
+                <div id="desktop-timeline">
+                    <div class="timeline-header bg-brand-black text-brand-white font-mono-tech text-xs uppercase flex items-center justify-center py-3">
+                        <i data-lucide="clock" class="w-4 h-4 mr-1"></i> Hora
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vista Móvil -->
+            <div id="mobile-list-container" class="lg:hidden max-w-xl mx-auto p-2">
+                <h2 class="text-2xl font-bold font-geist text-brand-black text-center mb-6 tracking-tight">Ruta Crítica Semanal</h2>
+            </div>
+            
+            <!-- LEYENDA DE COLORES -->
+            <div class="max-w-6xl mx-auto mt-14 pt-8 border-t border-brand-gray/40">
+                <h2 class="text-lg font-bold font-geist text-brand-black mb-4 text-center tracking-tight">Leyenda de Flujos y Responsables</h2>
+                <div id="legend-container" class="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto"></div>
+            </div>
+        </div>
+
+        <!-- Botón de Descarga PDF -->
+        <div class="max-w-6xl mx-auto text-center mt-10 mb-8">
+            <button id="download-pdf" class="inline-flex items-center justify-center px-6 py-3 border-2 border-brand-black text-sm font-mono-tech uppercase tracking-wider font-bold shadow-md text-brand-white bg-brand-black hover:bg-brand-orange transition duration-300 transform hover:scale-105">
+                <i data-lucide="file-down" class="w-5 h-5 mr-2"></i>
+                Descargar Cronograma Oficial (PDF)
+            </button>
+        </div>
+    </main>
+
+    <!-- Script de Datos y Lógica -->
+    <script>
+        const SPREADSHEET_ID = '1ejBhL6yDQuQ8Jj-JTxTt3aKGW2BMDn6HjAEHIxWxrFQ';
+        
+        // Mapeo directo a los colores de la marca
+        const COLOR_PALETTE = [
+            'brand-blue', 'brand-orange', 'brand-green', 'brand-gray'
+        ];
+
+        function twColor(colorKey) {
+            const config = tailwind.config.theme.extend.colors;
+            return config[colorKey] || '#3f81ac';
+        }
+
+        function formatTime(time24) {
+            const match = time24.match(/^(\d{1,2}):(\d{2})/);
+            if (!match) return time24;
+            
+            let [_, hourStr, minuteStr] = match;
+            let hour = parseInt(hourStr, 10);
+            let minute = minuteStr;
+            let period = hour >= 12 ? 'p.m.' : 'a.m.';
+            
+            hour = hour % 12;
+            hour = hour ? hour : 12; 
+
+            return `${hour}:${minute} ${period}`;
+        }
+
+        function parseTimeToMinutes(timeStr) {
+            if (!timeStr) return 9999; 
+            const match = timeStr.match(/(\d{1,2}):(\d{2})/);
+            if (match) {
+                let h = parseInt(match[1]);
+                let m = parseInt(match[2]);
+                if (timeStr.toLowerCase().includes('pm') && h < 12) h += 12;
+                if (timeStr.toLowerCase().includes('am') && h === 12) h = 0;
+                return h * 60 + m;
+            }
+            return 9999;
+        }
+
+        async function loadDataFromSheet() {
+            try {
+                const sheetId = SPREADSHEET_ID;
+                const response = await fetch(`https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&range=Entregables!A2:J`);
+                
+                if (!response.ok) throw new Error('Error al cargar los datos');
+                
+                const text = await response.text();
+                const json = JSON.parse(text.substring(47).slice(0, -2));
+                const rows = json.table.rows;
+                const taskData = [];
+                
+                const categoriasEspecificas = new Set();
+                
+                rows.forEach(row => {
+                    const cell = row.c;
+                    if (cell && cell.length >= 10) {
+                        const categoriaEspecifica = cell[1] ? cell[1].v : '';
+                        if (categoriaEspecifica) categoriasEspecificas.add(categoriaEspecifica);
+                    }
+                });
+                
+                const colorMap = {};
+                let colorIndex = 0;
+                categoriasEspecificas.forEach(categoria => {
+                    colorMap[categoria] = COLOR_PALETTE[colorIndex % COLOR_PALETTE.length];
+                    colorIndex++;
+                });
+                
+                rows.forEach(row => {
+                    const cell = row.c;
+                    if (cell && cell.length >= 10) {
+                        const categoria = cell[0] ? cell[0].v : '';
+                        const categoriaEspecifica = cell[1] ? cell[1].v : '';
+                        
+                        const task = {
+                            categoria: categoria,
+                            categoriaEspecifica: categoriaEspecifica,
+                            name: cell[2] ? cell[2].v : '',
+                            day: cell[3] ? cell[3].v : '',
+                            time: cell[4] ? cell[4].v : '',
+                            responsables: cell[5] ? cell[5].v : '',
+                            detalles: cell[6] ? cell[6].v : '',
+                            efectos: cell[7] ? cell[7].v : '',
+                            incumplimiento: cell[8] ? cell[8].v : '',
+                            icon: cell[9] ? cell[9].v : 'file-text',
+                            color: colorMap[categoriaEspecifica] || 'brand-blue',
+                            group: categoria
+                        };
+                        taskData.push(task);
+                    }
+                });
+                
+                return taskData;
+            } catch (error) {
+                console.error('Error al cargar datos desde Google Sheets:', error);
+                return getBackupData();
+            }
+        }
+
+        function getBackupData() {
+            return [
+                { name: "Recepción de facturas", day: "Viernes", time: "16:00 hrs", color: "brand-blue", group: "Administración", icon: "file-text", categoria: "Administración", categoriaEspecifica: "Administración", responsables: "Equipo administrativo", detalles: "Proceso inicial para registrar obligaciones", efectos: "Inicio del proceso de pago", incumplimiento: "Retraso en pagos a proveedores" },
+                { name: "Pagos en Banca", day: "Sábado", time: "12:00 hrs", color: "brand-blue", group: "Administración", icon: "banknote", categoria: "Administración", categoriaEspecifica: "Pagos", responsables: "Gerente financiero", detalles: "Ejecutar transferencias bancarias", efectos: "Cumplimiento de obligaciones", incumplimiento: "Sanciones por pagos atrasados" },
+                { name: "Pagos en Efectivo", day: "Sábado", time: "12:30 hrs", color: "brand-blue", group: "Administración", icon: "wallet", categoria: "Administración", categoriaEspecifica: "Pagos", responsables: "Tesorería", detalles: "Realizar desembolsos de nómina", efectos: "Pago oportuno a empleados", incumplimiento: "Conflictos laborales" },
+                { name: "Registro gastos caja chica", day: "Viernes", time: "12:00 hrs", color: "brand-orange", group: "Administración", icon: "receipt", categoria: "Administración", categoriaEspecifica: "Caja Chica", responsables: "Auxiliar administrativo", detalles: "Documentar y capturar los gastos menores", efectos: "Control de gastos operativos", incumplimiento: "Falta de transparencia en gastos" },
+                { name: "Rembolso caja chica", day: "Martes", time: "18:00 hrs", color: "brand-orange", group: "Administración", icon: "piggy-bank", categoria: "Administración", categoriaEspecifica: "Caja Chica", responsables: "Contabilidad", detalles: "Entrega del efectivo correspondiente", efectos: "Liquidez para gastos urgentes", incumplimiento: "Interrupción de operaciones" },
+                { name: "Reporte listas personal obra", day: "Lunes", time: "14:00 hrs", color: "brand-green", group: "Obra", icon: "users", categoria: "Obra", categoriaEspecifica: "Nómina", responsables: "Supervisor de obra", detalles: "Relación del personal y horas trabajadas", efectos: "Cálculo semanal de la nómina", incumplimiento: "Retraso en pago de nómina" },
+                { name: "Pedidos de material (Lunes)", day: "Lunes", time: "14:00 hrs", color: "brand-gray", group: "Obra", icon: "box", categoria: "Obra", categoriaEspecifica: "Materiales", responsables: "Coordinador de compras", detalles: "Solicitud inicial de insumos", efectos: "Aseguramiento de materiales", incumplimiento: "Paralización de obra" },
+                { name: "Pedidos de material (Jueves)", day: "Jueves", time: "14:00 hrs", color: "brand-gray", group: "Obra", icon: "box", categoria: "Obra", categoriaEspecifica: "Materiales", responsables: "Coordinador de compras", detalles: "Última solicitud de la semana", efectos: "Inventario para fin de semana", incumplimiento: "Falta de materiales críticos" },
+                { name: "Aviso rayas Est. AGS", day: "Jueves", time: "10:00 hrs", color: "brand-green", group: "Obra", icon: "clipboard-check", categoria: "Obra", categoriaEspecifica: "Autorizaciones", responsables: "Residente de obra", detalles: "Notificación de avances", efectos: "Control de avances", incumplimiento: "Falta de seguimiento" },
+                { name: "Autorización Est. AGS", day: "Jueves", time: "17:00 hrs", color: "brand-green", group: "Administración", icon: "lock-open", categoria: "Administración", categoriaEspecifica: "Autorizaciones", responsables: "Director de obra", detalles: "Aprobación final", efectos: "Continuidad de obra", incumplimiento: "Retraso en autorizaciones" },
+                { name: "Aviso rayas Est. Foráneas", day: "Viernes", time: "15:00 hrs", color: "brand-blue", group: "Obra", icon: "clipboard-check", categoria: "Obra", categoriaEspecifica: "Reportes", responsables: "Supervisor foráneo", detalles: "Reporte de avances", efectos: "Control de obras remotas", incumplimiento: "Falta de visibilidad" },
+                { name: "Autorización Est. Foráneas", day: "Viernes", time: "17:30 hrs", color: "brand-blue", group: "Administración", icon: "lock-open", categoria: "Administración", categoriaEspecifica: "Autorizaciones", responsables: "Gerente general", detalles: "Aprobación de pagos", efectos: "Cierre semanal", incumplimiento: "Retraso en cierre contable" }
+            ];
+        }
+
+        const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+        
+        function showModal(task) {
+            document.getElementById('modal-title').textContent = task.name.replace(/\s*\([^)]+\)$/, '').trim();
+            document.getElementById('modal-day-time').textContent = `${task.day} • ${formatTime(task.time)} | Área: ${task.group}`;
+            document.getElementById('modal-responsables').textContent = task.responsables || 'No especificado';
+            document.getElementById('modal-detalles').textContent = task.detalles || 'No hay detalles adicionales';
+            document.getElementById('modal-efectos').textContent = task.efectos || 'No especificado';
+            document.getElementById('modal-incumplimiento').textContent = task.incumplimiento || 'No especificado';
+
+            const modal = document.getElementById('task-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('task-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        let currentHighlightedDay = null; 
+        let selectedCategories = []; 
+
+        function getDayName(dayIndex) {
+            const days = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+            return days[dayIndex];
+        }
+
+        function getTodayName() {
+            const todayIndex = new Date().getDay();
+            const todayName = getDayName(todayIndex);
+            return daysOfWeek.includes(todayName) ? todayName : null;
+        }
+
+        function updateTimelineTitle() {
+            const titleElement = document.getElementById('timeline-title');
+            if (selectedCategories.length === 0 || selectedCategories.length === [...new Set(window.taskData.map(task => task.categoria))].length) {
+                titleElement.textContent = "Línea de Tiempo Semanal (Cronológica)";
+            } else {
+                titleElement.textContent = `Cronograma (${selectedCategories.join(', ')})`;
+            }
+        }
+
+        function highlightDay(day) {
+            clearDayHighlight(); 
+            currentHighlightedDay = day;
+
+            document.querySelectorAll('.day-header').forEach(header => {
+                if (header.textContent.includes(day)) {
+                    header.classList.add('highlighted-day'); 
+                }
+            });
+
+            const filteredTasks = getFilteredTasks();
+            const uniqueTimes = [...new Set(filteredTasks.map(t => t.time))];
+            
+            uniqueTimes.forEach(time => {
+                const hasTaskThatDay = filteredTasks.some(t => t.time === time && t.day === day);
+                if (hasTaskThatDay) {
+                    const timeHeaderId = `time-header-${time.replace(/[:\s]/g, '_')}`;
+                    const timeHeaderEl = document.getElementById(timeHeaderId);
+                    if (timeHeaderEl) timeHeaderEl.classList.add('highlighted-task');
+                }
+            });
+
+            document.getElementById('clear-filter-btn').classList.remove('hidden');
+            applyDayFilter(day);
+        }
+
+        function clearDayHighlight() {
+            currentHighlightedDay = null;
+            
+            document.querySelectorAll('.day-header').forEach(header => {
+                header.classList.remove('highlighted-day');
+            });
+
+            document.querySelectorAll('.time-row-header').forEach(header => {
+                header.classList.remove('highlighted-task');
+            });
+            
+            document.getElementById('clear-filter-btn').classList.add('hidden');
+            removeDayFilter();
+        }
+
+        function applyDayFilter(selectedDay) {
+            document.querySelectorAll('.task-card-item').forEach(card => {
+                const taskDay = card.closest('.timeline-cell').getAttribute('data-day');
+                if (taskDay !== selectedDay) {
+                    card.classList.add('non-selected-day');
+                }
+            });
+            
+            document.querySelectorAll('.mobile-task-item').forEach(item => {
+                const taskDay = item.getAttribute('data-day');
+                if (taskDay !== selectedDay) {
+                    item.classList.add('non-selected-day');
+                }
+            });
+            
+            document.querySelectorAll('.legend-item').forEach(item => {
+                const category = item.getAttribute('data-category');
+                const filteredTasks = getFilteredTasks();
+                const hasTaskInDay = filteredTasks.some(task => 
+                    task.categoriaEspecifica === category && task.day === selectedDay
+                );
+                if (!hasTaskInDay) {
+                    item.classList.add('non-selected-day');
+                }
+            });
+        }
+
+        function removeDayFilter() {
+            document.querySelectorAll('.non-selected-day').forEach(element => {
+                element.classList.remove('non-selected-day');
+            });
+        }
+
+        function positionTodayIndicator() {
+            const todayName = getTodayName();
+            const indicator = document.getElementById('today-indicator');
+            
+            if (!todayName) {
+                indicator.style.display = 'none';
+                return;
+            }
+
+            const todayIndex = daysOfWeek.indexOf(todayName);
+            const dayColumnIndex = todayIndex + 1; 
+            
+            const allHeaders = document.querySelectorAll('#desktop-timeline .timeline-header, #desktop-timeline .day-header');
+            const todayHeader = allHeaders[dayColumnIndex]; 
+            
+            if (todayHeader) {
+                const containerRect = document.getElementById('desktop-timeline-container').getBoundingClientRect();
+                const headerRect = todayHeader.getBoundingClientRect();
+
+                const indicatorSize = 16;
+                const leftPosition = (headerRect.left + headerRect.width / 2) - containerRect.left - (indicatorSize / 2);
+                const topPosition = headerRect.top - containerRect.top - 10; 
+                
+                indicator.style.left = `${leftPosition}px`;
+                indicator.style.top = `${topPosition}px`;
+                indicator.style.display = 'block';
+            }
+        }
+
+        function renderDesktopTimeline() {
+            const timeline = document.getElementById('desktop-timeline');
+            const filteredTasks = getFilteredTasks();
+            
+            const uniqueTimes = [...new Set(filteredTasks.map(t => t.time))]
+                .sort((a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b));
+            
+            timeline.innerHTML = '';
+            
+            const taskHeaderStatic = document.createElement('div');
+            taskHeaderStatic.className = 'timeline-header bg-brand-black text-brand-white font-mono-tech text-xs uppercase flex flex-col items-center justify-center py-3';
+            taskHeaderStatic.innerHTML = `<i data-lucide="clock" class="w-4 h-4 mb-1"></i> <span>Hora</span>`;
+            timeline.appendChild(taskHeaderStatic);
+
+            daysOfWeek.forEach((day, index) => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'timeline-header day-header bg-brand-black text-brand-white font-bold flex items-center justify-center py-3';
+                
+                dayHeader.textContent = day;
+                dayHeader.onclick = () => highlightDay(day);
+                timeline.appendChild(dayHeader);
+            });
+
+            uniqueTimes.forEach(time => {
+                const timeHeader = document.createElement('div');
+                timeHeader.className = 'time-row-header';
+                timeHeader.id = `time-header-${time.replace(/[:\s]/g, '_')}`;
+                timeHeader.innerHTML = `<span class="text-xs font-mono-tech">${formatTime(time)}</span>`;
+                timeline.appendChild(timeHeader); 
+
+                daysOfWeek.forEach(day => {
+                    const cell = document.createElement('div');
+                    cell.className = 'timeline-cell';
+                    cell.setAttribute('data-day', day);
+                    
+                    const matchingTasks = filteredTasks.filter(t => t.time === time && t.day === day);
+
+                    if (matchingTasks.length > 0) {
+                        matchingTasks.forEach(task => {
+                            const taskCard = document.createElement('div');
+                            taskCard.className = 'task-card-item p-2 text-white shadow cursor-pointer w-full text-left border border-black/20';
+                            taskCard.style.backgroundColor = twColor(task.color);
+                            taskCard.onclick = () => showModal(task);
+                            
+                            const cleanName = task.name.replace(/\s*\([^)]+\)$/, '').trim();
+                            
+                            taskCard.innerHTML = `
+                                <div class="flex flex-col h-full justify-between">
+                                    <div class="flex items-start font-medium text-xs mb-1.5 leading-tight">
+                                        <i data-lucide="${task.icon}" class="w-3.5 h-3.5 mr-1 mt-0.5 flex-shrink-0 opacity-90"></i>
+                                        <span>${cleanName}</span>
+                                    </div>
+                                    <div class="text-[9px] font-mono-tech bg-black/20 px-1 py-0.5 inline-block w-fit opacity-90 truncate max-w-full">
+                                        ${task.responsables || task.group}
+                                    </div>
+                                </div>
+                            `;
+                            cell.appendChild(taskCard);
+                        });
+                    }
+                    timeline.appendChild(cell);
+                });
+            });
+            
+            positionTodayIndicator();
+            lucide.createIcons();
+            
+            if (currentHighlightedDay) {
+                applyDayFilter(currentHighlightedDay);
+            }
+        }
+
+        function renderMobileList() {
+            const listContainer = document.getElementById('mobile-list-container');
+            listContainer.innerHTML = ''; 
+
+            const filteredTasks = getFilteredTasks();
+            
+            const groupedByDay = daysOfWeek.reduce((acc, day) => {
+                const sortedTasks = filteredTasks
+                    .filter(t => t.day === day)
+                    .sort((a, b) => parseTimeToMinutes(a.time) - parseTimeToMinutes(b.time));
+                
+                acc[day] = sortedTasks;
+                return acc;
+            }, {});
+
+            daysOfWeek.forEach(day => {
+                const tasks = groupedByDay[day];
+                if (tasks.length === 0) return;
+
+                const dayHeader = document.createElement('h3');
+                const isToday = day === getTodayName();
+
+                dayHeader.className = 'text-xl font-bold font-geist text-brand-black mb-4 mt-8 pb-2 flex items-center border-b-2 border-brand-black tracking-tight';
+                
+                let headerContent = day;
+                if (isToday) {
+                    headerContent = `<i data-lucide="sun" class="w-5 h-5 mr-2 text-brand-orange"></i> ${day} <span class="ml-2 text-xs font-mono-tech bg-brand-orange text-white px-2 py-0.5 uppercase">Hoy</span>`;
+                }
+
+                dayHeader.innerHTML = headerContent;
+                listContainer.appendChild(dayHeader);
+
+                const timelineContainer = document.createElement('div');
+                timelineContainer.className = 'relative border-l-2 border-brand-black ml-3 pl-6 pb-2 pt-2';
+
+                tasks.forEach(task => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'mobile-task-item bg-brand-white p-4 shadow-sm mb-4 cursor-pointer relative border-2 border-brand-black';
+                    listItem.onclick = () => showModal(task);
+                    listItem.setAttribute('data-day', task.day);
+                    listItem.style.borderTopWidth = '6px';
+                    listItem.style.borderTopColor = twColor(task.color);
+
+                    const dot = document.createElement('div');
+                    dot.className = 'absolute w-[14px] h-[14px] rounded-full border-2 border-brand-white shadow-sm z-10';
+                    dot.style.backgroundColor = twColor(task.color);
+                    dot.style.left = '-32px'; 
+                    dot.style.top = '16px';
+
+                    listItem.appendChild(dot);
+
+                    listItem.innerHTML += `
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center text-xs font-mono-tech font-bold" style="color: ${twColor(task.color)}">
+                                <i data-lucide="clock" class="w-3.5 h-3.5 mr-1"></i>
+                                ${formatTime(task.time)}
+                            </div>
+                            <span class="text-[10px] font-mono-tech px-2 py-0.5 bg-brand-beige text-brand-black font-medium border border-brand-black/20">${task.group}</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i data-lucide="${task.icon}" class="w-5 h-5 mr-3 flex-shrink-0 mt-0.5" style="color: ${twColor(task.color)}"></i>
+                            <div>
+                                <p class="font-bold text-brand-black text-[15px] leading-tight mb-1">${task.name.replace(/\s*\([^)]+\)$/, '').trim()}</p>
+                                <p class="text-xs text-brand-gray"><span class="font-medium">Responsable:</span> ${task.responsables}</p>
+                            </div>
+                        </div>
+                    `;
+                    timelineContainer.appendChild(listItem);
+                });
+                listContainer.appendChild(timelineContainer);
+            });
+            lucide.createIcons();
+            
+            if (currentHighlightedDay) {
+                applyDayFilter(currentHighlightedDay);
+            }
+        }
+
+        function renderLegend() {
+            const legendContainer = document.getElementById('legend-container');
+            legendContainer.innerHTML = '';
+
+            const filteredTasks = getFilteredTasks();
+            const uniqueCategories = [...new Set(filteredTasks.map(task => task.categoriaEspecifica))];
+
+            uniqueCategories.forEach(category => {
+                const firstTaskInCategory = filteredTasks.find(task => task.categoriaEspecifica === category);
+                if (!firstTaskInCategory) return;
+
+                const legendItem = document.createElement('div');
+                legendItem.className = 'flex items-center space-x-2 p-2.5 bg-brand-white shadow-sm border border-brand-black legend-item';
+                legendItem.setAttribute('data-category', category);
+                
+                legendItem.innerHTML = `
+                    <div class="w-4 h-4 flex-shrink-0 shadow-sm" style="background-color: ${twColor(firstTaskInCategory.color)};"></div>
+                    <span class="text-xs font-mono-tech font-medium text-brand-black leading-tight">${category}</span>
+                `;
+                legendContainer.appendChild(legendItem);
+            });
+            
+            if (currentHighlightedDay) {
+                applyDayFilter(currentHighlightedDay);
+            }
+        }
+
+        function renderCategoryFilter() {
+            const filterContainer = document.getElementById('category-filter');
+            filterContainer.innerHTML = '';
+
+            const uniqueCategories = [...new Set(window.taskData.map(task => task.categoria))];
+
+            uniqueCategories.forEach(category => {
+                const checkboxId = `category-${category.replace(/\s+/g, '-').toLowerCase()}`;
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = checkboxId;
+                checkbox.className = 'category-checkbox';
+                checkbox.checked = true; 
+                checkbox.addEventListener('change', handleCategoryFilter);
+
+                const label = document.createElement('label');
+                label.htmlFor = checkboxId;
+                label.className = 'category-label shadow-sm hover:bg-brand-beige';
+                label.textContent = category;
+
+                filterContainer.appendChild(checkbox);
+                filterContainer.appendChild(label);
+            });
+
+            document.getElementById('category-filter-container').classList.remove('hidden');
+        }
+
+        function handleCategoryFilter() {
+            selectedCategories = [];
+            document.querySelectorAll('.category-checkbox:checked').forEach(checkbox => {
+                const category = checkbox.nextElementSibling.textContent;
+                selectedCategories.push(category);
+            });
+
+            updateTimelineTitle();
+            renderDesktopTimeline();
+            renderMobileList();
+            renderLegend();
+        }
+
+        function getFilteredTasks() {
+            if (selectedCategories.length === 0) return window.taskData;
+            return window.taskData.filter(task => selectedCategories.includes(task.categoria));
+        }
+
+        function setupPDFDownload() {
+            document.getElementById('download-pdf').addEventListener('click', generatePDF);
+        }
+
+        function generatePDF() {
+            const element = document.getElementById('export-content');
+            
+            const opt = {
+                margin: [10, 10, 10, 10],
+                filename: 'cronograma_operativo.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: true,
+                    scrollY: 0,
+                },
+                jsPDF: { unit: 'mm', format: 'a3', orientation: 'landscape' }
+            };
+
+            html2pdf().set(opt).from(element).save().catch(error => {
+                console.error('Error al generar PDF:', error);
+                alert('Error al generar el PDF. Por favor, intente nuevamente.');
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                window.taskData = await loadDataFromSheet();
+            } catch (error) {
+                window.taskData = getBackupData();
+            }
+            
+            selectedCategories = [...new Set(window.taskData.map(task => task.categoria))];
+            
+            renderCategoryFilter();
+            updateTimelineTitle();
+            renderDesktopTimeline();
+            renderMobileList();
+            renderLegend(); 
+            setupPDFDownload();
+            lucide.createIcons();
+            
+            window.addEventListener('resize', positionTodayIndicator);
+        });
+    </script>
+</body>
+</html>

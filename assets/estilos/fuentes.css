@@ -1,17 +1,3 @@
-:root {
-    --primary-white-color: #ffffff;
-    --primary-black-color: #000000;
-    --primary-orange-color: #ef7a6b;
-    --primary-green-color: #38814b;
-    --primary-blue-color: #3f81ac;
-    --primary-gray-color: #616160;
-    --primary-beige-color: #d9d8d6;
-    --primary-pink-color: #eb148b;
-    --font-regular: 'Geist', sans-serif;
-    --font-body-social: 'Imb Plex Mono', sans-serif;
-    --font-headline-tech: 'Stardos Stencil', sans-serif;
-}
-
 /** Esencialmente debe ser usada para titulares
 y cuerpos de texto regulares de materiales
 institucionales y de comunicación. */
