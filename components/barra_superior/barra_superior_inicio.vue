@@ -14,7 +14,7 @@
 <template>
     <header id="barra_superior">
         <section id="seccion_titulo">
-            <img src="../../assets/logos/logo_blanco/MG_BAG_Principal_SinTagline/MG_BAG_Principal_SinTagline.png" alt="Logo BAG Group" width="auto" height="50px" />
+            <img src="../../assets/logos/logo_blanco/MG_BAG_Principal_SinTagline/MG_BAG_Principal_SinTagline.png" alt="Logo BAG Group" width="auto" height="80px" />
             <h1>Portal</h1>
         </section>
     
@@ -62,6 +62,7 @@
 
 <style scoped>
     #barra_superior {
+        padding: 0;
         background-color: var(--negro);
         display: flex;
         flex-direction: row;
@@ -71,21 +72,17 @@
         align-items: center;
         color: var(--blanco);
     }
-
     #barra_superior #seccion_titulo {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
     }
-
     @media (max-width: 768px) {
         #barra_superior #seccion_titulo h1 {
             display: none;
         }
     }
-
-
     #barra_superior #seccion_botones {
         display: flex;
         flex-direction: row;
@@ -94,7 +91,6 @@
         margin-right: 1em;
         min-width: 0;
     }
-
     #barra_superior #seccion_botones #paginas {
         display: flex;
         flex-wrap: nowrap;
@@ -112,8 +108,6 @@
         /* 3. Oculta la barra en Internet Explorer y Edge antiguo */
         -ms-overflow-style: none; 
     }
-
-
     .contenedor-menu {
         position: relative; /* Eje de referencia para el cuadro flotante */
         display: inline-block;

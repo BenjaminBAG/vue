@@ -58,13 +58,13 @@
 
 <style>
     #seccion_editar {
-        padding: 1em;
+        padding: 2em 0;
     }
     #seccion_editar .titulo_h2 {
         display: flex;
         align-items: center;
         gap: 12px;
-        padding: 8px 16px;
+        padding-bottom: 2em;
     }
     #seccion_editar .titulo_h2 .icono {
         width: 2em;
@@ -84,13 +84,14 @@
         box-sizing: border-box;
         border-radius: 0;
         scrollbar-width: none;
-        border: 1px solid var(--beige);
-        transition: background-color 0.3s;
+        border: none;
+        border-radius: 10px;
+        transition: background-color 0.3s, border-left 0.01s, border-radius 0.3s;
     }
     #seccion_editar textarea:focus {
         outline: none;
-        background-color: var(--negro);
-        color: var(--blanco);
+        border-left: 5px solid var(--azul);
+        border-radius: 0;
     }
     
 </style>

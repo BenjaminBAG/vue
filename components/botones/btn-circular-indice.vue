@@ -37,11 +37,6 @@
         color: var(--blanco); 
         transform: rotate(7deg) scale(1.1);
     }
-    svg {
-        width: 70%;
-        height: auto;
-        border: none;
-    }
     button.is-active {
         background-color: var(--negro);
         color: var(--blanco);

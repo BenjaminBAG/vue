@@ -1,14 +1,10 @@
 <template>
-    <div id="panel_lateral_inicio">
+    <div id="panel_lateral_plantillas">
         <header id="botones_seleccion">
             <!-- Pasamos true o false si la vista coincide -->
             <BtnCircularSelector 
                 :activo="vistaActiva === 'selector'" 
                 @click="cambiarVista('selector')"
-            />
-            <BtnCircularLista 
-                :activo="vistaActiva === 'indice'" 
-                @click="cambiarVista('indice')"
             />
             <BtnCircularEditar 
                 :activo="vistaActiva === 'editar'" 
@@ -18,16 +14,15 @@
                 :activo="vistaActiva === 'nuevo'" 
                 @click="cambiarVista('nuevo')"
             />
+            <BtnCircularExternalLink 
+                :ruta="documentoSeleccionado?.urlDocumento || ''"
+            />
         </header>
         <div id="contenedor_secciones">
             <KeepAlive>
-                <SeccionSelector
+                <SeccionLista
                     v-if="vistaActiva === 'selector'"
                     @documento-seleccionado="emitirDocumentoSeleccionado"
-                />
-                <SeccionIndice
-                    v-else-if="vistaActiva === 'indice'"
-                    :titulos="titulos"
                 />
                 <SeccionEditar
                     v-else-if="vistaActiva === 'editar'"
@@ -48,13 +43,10 @@
 <script setup>
     import { ref } from 'vue'
     import BtnCircularSelector from '../botones/btn-circular-selector.vue'
-    import BtnCircularLista from '../botones/btn-circular-indice.vue'
-    import BtnCircularFiltrar from '../botones/btn-circular-filtrar.vue'
     import BtnCircularEditar from '../botones/btn-circular-editar.vue'
     import BtnCircularNuevo from '../botones/btn-circular-nuevo.vue'
-    import SeccionSelector from './seccion_selector.vue'
-    import SeccionIndice from './seccion_indice.vue'
-    import SeccionFiltro from './seccion_filtro.vue'
+    import BtnCircularExternalLink from '../botones/btn-circular-external_link.vue'
+    import SeccionLista from './seccion_selector.vue'
     import SeccionEditar from './seccion_editar.vue'
 
     const emit = defineEmits(['documento-seleccionado', 'vista-cambiada', 'contenido-editor-cambiado'])
@@ -94,15 +86,15 @@
 
 
 <style scoped>
-    #panel_lateral_inicio {
+    #panel_lateral_plantillas {
         padding: 1em 2em;
     }
     @media (max-width: 768px) {
-        #panel_lateral_inicio {
+        #panel_lateral_plantillas {
             display: none;
         }
     }
-    #panel_lateral_inicio #botones_seleccion {
+    #panel_lateral_plantillas #botones_seleccion {
         padding: 1em;
         display: flex;
         gap: 0.5em;
@@ -111,11 +103,11 @@
         background-color: inherit;
         flex-wrap: wrap;
     }
-    #botones_seleccion > * {
+    #panel_lateral_plantillas #botones_seleccion > * {
         flex-shrink: 0;
     }
 
-    #panel_lateral_inicio #contenedor_secciones {
+    #panel_lateral_plantillas #contenedor_secciones {
         position: sticky;
         top: 10em;
         max-height: calc(100vh - 12em); 

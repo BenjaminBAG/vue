@@ -23,14 +23,11 @@
         background-color: var(--nergo);
         color: var(--blanco);
         cursor: pointer;
-    }
-    svg {
-        width: 70%;
-        height: auto;
-        border: none;
+        transition: transform 0.3s ease;
     }
     button:hover {
         background-color: color-mix(var(--negro), var(--blanco) 20%);
+        transform: rotate(7deg) scale(1.1);
     }
     button:active {
         background-color: var(--blanco);

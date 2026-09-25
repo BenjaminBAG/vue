@@ -2,10 +2,10 @@
     <div id="seccion_lista">
         <div class="titulo_h2">
             <MousePointerClick class="icono"/>
-            <h2>Selección de Documentos</h2>
+            <h2>Selección de Plantillas</h2>
         </div>
         <SeccionFiltro @filtros-cambiados="actualizarFiltros" />
-        
+
         <ul v-if="documentosFiltrados.length">
             <li v-for="item in documentosFiltrados" :key="item.id || item.nombre">
                 <button :activo="item === Documento-seleccionado" :class="{'documento_activo': documentoSeleccionado?.id === item.id}" @click="seleccionarDocumento(item)">{{ item.nombre }}</button>
@@ -13,7 +13,6 @@
         </ul>
 
         <p v-else-if="errorMensaje" class="mensaje-error">{{ errorMensaje }}</p>
-        <p v-else class="mensaje-vacio">No hay documentos para los filtros seleccionados.</p>
     </div>
 </template>
 
@@ -21,7 +20,7 @@
     import { computed, onMounted, ref } from 'vue'
     import { MousePointerClick } from 'lucide-vue-next'
     import { useSheets } from '../../composables/useSheets'
-    import SeccionFiltro from '../../components/inicio/seccion_filtro.vue'
+    import SeccionFiltro from '../../components/plantillas/seccion_filtro.vue'
 
     const documentoSeleccionado = ref(null)
     const emit = defineEmits(['documento-seleccionado'])
@@ -69,7 +68,7 @@
 
     const cargarChips = async () => {
         try {
-            const data = await fetchSheetRange('documentos!A:E')
+            const data = await fetchSheetRange('plantillas!A:E')
 
             documentos.value = data
                 .map((item, index) => {
@@ -81,8 +80,8 @@
                         id: String(normalizarCampo(documento, ['id']) || index + 1),
                         nombre: normalizarCampo(documento, ['nombre', 'titulo', 'documento', 'title']) || '',
                         tipo: normalizarCampo(documento, ['tipo', 'categoria', 'clasificacion']) || '',
-                        contenidoMarkdown: normalizarCampo(documento, ['contenidomarkdown', 'markdown', 'contenido', 'texto', 'body']) || '',
-                        idEtiqueta: normalizarCampo(documento, ['idetiqueta', 'etiqueta', 'tag']) || ''
+                        urlDocumento: normalizarCampo(documento, ['urlDocumento', 'url', 'contenido', 'texto', 'body']) || '',
+                        idEtiqueta: normalizarCampo(documento, ['idetiqueta', 'etiqueta', 'tag']) || '',
                     }
                 })
                 .filter((item) => item.nombre)
@@ -104,6 +103,7 @@
         emit('documento-seleccionado', item)
     }
 
+    
     onMounted(() => {
         cargarChips()
     })
@@ -127,6 +127,7 @@
     }
     .titulo_h2 h2 {
         margin: 0;
+        font-size: 1.5rem;
     }
     #seccion_lista ul {
         list-style-type: none;
@@ -136,10 +137,9 @@
     #seccion_lista ul li button {
         position: relative;
         overflow: hidden;
-        width: 95%;
-        margin: 0.2em 0;
+        width: 90%;
         padding: 0.5em 0.5em 0.5em 1em;
-        font-size: 1em;
+        margin: 0.2em;
         text-align: left;
         border-radius: 10px;
         border: none;
@@ -165,15 +165,10 @@
     }
     #seccion_lista ul li button:hover::before {
         opacity: 1;
-        transform: translateY(-50%) translateX(5px);
+        transform: translateY(-50%) translateX(5px); /* Se mueve suavemente hacia la derecha */
     }
     #seccion_lista ul li .documento_activo {
         padding-left: 1.5em;
         background-color: color-mix(var(--naranja), var(--blanco) 70%);
-    }
-    .mensaje-vacio {
-        margin: 1em 0 0;
-        color: var(--gris-oscuro, #555);
-        font-style: italic;
     }
 </style>

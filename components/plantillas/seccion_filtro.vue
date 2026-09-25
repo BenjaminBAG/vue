@@ -77,7 +77,7 @@
 
             errorMensaje.value = ''
 
-            const dataTipos = await fetchSheetRange('documentos!C:C')
+            const dataTipos = await fetchSheetRange('plantillas!C:C')
 
             tipos.value = dataTipos
                 .map((item, index) => ({

@@ -77,3 +77,7 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 npm install markdown-it
 npm install markdown-it-anchor
+npm install markdown-it-container
+npm install markdown-it-mark
+
+configuración de API de Google Sheets en [este enlace](https://console.cloud.google.com/apis/credentials?project=noble-particle-472522-u9).

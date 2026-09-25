@@ -5,8 +5,7 @@
 </template>
 
 <script>
-    import MarkdownIt from 'markdown-it';
-    import markdownItAnchor from 'markdown-it-anchor';
+    import { procesarMarkdown } from '../../utils/markdown/markdown.js';
 
     const MI_MARKDOWN = `# ¡Hola!<br><p style="color: gray">Selecciona un documento para empezar a leer...</p>`;
 
@@ -28,60 +27,31 @@
         },
         computed: {
             textoMarkdown() {
-                if (this.vistaActiva === 'editar' || this.vistaActiva === 'nuevo') {
-                    return this.documentoEnEdicion || MI_MARKDOWN
-                }
+            if (this.vistaActiva === 'editar' || this.vistaActiva === 'nuevo') {
+                return this.documentoEnEdicion || MI_MARKDOWN;
+            }
 
-                return (
-                    this.documento?.contenidoMarkdown ||
-                    this.documento?.markdown ||
-                    this.documento?.contenido ||
-                    this.documento?.texto ||
-                    MI_MARKDOWN
-                )
+            return (
+                this.documento?.contenidoMarkdown ||
+                this.documento?.markdown ||
+                this.documento?.contenido ||
+                this.documento?.texto ||
+                MI_MARKDOWN
+            );
             },
             contenidoRenderizado() {
-                const titulos = [];
-
-                const md = new MarkdownIt({ html: true, linkify: true })
-                    .use(markdownItAnchor, {
-                        slugify: (str) =>
-                            encodeURIComponent(
-                                String(str)
-                                    .trim()
-                                    .toLowerCase()
-                                    .replace(/\s+/g, '-')
-                            ),
-                        callback: (token, info) => {
-                            titulos.push({
-                                texto: info.title,
-                                slug: token.attrGet('id'),
-                                nivel: Number(token.tag.replace('h', ''))
-                            });
-                        }
-                      });
-
-                md.renderer.rules.paragraph_open = () => '<p class="p-markdown">';
-
-                const html = md.render(this.textoMarkdown);
-
-                this.$nextTick(() => {
+                // Llamamos al helper passing el texto y escuchando la extracción de títulos
+                return procesarMarkdown(this.textoMarkdown, (titulos) => {
+                    this.$nextTick(() => {
                     this.$emit('titulos-extraidos', titulos);
+                    });
                 });
-
-                return html;
             }
         }
-    }
+    };
 </script>
 
 <style scoped>
-    #contenedor_documento >>> .p-markdown {
-        line-height: 1.6;
-        margin-bottom: 1em;
-        white-space: normal;
-    }
-
     #panel_central_inicio {
         grid-column: 2;
         grid-row: 2;
@@ -94,17 +64,20 @@
         }
     }
     #panel_central_inicio #contenedor_documento {
-        min-height: 300px;
+        min-height: 80%;
         padding: 3em 6em;
         box-shadow: 0 0 0.5em 0.2em var(--beige);
+        background-color: var(--blanco);
+        font-size: 1em;
     }
     @media (max-width: 768px) {
         #panel_central_inicio #contenedor_documento {
             box-shadow: none;
+            padding: 1.5em 3em;
         }
     }
-    #contenedor_documento {
+    #panel_central_inicio #contenedor_documento {
         overflow: auto;
-        max-width: 100%
+        max-width: 100%;
     }
 </style>

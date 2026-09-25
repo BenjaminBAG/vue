@@ -56,7 +56,7 @@
         padding: 2em;
         min-width: 300px;
         margin: auto;
-        background-color: var(--blanco);
+        background-color: color-mix(in srgb, var(--beige), var(--blanco) 80%);
         box-shadow: 0 0 10px 5px var(--beige);
         display: flex;
         flex-direction: column;

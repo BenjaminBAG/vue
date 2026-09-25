@@ -1,6 +1,6 @@
 <template>
     <div id="indice_documentos">
-        <div>
+        <div class="titulo_h2">
             <List class="icono"/>
             <h2>Índice del Documento</h2>
         </div>
@@ -48,43 +48,42 @@
 
 <style scoped>
     #indice_documentos {
-        padding: 1em;
+        padding: 2em 0;
     }
-
+    #indice_documentos .titulo_h2 {
+        padding-bottom: 1em;
+    }
     #indice_documentos div {
         display: flex;
         align-items: center;
         gap: 12px;
-        padding: 8px 16px;
     }
-
     #indice_documentos .icono {
         width: 1.5em;
         height: 1.5em;
         flex-shrink: 0;
         stroke-width: 0.2em;
     }
-
     #indice_documentos ul {
         list-style: none;
         padding: 0;
         margin: 0;
     }
-
     #indice_documentos ul li {
         margin: 0.5rem 0;
     }
-
     #indice_documentos ul li a {
-        text-decoration: none;
-        color: var(--negro);
+        padding: 4px 0.7em 4px 0.7em;
         font-size: 0.9rem;
-        transition: all 0.2s ease;
-        position: relative; 
+        color: var(--negro);
+        text-decoration: none;
+        font-size: 1em;
+        background-color: var(--blanco);
+        border-radius: 10px;
         display: inline-block;
-        padding: 4px 8px 4px 1.5rem;
+        position: relative; 
+        transition: all 0.2s ease;
     }
-
     #indice_documentos ul li a::before { 
         content: ""; 
         position: absolute; 
@@ -97,18 +96,15 @@
         opacity: 0; 
         transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out; 
     }
-
-
     #indice_documentos ul li a:hover {
         cursor: pointer;
-        background-color: color-mix(var(--beige), var(--blanco) 70%);
+        background-color: color-mix(var(--azul), var(--blanco) 70%);
+        padding: 4px 0.7em 4px 1.5em;
     }
-
     #indice_documentos ul li a:hover::before {
         opacity: 1;
         transform: translateY(-50%) scale(1);
     }
-
     .sin_titulos {
         font-size: 0.85rem;
         color: #999;

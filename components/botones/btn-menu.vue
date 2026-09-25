@@ -17,13 +17,15 @@
     .boton_menu {
         position: relative;
         overflow: visible;
+        font-weight: bold;
         background-color: color-mix(in srgb, var(--blaco), var(--gris) 0%);
-        color: var(--primary-black-color);
+        color: var(--blanco);
+        padding: 0 1em;
         margin: 0.5em;
         height: 3em;
         cursor: pointer;
         border: none;
-        transition: background-color 0.2s, box-shadow 0.2s;
+        transition: background-color 0.2s, box-shadow 0.2s, padding-bottom 0.2s ease;
     }
 
     .boton_menu::after {
@@ -41,9 +43,12 @@
         opacity: 0;
         transition: transform 0.2s ease, opacity 0.2s ease;
     }
-
+    .boton_menu:hover {
+        cursor: pointer;
+        padding-bottom: 0.5em;
+    }
     .boton_menu:hover::after {
         opacity: 1;
-        transform: translate(-50%, 0);
+        transform: translate(-50%, -5px);
     }
 </style>
