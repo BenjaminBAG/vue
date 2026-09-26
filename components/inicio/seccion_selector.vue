@@ -8,7 +8,13 @@
         
         <ul v-if="documentosFiltrados.length">
             <li v-for="item in documentosFiltrados" :key="item.id || item.nombre">
-                <button :activo="item === Documento-seleccionado" :class="{'documento_activo': documentoSeleccionado?.id === item.id}" @click="seleccionarDocumento(item)">{{ item.nombre }}</button>
+                <button
+                :activo="item === Documento-seleccionado"
+                :class="{'documento_activo': documentoSeleccionado?.id === item.id}"
+                @click="seleccionarDocumento(item)"
+                >
+                    {{ item.nombre }}
+                </button>
             </li>
         </ul>
 

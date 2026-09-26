@@ -3,11 +3,13 @@
 :root {
     --blanco: #ffffff;
     --negro: #000000;
+    /* --negro: #616160 */
     --naranja: #ef7a6b;
     --verde: #38814b;
     --azul: #3f81ac;
     --gris: #616160;
-    --beige: #d9d8d6;
+    /* --beige: #d9d8d6; */
+    --beige: #d2cbc0;
     --rosa: #eb148b;
     --rojo: #b03a2e;
     --amarillo: #f4d03f;

@@ -4,9 +4,8 @@
     </NuxtLayout>
 </template>
 
-<style scoped>
+<style>
     * {
         font-family: var(--fuente-regular);
-        font-size: 14px;
     }
 </style>

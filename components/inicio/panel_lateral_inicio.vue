@@ -49,12 +49,10 @@
     import { ref } from 'vue'
     import BtnCircularSelector from '../botones/btn-circular-selector.vue'
     import BtnCircularLista from '../botones/btn-circular-indice.vue'
-    import BtnCircularFiltrar from '../botones/btn-circular-filtrar.vue'
     import BtnCircularEditar from '../botones/btn-circular-editar.vue'
     import BtnCircularNuevo from '../botones/btn-circular-nuevo.vue'
     import SeccionSelector from './seccion_selector.vue'
     import SeccionIndice from './seccion_indice.vue'
-    import SeccionFiltro from './seccion_filtro.vue'
     import SeccionEditar from './seccion_editar.vue'
 
     const emit = defineEmits(['documento-seleccionado', 'vista-cambiada', 'contenido-editor-cambiado'])

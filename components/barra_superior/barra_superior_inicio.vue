@@ -15,7 +15,7 @@
     <header id="barra_superior">
         <section id="seccion_titulo">
             <img src="../../assets/logos/logo_blanco/MG_BAG_Principal_SinTagline/MG_BAG_Principal_SinTagline.png" alt="Logo BAG Group" width="auto" height="80px" />
-            <h1>Portal</h1>
+            <h1>Portal Empresarial</h1>
         </section>
     
     <div id="seccion_botones">

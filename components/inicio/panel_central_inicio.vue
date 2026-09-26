@@ -69,15 +69,13 @@
         box-shadow: 0 0 0.5em 0.2em var(--beige);
         background-color: var(--blanco);
         font-size: 1em;
+        overflow: auto;
+        max-width: 100%;
     }
     @media (max-width: 768px) {
         #panel_central_inicio #contenedor_documento {
             box-shadow: none;
             padding: 1.5em 3em;
         }
-    }
-    #panel_central_inicio #contenedor_documento {
-        overflow: auto;
-        max-width: 100%;
     }
 </style>

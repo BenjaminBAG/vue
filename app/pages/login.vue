@@ -1,5 +1,39 @@
 <template>
     <div id="pantalla_general_login">
+        <SeccionTitulo />
+        <SeccionFormulario />
+        <SeccionPresentacion />
+        <SeccionPie />
+    </div>
+</template>
+
+<script>
+    import SeccionTitulo from '../../components/login/seccion_titulo_login.vue'
+    import SeccionFormulario from '../../components/login/seccion_formulario_login.vue'
+    import SeccionPresentacion from '../../components/login/seccion_presentacion_login.vue'
+    import SeccionPie from '../../components/login/seccion_pie_login.vue'
+
+    export default {
+        components: {
+            SeccionTitulo,
+            SeccionFormulario,
+            SeccionPresentacion,
+            SeccionPie
+        }
+    }
+</script>
+
+<style scoped>
+    #pantalla_general_login {
+        display: grid;
+        grid-template-columns: 50% 50%;
+        grid-template-rows: 20vh 70vh 10vh;
+    }
+</style>
+
+
+<!-- <template>
+    <div id="pantalla_general_login">
         <form>
             <section id="seccion_titulo_formulario_login">
                 <h1>Iniciar sesión</h1>
@@ -47,6 +81,7 @@
         background-position: top left;
         background-repeat: no-repeat;
         background-size: 70% auto;
+        background-color: color-mix(in srgb, var(--beige), var(--blanco) 80%);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -56,7 +91,8 @@
         padding: 2em;
         min-width: 300px;
         margin: auto;
-        background-color: color-mix(in srgb, var(--beige), var(--blanco) 80%);
+        background-color: var(--azul);
+        color: var(--blanco);
         box-shadow: 0 0 10px 5px var(--beige);
         display: flex;
         flex-direction: column;
@@ -67,4 +103,4 @@
         flex-direction: column;
         gap: 1em;
     }
-</style>
+</style> -->

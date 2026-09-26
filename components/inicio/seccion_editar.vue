@@ -91,7 +91,6 @@
     #seccion_editar textarea:focus {
         outline: none;
         border-left: 5px solid var(--azul);
-        border-radius: 0;
+        border-radius: 0 10px 10px 0;
     }
-    
 </style>

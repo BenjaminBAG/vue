@@ -6,7 +6,6 @@
 
     const mostrarCuadroFlotante = () => {
         estaActivado.value = !estaActivado.value
-        console.log('Acción ejecutada en el hijo')
     }
 
     defineExpose({
@@ -50,13 +49,13 @@
 <style>
     .cuadro-flotante {
         position: absolute;
-        top: 150%;          /* Lo coloca justo debajo del botón */
-        right: 0;           /* Lo alinea al borde derecho del botón */
-        margin-top: 0.5em;  /* Separación sutil del botón */
+        top: 150%;
+        right: 0;
+        margin-top: 0.5em;
         background-color: transparent; 
         color: var(--blanco);
         min-width: 150px;
-        z-index: 100;       /* Asegura que flote sobre otros elementos */
+        z-index: 100;
     }
     .cuadro-flotante ul {
         list-style: none;
@@ -72,6 +71,7 @@
         background-color: var(--negro);
         border-radius: 10px;
         cursor: pointer;
+        box-shadow: 0 0 5px 2px var(--beige);
         transition: background-color 0.3s, padding 0.3s;
     }
     .cuadro-flotante li .icono {
