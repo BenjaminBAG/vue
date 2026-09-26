@@ -1,3 +1,7 @@
+.md-p, .md-h1, .md-h2, .md-h3, .md-h4, .md-ul, .md-ol {
+    color: var(--blanco-siempre);
+}
+
 /* Párrafos e Inline */
 .md-p {
     line-height: 1.6;
@@ -25,7 +29,7 @@ mark {
 .md-code-block,
 .md-code-fence {
     background-color: #1e293b;
-    color: #f8fafc;
+    color: var(--blanco-siempre);
     padding: 1em;
     border-radius: 6px;
     overflow-x: auto;
@@ -38,13 +42,13 @@ mark {
 .md-code-fence {
     font-family: var(--fuente-mono);
     background: transparent;
-    color: inherit;
+    color: var(--blanco-siempre);
 }
 
 .hljs {
     font-family: var(--fuente-mono);
     background: #1e293b;
-    color: #e2e8f0;
+    color: var(--blanco-siempre);
 }
 
 .hljs-keyword,

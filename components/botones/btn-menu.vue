@@ -19,7 +19,7 @@
         overflow: visible;
         font-weight: bold;
         background-color: color-mix(in srgb, var(--blaco), var(--gris) 0%);
-        color: var(--blanco);
+        color: var(--blanco-siempre);
         padding: 0 1em;
         margin: 0.5em;
         height: 3em;

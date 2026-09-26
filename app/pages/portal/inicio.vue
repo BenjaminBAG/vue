@@ -60,10 +60,11 @@
     }
     #pantalla_general_inicio {
         width: 100%;
-        min-height: 100vh;
+        height: 100vh;
         display: grid;
         grid-template-columns: 30% 70%;
-        grid-template-rows: 75px 100%;
+        grid-template-rows: 75px minmax(0, 1fr);
         background-color: color-mix(in srgb, var(--beige), var(--blanco) 80%);
+        overflow: hidden;
     }
 </style>

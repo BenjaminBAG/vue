@@ -44,6 +44,8 @@
     }
     button.is-active {
         background-color: var(--negro);
+    }
+    button.is-active svg {
         color: var(--blanco);
     }
 </style>

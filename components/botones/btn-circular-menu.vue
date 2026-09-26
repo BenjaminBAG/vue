@@ -29,8 +29,10 @@
         background-color: color-mix(var(--negro), var(--blanco) 20%);
         transform: rotate(7deg) scale(1.1);
     }
-    button:active {
-        background-color: var(--blanco);
-        color: var(--negro);
+    button.is-active {
+        background-color: var(--negro);
+    }
+    button.is-active svg {
+        color: var(--blanco);
     }
 </style>

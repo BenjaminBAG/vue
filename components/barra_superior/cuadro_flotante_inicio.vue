@@ -68,7 +68,7 @@
     .cuadro-flotante li {
         display: flex;
         padding: 0.5em 0.5em;
-        background-color: var(--negro);
+        background-color: var(--negro-siempre);
         border-radius: 10px;
         cursor: pointer;
         box-shadow: 0 0 5px 2px var(--beige);
@@ -83,7 +83,7 @@
         display: block;
         padding: 0 0.5em;
         text-decoration: none;
-        color: var(--blanco);
+        color: var(--blanco-siempre);
         font-size: 0.9em;
     }
     .cuadro-flotante li:hover {

@@ -57,6 +57,9 @@
 </template>
 
 <style>
+    h2, p, svg, textarea {
+        color: var(--negro);
+    }
     #seccion_editar {
         padding: 2em 0;
     }
@@ -86,7 +89,8 @@
         scrollbar-width: none;
         border: none;
         border-radius: 10px;
-        transition: background-color 0.3s, border-left 0.01s, border-radius 0.3s;
+        background-color: var(--blanco);
+        transition: border-left 0.01s, border-radius 0.3s;
     }
     #seccion_editar textarea:focus {
         outline: none;

@@ -63,14 +63,14 @@
 <style scoped>
     #barra_superior {
         padding: 0;
-        background-color: var(--negro);
+        background-color: var(--negro-siempre);
         display: flex;
         flex-direction: row;
         grid-column: 1 / 3;
         grid-row: 1;
         justify-content: space-between;
         align-items: center;
-        color: var(--blanco);
+        color: var(--blanco-siempre);
     }
     #barra_superior #seccion_titulo {
         display: flex;

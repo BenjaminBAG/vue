@@ -36,6 +36,7 @@ input {
   border: none; 
   border-radius: 10px; 
   background-color: var(--blanco);
+  color: var(--negro);
   font-size: 1em; 
   outline: none;
 } 

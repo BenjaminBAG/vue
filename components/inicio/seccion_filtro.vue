@@ -118,7 +118,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     #seccion_filtro {
         padding-right: 1em;
         min-height: 150px;
@@ -146,6 +146,7 @@
         background-color: var(--blanco);
         border: none;
         border-radius: 10px;
+        color: var(--negro);
         cursor: pointer;
         transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
     }
@@ -161,9 +162,10 @@
     #seccion_filtro ul li .item-activo {
         background-color: var(--negro);
         border-color: var(--negro);
-        color: var(--blanco);
     }
-
+    #seccion_filtro ul li .item-activo p {
+        color: var(--blanco);    
+    }
     .icono_tag {
         width: auto;
         height: 1em;

@@ -56,6 +56,8 @@
         grid-column: 2;
         grid-row: 2;
         padding: 2em;
+        min-height: 0;
+        overflow: hidden;
     }
     @media (max-width: 768px) {
         #panel_central_inicio {
@@ -64,13 +66,15 @@
         }
     }
     #panel_central_inicio #contenedor_documento {
-        min-height: 80%;
+        height: 100%;
+        min-height: 0;
         padding: 3em 6em;
         box-shadow: 0 0 0.5em 0.2em var(--beige);
         background-color: var(--blanco);
         font-size: 1em;
         overflow: auto;
         max-width: 100%;
+        box-sizing: border-box;
     }
     @media (max-width: 768px) {
         #panel_central_inicio #contenedor_documento {

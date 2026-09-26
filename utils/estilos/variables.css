@@ -1,6 +1,9 @@
 @import url('./fuentes.css');
 
 :root {
+    --blanco-siempre: #ffffff;
+    --negro-siempre: #000000;
+
     --blanco: #ffffff;
     --negro: #000000;
     /* --negro: #616160 */
@@ -14,6 +17,7 @@
     --rojo: #b03a2e;
     --amarillo: #f4d03f;
     --morado: #5b2c6f;
+    
     --fuente-regular: 'Geist', sans-serif;
     --fuente-mono: 'Imb Plex Mono', sans-serif;
     --fuente-estilizada: 'Stardos Stencil', sans-serif;

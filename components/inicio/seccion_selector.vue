@@ -115,7 +115,10 @@
     })
 </script>
 
-<style>
+<style scoped>
+    h2, p, button, svg {
+        color: var(--negro);
+    }
     #seccion_lista {
         padding: 2em 0;
     }

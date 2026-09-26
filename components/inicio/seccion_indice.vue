@@ -47,6 +47,9 @@
 </script>
 
 <style scoped>
+    h2, a, svg {
+        color: var(--negro);
+    }
     #indice_documentos {
         padding: 2em 0;
     }
@@ -75,7 +78,6 @@
     #indice_documentos ul li a {
         padding: 4px 0.7em 4px 0.7em;
         font-size: 0.9rem;
-        color: var(--negro);
         text-decoration: none;
         font-size: 1em;
         background-color: var(--blanco);

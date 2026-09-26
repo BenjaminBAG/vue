@@ -21,6 +21,7 @@
 </template>
 
 <script>
+    import { Pencil } from 'lucide-vue-next'
     import InputRegular from '../otros/input-regular.vue';
     import BtnPrincipal from '../botones/btn-principal.vue';
 
@@ -28,7 +29,8 @@
         name: 'seccion_editar',
         components: {
             InputRegular,
-            BtnPrincipal
+            BtnPrincipal,
+            Pencil
         },
         data() {
             return {

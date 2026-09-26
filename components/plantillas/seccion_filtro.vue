@@ -161,9 +161,10 @@
     #seccion_filtro ul li .item-activo {
         background-color: var(--negro);
         border-color: var(--negro);
-        color: var(--blanco);
     }
-
+    #seccion_filtro ul li .item-activo p {
+        color: var(--blanco);    
+    }
     .icono_tag {
         width: auto;
         height: 1em;
