@@ -20,10 +20,12 @@
         height: 3em;
         border-radius: 50%;
         border: none;
-        background-color: var(--nergo);
-        color: var(--blanco);
+        background-color: var(--negro-siempre);
         cursor: pointer;
         transition: transform 0.3s ease;
+    }
+    button svg {
+        color: var(--blanco-siempre);
     }
     button:hover {
         background-color: color-mix(var(--negro), var(--blanco) 20%);

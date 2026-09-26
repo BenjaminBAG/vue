@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     '../app/estilos_generales.css',
     '../utils/estilos/variables.css',
     '../utils/estilos/modo_oscuro.css',
+    'katex/dist/katex.min.css',
     '../utils/markdown/markdown.css'
   ],
   runtimeConfig: {

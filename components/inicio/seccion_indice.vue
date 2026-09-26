@@ -4,23 +4,26 @@
             <List class="icono"/>
             <h2>Índice del Documento</h2>
         </div>
-        <ul v-if="titulos.length > 0">
-            <li 
-              v-for="item in titulos" 
-              :key="item.slug" 
-              :style="{ paddingLeft: `${(item.nivel - 1) * 1.2}rem` }"
-            >
-                <a :href="`#${item.slug}`" @click.prevent="irASeccion(item.slug)">
-                    {{ item.texto }}
-                </a>
-            </li>
-        </ul>
-        <!-- CORREGIDO: Cambiado sin_titulos por sin-titulos -->
-        <p v-else class="sin_titulos">Sin secciones</p> 
+        <AreaDesplazamiento :altura-max="'calc(100vh - 22em)'">
+            <ul v-if="titulos.length > 0">
+                <li 
+                  v-for="item in titulos" 
+                  :key="item.slug" 
+                  :style="{ paddingLeft: `${(item.nivel - 1) * 1.2}rem` }"
+                >
+                    <a :href="`#${item.slug}`" @click.prevent="irASeccion(item.slug)">
+                        {{ item.texto }}
+                    </a>
+                </li>
+            </ul>
+            <!-- CORREGIDO: Cambiado sin_titulos por sin-titulos -->
+            <p v-else class="sin_titulos">Sin secciones</p> 
+        </AreaDesplazamiento>
     </div>
 </template>
 
 <script>
+    import AreaDesplazamiento from '../otros/area_desplazamiento.vue';
     import { List } from 'lucide-vue-next'
 
     export default {
@@ -41,7 +44,8 @@
             }
         },
         components: {
-            List
+            List,
+            AreaDesplazamiento
         }
     };
 </script>
@@ -55,8 +59,6 @@
     }
     #indice_documentos .titulo_h2 {
         padding-bottom: 1em;
-    }
-    #indice_documentos div {
         display: flex;
         align-items: center;
         gap: 12px;

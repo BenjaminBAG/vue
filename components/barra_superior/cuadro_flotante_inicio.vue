@@ -78,6 +78,7 @@
         width: 1em;
         height: auto;
         margin-left: 0.5em;
+        color: var(--blanco-siempre);
     }
     .cuadro-flotante li a {
         display: block;

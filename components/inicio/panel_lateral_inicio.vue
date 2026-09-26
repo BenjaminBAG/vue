@@ -37,7 +37,8 @@
                 />
                 <SeccionEditar
                     v-else-if="vistaActiva === 'nuevo'"
-                    :model-value="null"
+                    :documento-para-editar="documentoSeleccionado || { nombre: '', contenidoMarkdown: '' }"
+                    :model-value="contenidoEditor"
                     @update:modelValue="actualizarContenidoEditor"
                 />
             </KeepAlive>
@@ -62,6 +63,12 @@
 
     const cambiarVista = (nuevaVista) => {
         vistaActiva.value = nuevaVista
+
+        if (nuevaVista === 'nuevo') {
+            documentoSeleccionado.value = null
+            contenidoEditor.value = ''
+        }
+
         emit('vista-cambiada', nuevaVista)
     }
 
@@ -117,7 +124,6 @@
         position: sticky;
         top: 10em;
         max-height: calc(100vh - 12em); 
-        overflow-y: auto; 
     }
 </style>
 

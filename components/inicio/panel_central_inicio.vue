@@ -1,11 +1,15 @@
 <template>
     <div id="panel_central_inicio">
-        <div id="contenedor_documento" v-html="contenidoRenderizado"></div>
+        <AreaDesplazamiento>
+            <div id="contenedor_documento" v-html="contenidoRenderizado"></div>
+        </AreaDesplazamiento>
     </div>
 </template>
 
 <script>
-    import { procesarMarkdown } from '../../utils/markdown/markdown.js';
+    import AreaDesplazamiento from '../otros/area_desplazamiento.vue';
+    import mermaid from 'mermaid';
+    import { inicializarMarkdownEnPagina, procesarMarkdown } from '../../utils/markdown/markdown.js';
 
     const MI_MARKDOWN = `# ¡Hola!<br><p style="color: gray">Selecciona un documento para empezar a leer...</p>`;
 
@@ -25,6 +29,30 @@
                 default: 'selector'
             }
         },
+        components: {
+            AreaDesplazamiento
+        },
+        mounted() {
+            this.$nextTick(() => {
+                inicializarMarkdownEnPagina(this.$el.querySelector('#contenedor_documento'));
+            });
+        },
+        updated() {
+            this.$nextTick(() => {
+                inicializarMarkdownEnPagina(this.$el.querySelector('#contenedor_documento'));
+            });
+        },
+        methods: {
+            renderizarMermaid() {
+                if (typeof window !== 'undefined' && window.mermaid) {
+                    window.mermaid.initialize({
+                        startOnLoad: false,
+                        securityLevel: 'loose',
+                        theme: 'default'
+                    });
+                }
+            }
+        },
         computed: {
             textoMarkdown() {
             if (this.vistaActiva === 'editar' || this.vistaActiva === 'nuevo') {
@@ -40,12 +68,16 @@
             );
             },
             contenidoRenderizado() {
-                // Llamamos al helper passing el texto y escuchando la extracción de títulos
                 return procesarMarkdown(this.textoMarkdown, (titulos) => {
                     this.$nextTick(() => {
                     this.$emit('titulos-extraidos', titulos);
                     });
                 });
+            }
+        },
+        beforeUnmount() {
+            if (typeof window !== 'undefined' && window.mermaid) {
+                window.mermaid.initialize({ startOnLoad: false });
             }
         }
     };
