@@ -2,17 +2,10 @@
     <div id="pantalla_general_inicio">
         <BarraSuperiorInicio />
         <PanelLateralCalendarios
-            :titulos="titulos"
-            :vista-activa="vistaActiva"
-            @documento-seleccionado="actualizarDocumentoSeleccionado"
-            @vista-cambiada="actualizarVista"
-            @contenido-editor-cambiado="actualizarContenidoEnEdicion"
+            @calendarios-seleccionados="actualizarCalendariosSeleccionados"
         />
         <PanelCentralCalendarios
-            :documento="documentoSeleccionado"
-            :documento-en-edicion="documentoEnEdicion"
-            :vista-activa="vistaActiva"
-            @titulos-extraidos="actualizarTitulos"
+            :calendarios-seleccionados="calendariosSeleccionados"
         />
     </div>
 </template>
@@ -30,25 +23,12 @@
         },
         data() {
             return {
-                titulos: [],
-                vistaActiva: 'selector',
-                documentoSeleccionado: null,
-                documentoEnEdicion: ''
+                calendariosSeleccionados: []
             }
         },
         methods: {
-            actualizarTitulos(listaTitulos) {
-                this.titulos = listaTitulos
-            },
-            actualizarVista(nuevaVista) {
-                this.vistaActiva = nuevaVista
-            },
-            actualizarDocumentoSeleccionado(documento) {
-                this.documentoSeleccionado = documento
-                this.documentoEnEdicion = documento?.contenidoMarkdown || documento?.contenido || ''
-            },
-            actualizarContenidoEnEdicion(nuevoTexto) {
-                this.documentoEnEdicion = nuevoTexto
+            actualizarCalendariosSeleccionados(calendarios) {
+                this.calendariosSeleccionados = calendarios
             }
         }
     }

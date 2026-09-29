@@ -1,3 +1,0 @@
-<template>
-    Sección Editar
-</template>

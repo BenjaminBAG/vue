@@ -1,6 +1,13 @@
 <script setup>
     import { ref } from 'vue'
+    import BtnMenu from '../botones/btn-menu.vue'
+    import BtnCircularMenu from '../botones/btn-circular-menu.vue'
     import CuadroFlotanteInicio from './cuadro_flotante_inicio.vue'
+
+    // Define el nombre del componente (reemplaza al viejo export default)
+    defineOptions({
+        name: 'BarraSuperiorInicio'
+    })
 
     const cuadroFlotanteInicio = ref(null)
 
@@ -9,56 +16,45 @@
             cuadroFlotanteInicio.value.mostrarCuadroFlotante()
         }
     }
+
+    // Tu switch ahora funciona porque el template sí tiene acceso a él
+    const cambiarDePagina = (pagina) => {
+        switch (pagina) {
+            case 'documentos': 
+            return navigateTo('/portal/inicio')
+            case 'plantillas': 
+            return navigateTo('/portal/plantillas')
+            case 'calendarios': 
+            return navigateTo('/portal/calendarios')
+        }
+    }
 </script>
 
 <template>
     <header id="barra_superior">
         <section id="seccion_titulo">
-            <img src="../../assets/logos/logo_blanco/MG_BAG_Principal_SinTagline/MG_BAG_Principal_SinTagline.png" alt="Logo BAG Group" width="auto" height="80px" />
-            <h1>Portal Empresarial</h1>
+        <img src="../../assets/logos/logo_blanco/MG_BAG_Principal_SinTagline/MG_BAG_Principal_SinTagline.png" alt="Logo BAG Group" width="auto" height="80px" />
+        <h1>Portal Empresarial</h1>
         </section>
-    
-    <div id="seccion_botones">
-        <section id="paginas">
-            <BtnMenu texto="Documentos" @click="cambiarDePagina('documentos')" />
-            <BtnMenu texto="Plantillas" @click="cambiarDePagina('plantillas')" />
-            <BtnMenu texto="Calendarios" @click="cambiarDePagina('calendarios')" />
-        </section>
-      
-        <section>
-            <!-- Contenedor relativo para posicionar el cuadro flotante -->
-            <div class="contenedor-menu">
-                <BtnCircularMenu @click="llamarCuadroFlotante" />
-                
-                <CuadroFlotanteInicio ref="cuadroFlotanteInicio" />
-            </div>
-        </section>
-    </div>
-  </header>
+        
+        <div id="seccion_botones">
+            <section id="paginas">
+                <BtnMenu texto="Documentos" @click="cambiarDePagina('documentos')" />
+                <BtnMenu texto="Plantillas" @click="cambiarDePagina('plantillas')" />
+                <BtnMenu texto="Calendarios" @click="cambiarDePagina('calendarios')" />
+            </section>
+            
+            <section>
+                <!-- Contenedor relativo para posicionar el cuadro flotante -->
+                <div class="contenedor-menu">
+                    <BtnCircularMenu @click="llamarCuadroFlotante" />
+                    <CuadroFlotanteInicio ref="cuadroFlotanteInicio" />
+                </div>
+            </section>
+        </div>
+    </header>
 </template>
 
-
-<script>
-  import BtnMenu from '../botones/btn-menu.vue'
-  import BtnCircularMenu from '../botones/btn-circular-menu.vue'
-
-  const cambiarDePagina = (pagina) => {
-      switch (pagina) {
-          case 'documentos': return navigateTo('/portal/inicio');
-          case 'plantillas': return navigateTo('/portal/plantillas');
-          case 'calendarios': return navigateTo('/portal/calendarios');
-      }
-  }
-
-  export default {
-    name: 'BarraSuperiorInicio',
-    components: { 
-      BtnMenu, 
-      BtnCircularMenu,
-      CuadroFlotanteInicio
-    }
-  }
-</script>
 
 <style scoped>
     #barra_superior {
@@ -77,6 +73,7 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        font-size: 0.8em;
     }
     @media (max-width: 768px) {
         #barra_superior #seccion_titulo h1 {

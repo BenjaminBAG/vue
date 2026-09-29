@@ -1,5 +1,4 @@
 import { useAuth } from '../../composables/useAuth'
-
 export default defineNuxtRouteMiddleware((to) => {
   const { usuario, restaurarSesion } = useAuth()
   const sesionActiva = restaurarSesion()

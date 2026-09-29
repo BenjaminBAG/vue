@@ -5,7 +5,7 @@
             <li v-for="item in etiquetas" :key="item.id">
                 <label class="item-filtro" :class="{ 'item-activo': item.seleccionado }">
                     <input type="checkbox" v-model="item.seleccionado" class="checkbox-oculto" @change="emitirFiltros">
-                    <Tag class="icono_tag" :style="{ color: item.color }" />
+                    <Tag class="icono_tag" />
                     <p>{{ item.nombre }}</p>
                 </label>
             </li>
@@ -31,10 +31,11 @@
 <script setup>
     import { computed, onMounted, ref } from 'vue'
     import { useSheets } from '../../composables/useSheets'
+    import { buildEntity, uniqueByField } from '../../composables/useSheetData'
     import BotonLimpiarFiltro from '../botones/btn-limpiar_filtro.vue'
 
     const emit = defineEmits(['filtros-cambiados'])
-    const { fetchSheetRange } = useSheets()
+    const { getTable } = useSheets()
     const etiquetas = ref([])
     const tipos = ref([])
     const errorMensaje = ref('')
@@ -64,36 +65,30 @@
 
     const cargarEtiquetas = async () => {
         try {
-            const dataEtiquetas = await fetchSheetRange('etiquetas!A:C')
-
+            const dataEtiquetas = await getTable('etiquetas')
             etiquetas.value = dataEtiquetas
                 .map((item, index) => ({
-                    id: String(item.id ?? item[0] ?? index + 1),
-                    nombre: item.nombre ?? item[1] ?? item[0] ?? '',
-                    color: item.color ?? item[2] ?? '',
+                    ...buildEntity(item, {
+                        id: ['id'],
+                        nombre: ['nombre'],
+                        color: ['color']
+                    }, index),
                     seleccionado: false
                 }))
                 .filter((item) => item.nombre)
 
             errorMensaje.value = ''
 
-            const dataTipos = await fetchSheetRange('plantillas!C:C')
-
-            tipos.value = dataTipos
-                .map((item, index) => ({
-                    tipo: String(item.tipo ?? item[0] ?? '').trim(),
-                    seleccionado: false
-                }))
-                .filter((item) => item.tipo)
-
-            const tiposUnicos = new Map()
-            tipos.value.forEach((item) => {
-                if (!tiposUnicos.has(item.tipo)) {
-                    tiposUnicos.set(item.tipo, item)
-                }
-            })
-
-            tipos.value = [...tiposUnicos.values()]
+            const dataTipos = await getTable('plantillas')
+            tipos.value = uniqueByField(
+                dataTipos
+                    .map((item) => ({
+                        tipo: String(item.tipo ?? '').trim(),
+                        seleccionado: false
+                    }))
+                    .filter((item) => item.tipo),
+                'tipo'
+            )
         } catch (error) {
             console.error('Error al cargar las etiquetas:', error)
             errorMensaje.value = 'No se pudieron cargar los documentos.'
@@ -139,18 +134,43 @@
     }
 
     #seccion_filtro ul li .item-filtro {
+        position: relative;
+        overflow: hidden;
         display: flex;
         align-items: center;
-        padding: 0.3em 0.3em;
+        padding: 0.5em 1.5em 0.5em 0.5em;
         height: 1.5em;
         background-color: var(--blanco);
         border: none;
         border-radius: 10px;
+        color: var(--negro);
         cursor: pointer;
-        transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        transition: all 0.3s ease-in-out;
     }
-    #seccion_filtro ul li .item-filtro:hover {
-        transform: translateY(-2px);
+    #seccion_filtro ul li .item-filtro::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 0.7em;
+        height: 0.7em;
+        transform: translateY(-50%) translateX(-15px);
+        border-radius: 50%;
+        background-color: var(--verde);
+        opacity: 0;
+        transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+    }
+    #seccion_filtro ul li .item-filtro:hover,
+    #seccion_filtro ul li .item-activo {
+        padding: 0.5em 0.5em 0.5em 1.5em;
+        background-color: color-mix(in srgb, var(--verde), var(--blanco) 70%);
+    }
+    #seccion_filtro ul li .item-filtro:hover::before {
+        opacity: 1;
+        transform: translateY(-50%) translateX(5px);
+    }
+    #seccion_filtro ul li .item-activo::before {
+        opacity: 1;
     }
     .checkbox-oculto {
         position: absolute;
@@ -159,11 +179,7 @@
         height: 0;
     }
     #seccion_filtro ul li .item-activo {
-        background-color: var(--negro);
-        border-color: var(--negro);
-    }
-    #seccion_filtro ul li .item-activo p {
-        color: var(--blanco);    
+        color: var(--negro);
     }
     .icono_tag {
         width: auto;
@@ -171,8 +187,5 @@
         padding: 0 0.2em 0 0;
         stroke-width: 3px;
         transition: transform 0.3s ease;
-    }
-    .icono_tag:hover {
-        transform: rotate(7deg) scale(1.1);
     }
 </style>

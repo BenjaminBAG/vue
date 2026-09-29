@@ -33,5 +33,8 @@
       display: flex;
       justify-content: space-between;
       background-color: var(--verde);
+      p {
+        color: var(--blanco-siempre);
+      }
     }
 </style>

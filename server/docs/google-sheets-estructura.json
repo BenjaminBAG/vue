@@ -1,0 +1,120 @@
+{
+  "version": 1,
+  "database": "portal2",
+  "description": "Estructura de referencia para Google Sheets del proyecto Portal2.",
+  "sheetConfig": {
+    "defaultSheetPrefix": "",
+    "normalizeHeaders": true,
+    "trimWhitespace": true,
+    "caseMode": "lowercase"
+  },
+  "tables": [
+    {
+      "name": "usuarios",
+      "range": "usuarios!A:Z",
+      "primaryKey": "id",
+      "fields": [
+        { "name": "id", "type": "string", "required": true },
+        { "name": "nombre", "type": "string" },
+        { "name": "email", "type": "string" },
+        { "name": "clave", "type": "string" },
+        { "name": "rol", "type": "string" },
+        { "name": "imagen", "type": "String" }
+      ],
+      "relationships": [
+        { "type": "one-to-many", "localKey": "id", "foreignTable": "permisos", "foreignKey": "id_usuario" }
+      ]
+    },
+    {
+      "name": "etiquetas",
+      "range": "etiquetas!A:Z",
+      "primaryKey": "id",
+      "fields": [
+        { "name": "id", "type": "string", "required": true },
+        { "name": "nombre", "type": "string" },
+        { "name": "color", "type": "string" }
+      ],
+      "relationships": [
+        { "type": "one-to-many", "localKey": "id", "foreignTable": "permisos", "foreignKey": "id_etiqueta" },
+        { "type": "one-to-many", "localKey": "id", "foreignTable": "calendarios", "foreignKey": "id_etiqueta" },
+        { "type": "one-to-many", "localKey": "id", "foreignTable": "documentos", "foreignKey": "id_etiqueta" },
+        { "type": "one-to-many", "localKey": "id", "foreignTable": "plantillas", "foreignKey": "id_etiqueta" }
+      ]
+    },
+    {
+      "name": "permisos",
+      "range": "permisos!A:Z",
+      "primaryKey": "id",
+      "fields": [
+        { "name": "id", "type": "string", "required": true },
+        { "name": "permiso", "type": "string" },
+        { "name": "id_usuario", "type": "string", "foreignKey": "usuarios.id" },
+        { "name": "id_etiqueta", "type": "string", "foreignKey": "etiquetas.id" }
+      ]
+    },
+    {
+      "name": "calendarios",
+      "range": "calendarios!A:Z",
+      "primaryKey": "id",
+      "fields": [
+        { "name": "id", "type": "string", "required": true },
+        { "name": "nombre", "type": "string" },
+        { "name": "color", "type": "string" },
+        { "name": "icono", "type": "string" },
+        { "name": "id_etiqueta", "type": "string", "foreignKey": "etiquetas.id" }
+      ],
+      "relationships": [
+        { "type": "one-to-many", "localKey": "id", "foreignTable": "hitos", "foreignKey": "id_calendario" }
+      ]
+    },
+    {
+      "name": "hitos",
+      "range": "hitos!A:Z",
+      "primaryKey": "id",
+      "fields": [
+        { "name": "id", "type": "string", "required": true },
+        { "name": "nombre", "type": "string" },
+        { "name": "fecha", "type": "string" },
+        { "name": "descripcion", "type": "string" },
+        { "name": "responsable", "type": "string" },
+        { "name": "id_calendario", "type": "string", "foreignKey": "calendarios.id" }
+      ]
+    },
+    {
+      "name": "documentos",
+      "range": "documentos!A:Z",
+      "primaryKey": "id",
+      "fields": [
+        { "name": "id", "type": "string", "required": true },
+        { "name": "nombre", "type": "string" },
+        { "name": "tipo", "type": "string" },
+        { "name": "contenido_markdown", "type": "string" },
+        { "name": "id_etiqueta", "type": "string", "foreignKey": "etiquetas.id" }
+      ]
+    },
+    {
+      "name": "plantillas",
+      "range": "plantillas!A:Z",
+      "primaryKey": "id",
+      "fields": [
+        { "name": "id", "type": "string", "required": true },
+        { "name": "nombre", "type": "string" },
+        { "name": "tipo", "type": "string" },
+        { "name": "url_documento", "type": "string" },
+        { "name": "id_etiqueta", "type": "string", "foreignKey": "etiquetas.id" }
+      ]
+    },
+    {
+      "name": "claves_plantillas",
+      "range": "claves_plantillas!A:Z",
+      "primaryKey": "id",
+      "fields": [
+        { "name": "id", "type": "string", "required": true },
+        { "name": "nombre", "type": "string" },
+        { "name": "tipo", "type": "string" },
+        { "name": "placeholder", "type": "string" },
+        { "name": "es_tabla", "type": "boolean" }
+      ]
+    }
+  ]
+}

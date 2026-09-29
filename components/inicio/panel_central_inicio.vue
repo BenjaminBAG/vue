@@ -1,9 +1,9 @@
 <template>
-    <div id="panel_central_inicio">
-        <AreaDesplazamiento>
+    <AreaDesplazamiento id="contenedor_panel_central_inicio">
+        <div id="panel_central_inicio">
             <div id="contenedor_documento" v-html="contenidoRenderizado"></div>
-        </AreaDesplazamiento>
-    </div>
+        </div>
+    </AreaDesplazamiento>
 </template>
 
 <script>
@@ -92,14 +92,20 @@
         overflow: hidden;
     }
     @media (max-width: 768px) {
-        #panel_central_inicio {
+        #contenedor_panel_central_inicio{
             grid-column: 1 / 3;
-            padding: 0;
+            #panel_central_inicio {
+                padding: 0;
+                #contenedor_documento {
+                    box-shadow: none;
+                    padding: 1.5em 3em;
+                }
+            }
         }
     }
     #panel_central_inicio #contenedor_documento {
         height: 100%;
-        min-height: 0;
+        min-height: calc(100vh - 10em);
         padding: 3em 6em;
         box-shadow: 0 0 0.5em 0.2em var(--beige);
         background-color: var(--blanco);
@@ -107,11 +113,5 @@
         overflow: auto;
         max-width: 100%;
         box-sizing: border-box;
-    }
-    @media (max-width: 768px) {
-        #panel_central_inicio #contenedor_documento {
-            box-shadow: none;
-            padding: 1.5em 3em;
-        }
     }
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div class="contenedor_boton_principal">
-        <button class="boton_principal" type="submit">
+        <button class="boton_principal" type="submit" :disabled="disabled">
             <Check class="icono"/>
             <p>{{ texto }}</p>
         </button>
@@ -16,7 +16,14 @@
             Check
         },
         props: {
-            texto: String
+            texto: {
+                type: String,
+                default: 'Ingresar'
+            },
+            disabled: {
+                type: Boolean,
+                default: false
+            }
         }
     }
 </script>
@@ -40,6 +47,10 @@
         display: flex;
         align-items: center;
         transition: background-color 0.3s ease;
+    }
+    .boton_principal:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
     }
     .boton_principal:hover {
         background-color: var(--beige);

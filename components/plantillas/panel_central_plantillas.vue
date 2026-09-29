@@ -51,7 +51,7 @@
     }
     #panel_central_plantilla #contenedor_documento {
         width: 100%;
-        min-height: 80%;
+        min-height: calc(100vh - 10em);
         padding: 0;
         box-shadow: 0 0 0.5em 0.2em var(--beige);
         background-color: var(--blanco);

@@ -6,7 +6,7 @@
             const estaLogeado = !!token.value
 
             // 2. Redirige instantáneamente según el estado
-            if (!estaLogeado) {
+            if (estaLogeado) {
                 return navigateTo('/portal/inicio')
             } else {
                 return navigateTo('/login')

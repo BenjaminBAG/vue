@@ -31,11 +31,18 @@
         color: var(--negro);
         cursor: pointer;
         transition: transform 0.3s ease;
+        svg {
+            width: 70%;
+            height: auto;
+            border: none;
+        }
     }
     button:hover { 
         background-color: var(--verde); 
-        color: var(--blanco); 
         transform: rotate(7deg) scale(1.1);
+        svg {
+            color: var(--blanco); 
+        }
     }
     button.is-active {
         background-color: var(--negro);

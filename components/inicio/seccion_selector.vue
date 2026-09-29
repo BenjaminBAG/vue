@@ -11,7 +11,7 @@
             <ul v-if="documentosFiltrados.length">
                 <li v-for="item in documentosFiltrados" :key="item.id || item.nombre">
                     <button
-                    :activo="item === Documento-seleccionado"
+                    :activo="item === documentoSeleccionado"
                     :class="{'documento_activo': documentoSeleccionado?.id === item.id}"
                     @click="seleccionarDocumento(item)"
                     >
@@ -31,70 +31,32 @@
     import { computed, onMounted, ref } from 'vue'
     import { MousePointerClick } from 'lucide-vue-next'
     import { useSheets } from '../../composables/useSheets'
+    import { buildEntity, filterBySelection } from '../../composables/useSheetData'
     import SeccionFiltro from '../../components/inicio/seccion_filtro.vue'
 
     const documentoSeleccionado = ref(null)
     const emit = defineEmits(['documento-seleccionado'])
-    const { fetchSheetRange } = useSheets()
+    const { getTable } = useSheets()
     const documentos = ref([])
     const errorMensaje = ref('')
     const filtros = ref({ etiquetas: [], tipos: [] })
 
-    const normalizarTexto = (valor) => String(valor ?? '').trim().toLowerCase()
-
-    const documentosFiltrados = computed(() => {
-        const etiquetasSeleccionadas = new Set(filtros.value.etiquetas.map((item) => String(item).trim()))
-        const tiposSeleccionados = new Set(filtros.value.tipos.map((item) => normalizarTexto(item)))
-
-        const hayFiltroEtiquetas = etiquetasSeleccionadas.size > 0
-        const hayFiltroTipos = tiposSeleccionados.size > 0
-
-        return documentos.value.filter((item) => {
-            const etiquetasDocumento = String(item.idEtiqueta ?? '')
-                .split(/[\s,;|]+/)
-                .map((valor) => String(valor).trim())
-                .filter(Boolean)
-
-            const coincideEtiqueta = !hayFiltroEtiquetas || etiquetasDocumento.some((valor) => etiquetasSeleccionadas.has(String(valor)))
-            const coincideTipo = !hayFiltroTipos || tiposSeleccionados.has(normalizarTexto(item.tipo))
-
-            return coincideEtiqueta && coincideTipo
-        })
-    })
-
-    const normalizarCampo = (obj, candidatos) => {
-        const claves = Object.keys(obj || {}).map((key) => key.toLowerCase().replace(/[^a-z0-9]/g, ''))
-
-        for (const candidato of candidatos) {
-            const claveNormalizada = candidato.toLowerCase().replace(/[^a-z0-9]/g, '')
-            const indice = claves.indexOf(claveNormalizada)
-
-            if (indice !== -1) {
-                return Object.values(obj)[indice]
-            }
-        }
-
-        return ''
-    }
+    const documentosFiltrados = computed(() =>
+        filterBySelection(documentos.value, filtros.value.etiquetas, filtros.value.tipos)
+    )
 
     const cargarChips = async () => {
         try {
-            const data = await fetchSheetRange('documentos!A:E')
+            const data = await getTable('documentos')
 
             documentos.value = data
-                .map((item, index) => {
-                    const documento = Object.fromEntries(
-                        Object.entries(item).map(([key, value]) => [String(key).trim().toLowerCase(), value])
-                    )
-
-                    return {
-                        id: String(normalizarCampo(documento, ['id']) || index + 1),
-                        nombre: normalizarCampo(documento, ['nombre', 'titulo', 'documento', 'title']) || '',
-                        tipo: normalizarCampo(documento, ['tipo', 'categoria', 'clasificacion']) || '',
-                        contenidoMarkdown: normalizarCampo(documento, ['contenidomarkdown', 'markdown', 'contenido', 'texto', 'body']) || '',
-                        idEtiqueta: normalizarCampo(documento, ['idetiqueta', 'etiqueta', 'tag']) || ''
-                    }
-                })
+                .map((item, index) => buildEntity(item, {
+                    id: ['id'],
+                    nombre: ['nombre', 'titulo', 'documento', 'title'],
+                    tipo: ['tipo', 'categoria', 'clasificacion'],
+                    contenidoMarkdown: ['contenidomarkdown', 'markdown', 'contenido', 'texto', 'body'],
+                    idEtiqueta: ['idetiqueta', 'etiqueta', 'tag']
+                }, index))
                 .filter((item) => item.nombre)
 
             errorMensaje.value = ''
@@ -149,7 +111,7 @@
     #seccion_lista ul li button {
         position: relative;
         overflow: hidden;
-        width: 95%;
+        width: 100%;
         margin: 0.2em 0;
         padding: 0.5em 0.5em 0.5em 1em;
         font-size: 1em;

@@ -32,6 +32,7 @@
     .area_desplazamiento {
         display: block;
         width: 100%;
+        padding-right: 5px;
         max-height: var(--altura-max, 100%);
         min-height: 0;
         overflow-y: auto;
@@ -52,10 +53,10 @@
     }
     /* La barra o manija que se arrastra */
     .area_desplazamiento::-webkit-scrollbar-thumb {
-      background-color: color-mix(var(--azul), var(--blanco) 60%);
+        background-color: var(--naranja);
     }
     /* Color de la barra al pasar el cursor por encima */
     .area_desplazamiento::-webkit-scrollbar-thumb:hover {
-      background-color: var(--azul);
+        background-color: color-mix(var(--naranja), var(--blanco) 50%);
     }
 </style>

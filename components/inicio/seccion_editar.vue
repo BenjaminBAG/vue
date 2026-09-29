@@ -112,7 +112,7 @@
         max-height: 600px;
         padding: 12px;
         font-family: inherit;
-        font-size: 16px;
+        font-size: 1em;
         resize: none;
         box-sizing: border-box;
         border-radius: 0;
