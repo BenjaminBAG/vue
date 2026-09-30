@@ -1,7 +1,7 @@
 import { useAuth } from '../../composables/useAuth'
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   const { usuario, restaurarSesion } = useAuth()
-  const sesionActiva = restaurarSesion()
+  const sesionActiva = await restaurarSesion()
 
   const estaEnPortal = to.path.startsWith('/portal')
   const estaEnLogin = to.path === '/login'

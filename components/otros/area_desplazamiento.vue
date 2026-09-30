@@ -1,5 +1,5 @@
 <template>
-    <div class="area_desplazamiento" :style="estiloArea">
+    <div class="area_desplazamiento" :class="`area_desplazamiento--${eje}`" :style="estiloArea">
         <slot />
     </div>
 </template>
@@ -15,6 +15,10 @@
         altura_max: {
           type: String,
           default: null
+        },
+        eje: {
+          type: String,
+          default: 'vertical'
         }
       },
       computed: {
@@ -38,25 +42,17 @@
         overflow-y: auto;
         overflow-x: hidden;
         box-sizing: border-box;
+        scrollbar-gutter: stable;
     }
-    .area_desplazamiento::-webkit-scrollbar {
-        width: 0px;
-    }
-    /* Ancho de la barra vertical y alto de la horizontal */
-    .area_desplazamiento:hover::-webkit-scrollbar {
-        width: 6px;
-    }
-    /* El fondo o carril por donde se desplaza la barra */
-    .area_desplazamiento::-webkit-scrollbar-track {
-        background-color: transparent;
-        border-radius: 5px;
-    }
-    /* La barra o manija que se arrastra */
-    .area_desplazamiento::-webkit-scrollbar-thumb {
-        background-color: var(--naranja);
-    }
-    /* Color de la barra al pasar el cursor por encima */
-    .area_desplazamiento::-webkit-scrollbar-thumb:hover {
-        background-color: color-mix(var(--naranja), var(--blanco) 50%);
+      .area_desplazamiento--horizontal {
+        max-height: none;
+        padding-right: 0;
+        padding-bottom: 5px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-gutter: auto;
+      }
+      .area_desplazamiento--both {
+        overflow: auto;
     }
 </style>

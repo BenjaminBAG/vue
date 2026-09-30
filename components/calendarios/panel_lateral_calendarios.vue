@@ -1,42 +1,40 @@
 <template>
     <div id="panel_lateral_calendarios">
-        <header id="botones_seleccion">
-
-        </header>
-
+      <AreaDesplazamiento class="area-filtro-calendarios" :altura-max="'calc(100vh - 8em)'">
         <SeccionFiltro @filtros-cambiados="actualizarFiltros" />
 
-        <div id="seccion_selector_calendarios">
-            <div class="titulo_h2">
-                <Calendar class="icono"/>
-                <h2>Calendarios</h2>
+            <div id="seccion_selector_calendarios">
+                <div class="titulo_h2">
+                    <Calendar class="icono"/>
+                    <h2>Calendarios</h2>
+                </div>
+
+                <ul v-if="calendariosFiltrados.length">
+                    <li v-for="item in calendariosFiltrados" :key="item.id || item.nombre">
+                        <button
+                            type="button"
+                            :class="{ 'documento_activo': estaSeleccionado(item) }"
+                            :aria-pressed="estaSeleccionado(item)"
+                            @click="alternarCalendario(item)"
+                        >
+                            <i
+                                class="icono-calendario"
+                                :data-lucide="normalizarIcono(item.icono)"
+                                aria-hidden="true"
+                            ></i>
+                            <span>{{ item.nombre }}</span>
+                        </button>
+                    </li>
+                </ul>
+                <p v-else-if="errorMensaje" class="mensaje-vacio">{{ errorMensaje }}</p>
+                <p v-else-if="filtros.etiquetas.length" class="mensaje-vacio">No hay calendarios con esas etiquetas.</p>
+                <p v-else class="mensaje-vacio">No hay calendarios disponibles.</p>
+                <BotonLimpiarFiltro
+                    :disabled="calendariosSeleccionados.length === 0"
+                    @limpiar-filtro="limpiarFiltros"
+                />
             </div>
-    
-            <ul v-if="calendariosFiltrados.length">
-              <li v-for="item in calendariosFiltrados" :key="item.id || item.nombre">
-                    <button
-                        type="button"
-                        :class="{ 'documento_activo': estaSeleccionado(item) }"
-                        :aria-pressed="estaSeleccionado(item)"
-                        @click="alternarCalendario(item)"
-                    >
-                        <i
-                            class="icono-calendario"
-                            :data-lucide="normalizarIcono(item.icono)"
-                            aria-hidden="true"
-                        ></i>
-                        <span>{{ item.nombre }}</span>
-                    </button>
-                </li>
-            </ul>
-            <p v-else-if="errorMensaje" class="mensaje-vacio">{{ errorMensaje }}</p>
-            <p v-else-if="filtros.etiquetas.length" class="mensaje-vacio">No hay calendarios con esas etiquetas.</p>
-            <p v-else class="mensaje-vacio">No hay calendarios disponibles.</p>
-            <BotonLimpiarFiltro
-                :disabled="calendariosSeleccionados.length === 0"
-                @limpiar-filtro="limpiarFiltros"
-            />
-        </div>
+        </AreaDesplazamiento>
     </div>
 </template>
 
@@ -47,6 +45,7 @@
   import { buildEntity, filterBySelection } from '../../composables/useSheetData.ts'
     import BotonLimpiarFiltro from '../botones/btn-limpiar_filtro.vue'
     import SeccionFiltro from './seccion_filtro.vue'
+    import AreaDesplazamiento from '../otros/area_desplazamiento.vue'
 
     const calendariosSeleccionados = ref([])
     const emit = defineEmits(['calendarios-seleccionados'])
@@ -141,13 +140,15 @@
 <style scoped> 
 #panel_lateral_calendarios { 
   padding: 2em; 
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  box-sizing: border-box;
 } 
-@media (max-width: 768px) { 
-  #panel_lateral_calendarios {
-      display: none;
-  } 
-} 
-
+.area-filtro-calendarios {
+  flex: 0 1 auto;
+  min-height: 0;
+}
 .titulo_h2 { 
   display: flex; 
   align-items: center; 

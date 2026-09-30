@@ -1,23 +1,25 @@
 <template>
     <div class="dia-celda" :class="{ 'dia-vacio': !dia?.dia, hoy: esHoy }">
         <div v-if="dia?.dia" class="numero-dia">{{ dia.dia }}</div>
-        <div v-if="dia?.dia" class="hitos-contenedor">
+        <AreaDesplazamiento v-if="dia?.dia" class="hitos-contenedor">
             <HitoCalendario
                 v-for="hito in hitos"
                 :key="hito.id"
                 :hito="hito"
             />
-        </div>
+        </AreaDesplazamiento>
     </div>
 </template>
 
 <script>
 import HitoCalendario from './hito_calendario.vue';
+import AreaDesplazamiento from '../otros/area_desplazamiento.vue';
 
 export default {
     name: 'DiaCalendario',
     components: {
-        HitoCalendario
+        HitoCalendario,
+        AreaDesplazamiento
     },
     props: {
         dia: {
@@ -74,16 +76,7 @@ export default {
     flex-grow: 1;
     flex-direction: column;
     gap: 4px;
-    overflow-y: auto;
-}
-
-.hitos-contenedor::-webkit-scrollbar {
-    width: 4px;
-}
-
-.hitos-contenedor::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background-color: #ccc;
+    max-height: none;
 }
 
 @media (max-width: 768px) {

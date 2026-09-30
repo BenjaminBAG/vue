@@ -1,5 +1,6 @@
 <script setup>
     import { ref } from 'vue'
+    import AreaDesplazamiento from '../otros/area_desplazamiento.vue'
     import BtnMenu from '../botones/btn-menu.vue'
     import BtnCircularMenu from '../botones/btn-circular-menu.vue'
     import CuadroFlotanteInicio from './cuadro_flotante_inicio.vue'
@@ -38,11 +39,11 @@
         </section>
         
         <div id="seccion_botones">
-            <section id="paginas">
+            <AreaDesplazamiento id="paginas" eje="horizontal">
                 <BtnMenu texto="Documentos" @click="cambiarDePagina('documentos')" />
                 <BtnMenu texto="Plantillas" @click="cambiarDePagina('plantillas')" />
                 <BtnMenu texto="Calendarios" @click="cambiarDePagina('calendarios')" />
-            </section>
+            </AreaDesplazamiento>
             
             <section>
                 <!-- Contenedor relativo para posicionar el cuadro flotante -->
@@ -71,13 +72,44 @@
     #barra_superior #seccion_titulo {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
         font-size: 0.8em;
+        min-width: 0;
     }
     @media (max-width: 768px) {
+        #barra_superior {
+            gap: 0.5em;
+            min-width: 0;
+        }
+        #barra_superior #seccion_titulo img {
+            height: 50px;
+            max-width: 120px;
+            object-fit: contain;
+        }
         #barra_superior #seccion_titulo h1 {
             display: none;
+        }
+        #barra_superior #seccion_botones {
+            flex: 1 1 auto;
+            min-width: 0;
+            margin-right: 0.5em;
+            gap: 0.25em;
+        }
+        #barra_superior #seccion_botones #paginas {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        #barra_superior #seccion_botones #paginas :deep(.boton_menu) {
+            flex: 0 0 auto;
+            height: 2.5em;
+            margin: 0.25em;
+            padding: 0 0.5em;
+            font-size: 0.75em;
+        }
+        #barra_superior .contenedor-menu,
+        #barra_superior .contenedor-menu > button {
+            flex: 0 0 auto;
         }
     }
     #barra_superior #seccion_botones {
@@ -91,19 +123,14 @@
     #barra_superior #seccion_botones #paginas {
         display: flex;
         flex-wrap: nowrap;
-        overflow-x: auto;
-        overflow-y: hidden;
         white-space: nowrap;
         -webkit-overflow-scrolling: touch;
         align-items: center;
-        /* 1. Oculta la barra en Chrome, Safari, Edge y Opera */
-        &::-webkit-scrollbar {
-            display: none;
-        }
-        /* 2. Oculta la barra en Firefox */
         scrollbar-width: none;
-        /* 3. Oculta la barra en Internet Explorer y Edge antiguo */
-        -ms-overflow-style: none; 
+        scrollbar-gutter: auto;
+    }
+    #barra_superior #seccion_botones #paginas::-webkit-scrollbar {
+        display: none;
     }
     .contenedor-menu {
         position: relative; /* Eje de referencia para el cuadro flotante */

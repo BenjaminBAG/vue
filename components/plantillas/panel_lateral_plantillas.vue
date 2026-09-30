@@ -18,26 +18,40 @@
                 :ruta="documentoSeleccionado?.urlDocumento || ''"
             />
         </header>
-        <div id="contenedor_secciones">
-            <KeepAlive>
-                <SeccionLista
-                    v-if="vistaActiva === 'selector'"
-                    @documento-seleccionado="emitirDocumentoSeleccionado"
-                />
+        <KeepAlive>
+            <AreaDesplazamiento
+                v-if="vistaActiva === 'selector'"
+                id="contenedor_secciones"
+                key="selector"
+                :altura-max="'calc(100vh - 12em)'"
+            >
+                <SeccionLista @documento-seleccionado="emitirDocumentoSeleccionado" />
+            </AreaDesplazamiento>
+            <AreaDesplazamiento
+                v-else-if="vistaActiva === 'editar'"
+                id="contenedor_secciones"
+                key="editar"
+                :altura-max="'calc(100vh - 12em)'"
+            >
                 <SeccionEditar
-                    v-else-if="vistaActiva === 'editar'"
                     :documento-para-editar="documentoSeleccionado"
                     :model-value="contenidoEditor"
                     @update:modelValue="actualizarContenidoEditor"
                 />
+            </AreaDesplazamiento>
+            <AreaDesplazamiento
+                v-else-if="vistaActiva === 'nuevo'"
+                id="contenedor_secciones"
+                key="nuevo"
+                :altura-max="'calc(100vh - 12em)'"
+            >
                 <SeccionEditar
-                    v-else-if="vistaActiva === 'nuevo'"
                     :documento-para-editar="documentoSeleccionado || { nombre: '', contenidoMarkdown: '' }"
                     :model-value="contenidoEditor"
                     @update:modelValue="actualizarContenidoEditor"
                 />
-            </KeepAlive>
-        </div>
+            </AreaDesplazamiento>
+        </KeepAlive>
     </div>
 </template>
 
@@ -49,6 +63,7 @@
     import BtnCircularExternalLink from '../botones/btn-circular-external_link.vue'
     import SeccionLista from './seccion_selector.vue'
     import SeccionEditar from './seccion_editar.vue'
+    import AreaDesplazamiento from '../otros/area_desplazamiento.vue'
 
     const emit = defineEmits(['documento-seleccionado', 'vista-cambiada', 'contenido-editor-cambiado'])
 
@@ -95,18 +110,16 @@
 <style scoped>
     #panel_lateral_plantillas {
         padding: 1em 2em;
-    }
-    @media (max-width: 768px) {
-        #panel_lateral_plantillas {
-            display: none;
-        }
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        box-sizing: border-box;
     }
     #panel_lateral_plantillas #botones_seleccion {
         padding: 1em;
         display: flex;
         gap: 0.5em;
-        position: sticky;
-        top: 2em;
+        flex-shrink: 0;
         background-color: inherit;
         flex-wrap: wrap;
     }
@@ -115,10 +128,8 @@
     }
 
     #panel_lateral_plantillas #contenedor_secciones {
-        position: sticky;
-        top: 10em;
-        max-height: calc(100vh - 12em); 
-        overflow-y: auto; 
+        flex: 1 1 auto;
+        min-height: 0;
     }
 </style>
 

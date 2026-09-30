@@ -1,9 +1,9 @@
 <script setup>
     import { ref } from 'vue'
-    import { User, Bell, Settings, Info } from 'lucide-vue-next'
-    import CerrarSesion from './mas_opciones/cerrar_sesion.vue'
-    import ModalConfiguracion from './mas_opciones/modal_configuracion.vue'
-    import ModalNotificaciones from './mas_opciones/modal_notificaciones.vue'
+    import { CircleQuestionMark, Bell, Settings } from 'lucide-vue-next'
+    import CerrarSesion from './cerrar_sesion.vue'
+    import ModalConfiguracion from './modal_configuracion/modal_configuracion.vue'
+    import ModalNotificaciones from './modal_notificaciones.vue'
 
     defineOptions({
         name: 'CuadroFlotanteInicio'
@@ -34,8 +34,8 @@
     <div v-if="estaActivado" class="cuadro-flotante">
         <ul>
             <button>
-                <User />
-                <p>Mi Perfil</p>
+                <CircleQuestionMark />
+                <p>Ayuda</p>
             </button>
             <button @click="abrirModal('notificaciones')">
                 <Bell />
@@ -44,10 +44,6 @@
             <button @click="abrirModal('configuracion')">
                 <Settings />
                 <p>Configuración</p>
-            </button>
-            <button>
-                <Info />
-                <p>Acerca de</p>
             </button>
             <CerrarSesion/>
         </ul>
@@ -107,7 +103,7 @@
         font-size: 1em;
     }
     .cuadro-flotante button:hover {
-        background-color: var(--naranja);
+        background-color: var(--azul);
         padding: 0.5em 0.5em;
     }
     .cuadro-flotante .rojo:hover {

@@ -6,28 +6,24 @@
         </div>
         <SeccionFiltro @filtros-cambiados="actualizarFiltros" />
         
-        <AreaDesplazamiento :altura-max="'calc(100vh - 37em)'">
-
-            <ul v-if="documentosFiltrados.length">
-                <li v-for="item in documentosFiltrados" :key="item.id || item.nombre">
-                    <button
-                    :activo="item === documentoSeleccionado"
-                    :class="{'documento_activo': documentoSeleccionado?.id === item.id}"
-                    @click="seleccionarDocumento(item)"
-                    >
-                        {{ item.nombre }}
-                    </button>
-                </li>
-            </ul>
+        <ul v-if="documentosFiltrados.length">
+            <li v-for="item in documentosFiltrados" :key="item.id || item.nombre">
+                <button
+                :activo="item === documentoSeleccionado"
+                :class="{'documento_activo': documentoSeleccionado?.id === item.id}"
+                @click="seleccionarDocumento(item)"
+                >
+                    {{ item.nombre }}
+                </button>
+            </li>
+        </ul>
     
-            <p v-else-if="errorMensaje" class="mensaje-error">{{ errorMensaje }}</p>
-            <p v-else class="mensaje-vacio">No hay documentos para los filtros seleccionados.</p>
-        </AreaDesplazamiento>
+        <p v-else-if="errorMensaje" class="mensaje-error">{{ errorMensaje }}</p>
+        <p v-else class="mensaje-vacio">No hay documentos para los filtros seleccionados.</p>
     </div>
 </template>
 
 <script setup>
-    import AreaDesplazamiento from '../otros/area_desplazamiento.vue'
     import { computed, onMounted, ref } from 'vue'
     import { MousePointerClick } from 'lucide-vue-next'
     import { useSheets } from '../../composables/useSheets'

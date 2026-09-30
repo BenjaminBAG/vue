@@ -113,6 +113,7 @@ onMounted(cargarEtiquetas)
     position: relative;
     overflow: hidden;
     display: flex;
+    padding: 0.5em 1.5em 0.5em 0.5em;
     align-items: center;
     gap: 0.3em;
     min-height: 1.5em;
@@ -140,7 +141,7 @@ onMounted(cargarEtiquetas)
 
 .item-filtro:hover,
 .item-activo {
-    padding-left: 1.5em;
+    padding: 0.5em 0.5em 0.5em 1.5em;
     background-color: color-mix(in srgb, var(--verde), var(--blanco) 70%);
 }
 
@@ -170,6 +171,7 @@ onMounted(cargarEtiquetas)
     width: 1em;
     height: 1em;
     flex: 0 0 auto;
+    stroke-width: 3px;
 }
 
 .mensaje-filtro {

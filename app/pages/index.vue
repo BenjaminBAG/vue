@@ -1,16 +1,16 @@
 <script setup>
-    definePageMeta({
-        middleware: () => {
-            // 1. Obtén el estado de autenticación (ej. una cookie, estado global, pinia, etc.)
-            const token = useCookie('auth_token') 
-            const estaLogeado = !!token.value
+    import { useAuth } from '~~/composables/useAuth'
 
-            // 2. Redirige instantáneamente según el estado
-            if (estaLogeado) {
+    definePageMeta({
+        middleware: async () => {
+            const { restaurarSesion } = useAuth()
+            const sesionActiva = await restaurarSesion()
+
+            if (sesionActiva) {
                 return navigateTo('/portal/inicio')
-            } else {
-                return navigateTo('/login')
             }
+
+            return navigateTo('/login')
         }
     })
 </script>

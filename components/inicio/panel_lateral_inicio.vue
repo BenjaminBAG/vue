@@ -19,30 +19,48 @@
                 @click="cambiarVista('nuevo')"
             />
         </header>
-        <div id="contenedor_secciones">
-            <KeepAlive>
-                <SeccionSelector
-                    v-if="vistaActiva === 'selector'"
-                    @documento-seleccionado="emitirDocumentoSeleccionado"
-                />
-                <SeccionIndice
-                    v-else-if="vistaActiva === 'indice'"
-                    :titulos="titulos"
-                />
+        <KeepAlive>
+            <AreaDesplazamiento
+                v-if="vistaActiva === 'selector'"
+                id="contenedor_secciones"
+                key="selector"
+                :altura-max="'calc(100vh - 12em)'"
+            >
+                <SeccionSelector @documento-seleccionado="emitirDocumentoSeleccionado" />
+            </AreaDesplazamiento>
+            <AreaDesplazamiento
+                v-else-if="vistaActiva === 'indice'"
+                id="contenedor_secciones"
+                key="indice"
+                :altura-max="'calc(100vh - 12em)'"
+            >
+                <SeccionIndice :titulos="titulos" />
+            </AreaDesplazamiento>
+            <AreaDesplazamiento
+                v-else-if="vistaActiva === 'editar'"
+                id="contenedor_secciones"
+                key="editar"
+                :altura-max="'calc(100vh - 12em)'"
+            >
                 <SeccionEditar
-                    v-else-if="vistaActiva === 'editar'"
                     :documento-para-editar="documentoSeleccionado"
                     :model-value="contenidoEditor"
                     @update:modelValue="actualizarContenidoEditor"
                 />
+            </AreaDesplazamiento>
+            <AreaDesplazamiento
+                v-else-if="vistaActiva === 'nuevo'"
+                id="contenedor_secciones"
+                key="nuevo"
+                :altura-max="'calc(100vh - 12em)'"
+            >
                 <SeccionEditar
-                    v-else-if="vistaActiva === 'nuevo'"
                     :documento-para-editar="documentoSeleccionado || { nombre: '', contenidoMarkdown: '' }"
                     :model-value="contenidoEditor"
                     @update:modelValue="actualizarContenidoEditor"
                 />
-            </KeepAlive>
-        </div>
+            </AreaDesplazamiento>
+        </KeepAlive>
     </div>
 </template>
 
@@ -55,6 +73,7 @@
     import SeccionSelector from './seccion_selector.vue'
     import SeccionIndice from './seccion_indice.vue'
     import SeccionEditar from './seccion_editar.vue'
+    import AreaDesplazamiento from '../otros/area_desplazamiento.vue'
 
     const emit = defineEmits(['documento-seleccionado', 'vista-cambiada', 'contenido-editor-cambiado'])
 
@@ -71,7 +90,6 @@
 
         emit('vista-cambiada', nuevaVista)
     }
-
     const documentoSeleccionado = ref(null)
 
     const actualizarContenidoEditor = (nuevoTexto) => {
@@ -101,18 +119,16 @@
 <style scoped>
     #panel_lateral_inicio {
         padding: 1em 2em;
-    }
-    @media (max-width: 768px) {
-        #panel_lateral_inicio {
-            display: none;
-        }
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        box-sizing: border-box;
     }
     #panel_lateral_inicio #botones_seleccion {
         padding: 1em;
         display: flex;
         gap: 0.5em;
-        position: sticky;
-        top: 2em;
+        flex-shrink: 0;
         background-color: inherit;
         flex-wrap: wrap;
     }
@@ -121,9 +137,8 @@
     }
 
     #panel_lateral_inicio #contenedor_secciones {
-        position: sticky;
-        top: 10em;
-        max-height: calc(100vh - 12em); 
+        flex: 1 1 auto;
+        min-height: 0;
     }
 </style>
 

@@ -89,7 +89,7 @@
         grid-row: 2;
         padding: 2em;
         min-height: 0;
-        overflow: hidden;
+        overflow: visible;
     }
     @media (max-width: 768px) {
         #contenedor_panel_central_inicio{
@@ -110,7 +110,6 @@
         box-shadow: 0 0 0.5em 0.2em var(--beige);
         background-color: var(--blanco);
         font-size: 1em;
-        overflow: auto;
         max-width: 100%;
         box-sizing: border-box;
     }

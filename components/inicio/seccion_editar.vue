@@ -1,5 +1,4 @@
 <script setup>
-    import AreaDesplazamiento from '../otros/area_desplazamiento.vue'
     import { computed, nextTick, ref } from 'vue'
     import InputRegular from '../otros/input-regular.vue'
     import BtnPrincipal from '../botones/btn-principal.vue'
@@ -63,24 +62,22 @@
             <h2>Editor de documentos</h2>
         </div>
         <form>
-            <AreaDesplazamiento :altura-max="'calc(100vh - 30em)'">
-                <p><strong>Nombre del documento</strong></p>
-                <InputRegular 
-                    type="text"
-                    placeholder=""
-                    required
-                    :value="documentoParaEditar.nombre"
-                />
-                <p><strong>Contenido</strong></p>
-                <BarraHerramientasEdicion @insertar-texto="insertarTextoEnEditor" />
-                <textarea
-                    ref="textareaRef"
-                    spellcheck="false"
-                    name="contenido"
-                    :value="contenidoActual"
-                    @input="actualizarContenido"
-                ></textarea>
-            </AreaDesplazamiento>
+            <p><strong>Nombre del documento</strong></p>
+            <InputRegular
+                type="text"
+                placeholder=""
+                required
+                :value="documentoParaEditar.nombre"
+            />
+            <p><strong>Contenido</strong></p>
+            <BarraHerramientasEdicion @insertar-texto="insertarTextoEnEditor" />
+            <textarea
+                ref="textareaRef"
+                spellcheck="false"
+                name="contenido"
+                :value="contenidoActual"
+                @input="actualizarContenido"
+            ></textarea>
             <BtnPrincipal texto="Guardar" />
         </form>
     </div>
@@ -109,14 +106,12 @@
         field-sizing: content;
         width: 100%;
         min-height: 300px;
-        max-height: 600px;
         padding: 12px;
         font-family: inherit;
         font-size: 1em;
         resize: none;
         box-sizing: border-box;
         border-radius: 0;
-        scrollbar-width: none;
         border: none;
         border-radius: 0 0 10px 10px;
         background-color: var(--blanco);
