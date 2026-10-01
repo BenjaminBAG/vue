@@ -8,7 +8,6 @@
 
 <script>
     import AreaDesplazamiento from '../otros/area_desplazamiento.vue';
-    import mermaid from 'mermaid';
     import { inicializarMarkdownEnPagina, procesarMarkdown } from '../../utils/markdown/markdown.js';
 
     const MI_MARKDOWN = `# ¡Hola!<br><p style="color: gray">Selecciona un documento para empezar a leer...</p>`;

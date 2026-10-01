@@ -1,5 +1,5 @@
 <script setup>
-    import { User, Settings, History , Info } from 'lucide-vue-next'
+    import { User, UsersRound, History , Info } from 'lucide-vue-next'
     import { ref } from 'vue'
 
     const vistaActiva = ref(null)
@@ -7,7 +7,7 @@
     const botones = [ 
         { id: 'perfil', nombre: 'Perfil', icono: User },
         { id: 'historial', nombre: 'Historial', icono: History  },
-        { id: 'administrador', nombre: 'Administrador', icono: Settings },
+        { id: 'usuarios', nombre: 'Usuarios', icono: UsersRound },
         { id: 'acerca_de', nombre: 'Acerca de', icono: Info }
     ]
 

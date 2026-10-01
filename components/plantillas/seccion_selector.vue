@@ -17,57 +17,34 @@
 </template>
 
 <script setup>
-    import { computed, onMounted, ref } from 'vue'
+    import { onMounted } from 'vue'
     import { MousePointerClick } from 'lucide-vue-next'
-    import { useSheets } from '../../composables/useSheets'
-    import { buildEntity, filterBySelection } from '../../composables/useSheetData'
+    import { useSheetSelector } from '../../composables/useSheetSelector'
     import SeccionFiltro from '../../components/plantillas/seccion_filtro.vue'
 
-    const documentoSeleccionado = ref(null)
     const emit = defineEmits(['documento-seleccionado'])
-    const { getTable } = useSheets()
-    const documentos = ref([])
-    const errorMensaje = ref('')
-    const filtros = ref({ etiquetas: [], tipos: [] })
-
-    const documentosFiltrados = computed(() =>
-        filterBySelection(documentos.value, filtros.value.etiquetas, filtros.value.tipos)
-    )
-
-    const cargarChips = async () => {
-        try {
-            const data = await getTable('plantillas')
-
-            documentos.value = data
-                .map((item, index) => buildEntity(item, {
-                    id: ['id'],
-                    nombre: ['nombre', 'titulo', 'documento', 'title'],
-                    tipo: ['tipo', 'categoria', 'clasificacion'],
-                    urlDocumento: ['urldocumento', 'url', 'documento', 'contenido'],
-                    idEtiqueta: ['idetiqueta', 'etiqueta', 'tag']
-                }, index))
-                .filter((item) => item.nombre)
-
-            errorMensaje.value = ''
-        } catch (error) {
-            console.error('Error al cargar los chips:', error)
-            errorMensaje.value = 'No se pudieron cargar los documentos.'
-            documentos.value = []
-        }
-    }
-
-    const actualizarFiltros = (nuevosFiltros) => {
-        filtros.value = nuevosFiltros || { etiquetas: [], tipos: [] }
-    }
-
-    const seleccionarDocumento = (item) => {
-        documentoSeleccionado.value = item
-        emit('documento-seleccionado', item)
-    }
-
-    onMounted(() => {
-        cargarChips()
+    const {
+        selectedItem: documentoSeleccionado,
+        filteredItems: documentosFiltrados,
+        errorMessage: errorMensaje,
+        updateFilters: actualizarFiltros,
+        selectItem: seleccionarDocumento,
+        load: cargarPlantillas
+    } = useSheetSelector({
+        tableName: 'plantillas',
+        mapping: {
+            id: ['id'],
+            nombre: ['nombre', 'titulo', 'documento', 'title'],
+            tipo: ['tipo', 'categoria', 'clasificacion'],
+            urlDocumento: ['urldocumento', 'url', 'documento', 'contenido'],
+            idEtiqueta: ['idetiqueta', 'etiqueta', 'tag']
+        },
+        errorMessage: 'No se pudieron cargar las plantillas.',
+        logMessage: 'Error al cargar las plantillas',
+        onSelected: (item) => emit('documento-seleccionado', item)
     })
+
+    onMounted(cargarPlantillas)
 </script>
 
 <style scoped>

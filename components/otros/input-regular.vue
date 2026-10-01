@@ -25,7 +25,7 @@ export default {
         position: relative;
         display: inline-block;
         width: 100%;
-        margin: 0.5em 0 1.5em 0;
+        margin: 0em 0 0.5em 0;
         &::after {
             content: "";
             position: absolute;

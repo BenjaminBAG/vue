@@ -42,26 +42,23 @@
         grid-column: 2;
         grid-row: 2;
         padding: 2em;
+        #contenedor_documento {
+            width: 100%;
+            max-width: 100%;
+            min-height: calc(100vh - 10em);
+            padding: 0;
+            box-shadow: 0 0 0.5em 0.2em var(--beige);
+            background-color: var(--blanco);
+            overflow: auto;
+        }
     }
     @media (max-width: 768px) {
         #panel_central_plantilla {
             grid-column: 1 / 3;
             padding: 0;
-    }
-    }
-    #panel_central_plantilla #contenedor_documento {
-        width: 100%;
-        min-height: calc(100vh - 10em);
-        padding: 0;
-        box-shadow: 0 0 0.5em 0.2em var(--beige);
-        background-color: var(--blanco);
-        overflow: auto;
-        max-width: 100%;
-    }
-    @media (max-width: 768px) {
-        #panel_central_plantilla #contenedor_documento {
-            box-shadow: none;
-            padding: 1.5em 3em;
+            #contenedor_documento {
+                box-shadow: none;
+            }
         }
     }
 </style>

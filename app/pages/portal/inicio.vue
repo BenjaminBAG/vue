@@ -71,7 +71,7 @@
     }
     #pantalla_general_inicio {
         width: 100%;
-        height: 100%;
+        height: 100vh;
         display: grid;
         grid-template-columns: 30% 70%;
         grid-template-rows: 75px minmax(0, 1fr);

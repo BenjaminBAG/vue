@@ -32,7 +32,6 @@
             ])
 
             permisos.value = datosPermisos
-                .filter((item) => String(getFieldValue(item, ['id_usuario', 'idUsuario'])).trim() === idUsuario)
                 .map((item, index) => buildEntity(item, {
                     id: ['id'],
                     idEtiqueta: ['id_etiqueta', 'idEtiqueta'],

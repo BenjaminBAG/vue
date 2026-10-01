@@ -74,6 +74,7 @@ export default {
                     color: ['color']
                 }, index))
                 .map((calendario) => [String(calendario.id).trim(), calendario.color]));
+            const idsCalendariosPermitidos = new Set(coloresPorCalendario.keys());
 
             this.hitos = datosHitos
                 .map((item, index) => buildEntity(item, {
@@ -89,7 +90,11 @@ export default {
                     fecha: this.normalizarFecha(hito.fecha),
                     colorCalendario: coloresPorCalendario.get(String(hito.id_calendario).trim()) || ''
                 }))
-                .filter((hito) => hito.nombre && hito.fecha);
+                .filter((hito) =>
+                    hito.nombre &&
+                    hito.fecha &&
+                    idsCalendariosPermitidos.has(String(hito.id_calendario).trim())
+                );
         } catch (error) {
             console.error('Error al cargar los hitos:', error);
             this.hitos = [];

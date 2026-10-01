@@ -1,4 +1,6 @@
 import { useCookie, useState } from '#imports'
+import { useSheets } from './useSheets'
+import { useSheetAccess } from './useSheetAccess.ts'
 
 type PermisoUsuario = {
   id: string
@@ -34,6 +36,8 @@ const normalizarUsuario = (usuario: Record<string, any>, permisos: PermisoUsuari
 })
 
 export const useAuth = () => {
+  const { getTable } = useSheets()
+  const { filterByLabelPermission } = useSheetAccess()
   const usuario = useState<UsuarioSesion | null>('usuario_sesion', () => null)
   const permisos = useState<PermisoUsuario[]>('permisos_usuario', () => [])
   const token = useCookie<string | null>('auth_token', {
@@ -50,30 +54,11 @@ export const useAuth = () => {
 
   const filtrarPorPermisos = <T extends Record<string, any>>(items: T[] = []) => {
     if (!usuario.value) return []
-
-    const permisosUsuario = obtenerPermisosDelUsuario(usuario.value)
-
-    if (!permisosUsuario.length) return []
-
-    return items.filter((item) => {
-      const idEtiquetaItem = String(item?.idEtiqueta ?? item?.idetiqueta ?? item?.id_etiqueta ?? '').trim()
-      const permisoRelacion = permisosUsuario.find((permiso: PermisoUsuario) => permiso.idEtiqueta === idEtiquetaItem)
-
-      if (!permisoRelacion) return false
-
-      const tieneAcceso = permisoRelacion.permiso === 'administrador' || permisoRelacion.permiso === 'lector'
-      return tieneAcceso
-    })
+    return filterByLabelPermission(items)
   }
 
   const iniciarSesion = async ({ email, clave }: { email: string; clave: string }) => {
-    const usuarios = await $fetch<Array<Record<string, any>>>('/api/sheets', {
-      method: 'GET',
-      query: {
-        action: 'getTable',
-        table: 'usuarios'
-      }
-    })
+    const usuarios = await getTable('usuarios')
 
     const usuarioEncontrado = usuarios.find((item: Record<string, any>) => {
       const emailNormalizado = String(item?.email ?? item?.correo ?? '').trim().toLowerCase()
@@ -85,18 +70,8 @@ export const useAuth = () => {
       throw new Error('Credenciales incorrectas.')
     }
 
-    const permisosUsuario = await $fetch<Array<Record<string, any>>>('/api/sheets', {
-      method: 'GET',
-      query: {
-        action: 'getTable',
-        table: 'permisos'
-      }
-    })
-
-    const permisosRelacionados = permisosUsuario.filter((permiso: Record<string, any>) => {
-      const idUsuario = String(permiso?.idUsuario ?? permiso?.idusuario ?? permiso?.id_usuario ?? '').trim()
-      return idUsuario === String(usuarioEncontrado.id ?? usuarioEncontrado.ID ?? '').trim()
-    })
+    const idUsuario = usuarioEncontrado.id ?? usuarioEncontrado.ID
+    const permisosRelacionados = await getTable('permisos', idUsuario)
 
     const usuarioConPermisos = normalizarUsuario(usuarioEncontrado, permisosRelacionados.map(normalizarPermiso))
 
@@ -135,13 +110,9 @@ export const useAuth = () => {
       permisos.value = []
 
       try {
-        const [usuarios, permisosUsuario] = await Promise.all([
-          $fetch<Array<Record<string, any>>>('/api/sheets', {
-            query: { action: 'getTable', table: 'usuarios' }
-          }),
-          $fetch<Array<Record<string, any>>>('/api/sheets', {
-            query: { action: 'getTable', table: 'permisos' }
-          })
+        const [usuarios, permisosRelacionados] = await Promise.all([
+          getTable('usuarios'),
+          getTable('permisos', datosSesion.id)
         ])
 
         const usuarioEncontrado = usuarios.find((item) =>
@@ -149,10 +120,7 @@ export const useAuth = () => {
         )
 
         if (usuarioEncontrado) {
-          const permisosRelacionados = permisosUsuario
-            .filter((permiso) => String(permiso?.idUsuario ?? permiso?.idusuario ?? permiso?.id_usuario ?? '').trim() === String(datosSesion.id).trim())
-            .map(normalizarPermiso)
-          const usuarioRestaurado = normalizarUsuario(usuarioEncontrado, permisosRelacionados)
+          const usuarioRestaurado = normalizarUsuario(usuarioEncontrado, permisosRelacionados.map(normalizarPermiso))
 
           usuario.value = usuarioRestaurado
           permisos.value = usuarioRestaurado.permisos

@@ -19,6 +19,21 @@ export const getFieldValue = (record: Record<string, any> = {}, candidates: stri
   return ''
 }
 
+export const filterByUserId = <T extends Record<string, any>>(
+  items: T[] = [],
+  userId: string | number | null | undefined
+) => {
+  const activeUserId = String(userId ?? '').trim()
+  const userIdKey = normalizeSheetKey('id_usuario')
+
+  return items.filter((item) => {
+    const normalized = toNormalizedRecord(item)
+    if (!(userIdKey in normalized)) return true
+
+    return Boolean(activeUserId) && String(normalized[userIdKey] ?? '').trim() === activeUserId
+  })
+}
+
 export const buildEntity = (
   source: Record<string, any> = {},
   mapping: Record<string, string | string[]>,

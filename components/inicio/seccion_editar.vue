@@ -1,9 +1,13 @@
 <script setup>
-    import { computed, nextTick, ref } from 'vue'
+    import { computed, nextTick, onMounted, ref, watch } from 'vue'
     import InputRegular from '../otros/input-regular.vue'
     import BtnPrincipal from '../botones/btn-principal.vue'
     import { Pencil } from 'lucide-vue-next'
     import BarraHerramientasEdicion from '../otros/barra_herramientas_edicion.vue'
+    import Selector from '../otros/selector.vue'
+    import { useSheets } from '../../composables/useSheets'
+    import { buildEntity } from '../../composables/useSheetData'
+    import TituloSeccion from '../otros/TituloSeccion.vue'
 
     const props = defineProps({
         documentoParaEditar: {
@@ -18,6 +22,27 @@
 
     const emit = defineEmits(['update:modelValue'])
     const textareaRef = ref(null)
+    const etiquetas = ref([])
+    const etiquetaSeleccionada = ref('')
+
+    const { getTable } = useSheets()
+
+    watch(
+        () => props.documentoParaEditar?.idEtiqueta,
+        (idEtiqueta) => { etiquetaSeleccionada.value = String(idEtiqueta ?? '').trim() },
+        { immediate: true }
+    )
+
+    onMounted(async () => {
+        try {
+            const datos = await getTable('etiquetas')
+            etiquetas.value = datos
+                .map((item, index) => buildEntity(item, { id: ['id'], nombre: ['nombre'] }, index))
+                .filter((item) => item.nombre)
+        } catch (error) {
+            console.error('Error al cargar las etiquetas de documentos:', error)
+        }
+    })
 
     const contenidoActual = computed(() => {
         if (props.modelValue !== undefined && props.modelValue !== null) {
@@ -57,10 +82,7 @@
 
 <template>
     <div id="seccion_editar">
-        <div class="titulo_h2">
-            <Pencil class="icono"/>
-            <h2>Editor de documentos</h2>
-        </div>
+        <TituloSeccion :icono=Pencil titulo="Editar el documento"/>
         <form>
             <p><strong>Nombre del documento</strong></p>
             <InputRegular
@@ -69,6 +91,13 @@
                 required
                 :value="documentoParaEditar.nombre"
             />
+            <p><strong>Etiqueta</strong></p>
+            <Selector v-model="etiquetaSeleccionada">
+                <option value="">Selecciona una etiqueta</option>
+                <option v-for="etiqueta in etiquetas" :key="etiqueta.id" :value="etiqueta.id">
+                    {{ etiqueta.nombre }}
+                </option>
+            </Selector>
             <p><strong>Contenido</strong></p>
             <BarraHerramientasEdicion @insertar-texto="insertarTextoEnEditor" />
             <textarea
@@ -83,43 +112,30 @@
     </div>
 </template>
 
-<style>
-    h2, p, svg, textarea {
+<style scoped>
+    h2, p, textarea {
         color: var(--negro);
     }
     #seccion_editar {
         padding: 2em 0;
-    }
-    #seccion_editar .titulo_h2 {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding-bottom: 2em;
-    }
-    #seccion_editar .titulo_h2 .icono {
-        width: 2em;
-        height: 2em;
-        flex-shrink: 0;
-        stroke-width: 0.2em;
-    }
-    #seccion_editar textarea {
-        field-sizing: content;
-        width: 100%;
-        min-height: 300px;
-        padding: 12px;
-        font-family: inherit;
-        font-size: 1em;
-        resize: none;
-        box-sizing: border-box;
-        border-radius: 0;
-        border: none;
-        border-radius: 0 0 10px 10px;
-        background-color: var(--blanco);
-        transition: border-left 0.01s, border-radius 0.3s;
-    }
-    #seccion_editar textarea:focus {
-        outline: none;
-        border-left: 5px solid var(--azul);
-        border-radius: 0 0 10px 0;
+        textarea {
+            field-sizing: content;
+            width: 100%;
+            min-height: 300px;
+            padding: 1em;
+            font-family: inherit;
+            font-size: 1em;
+            resize: none;
+            box-sizing: border-box;
+            border: none;
+            border-radius: 0 0 10px 10px;
+            background-color: var(--blanco);
+            transition: border-left 0.01s, border-radius 0.3s;
+            &:focus {
+                outline: none;
+                border-left: 5px solid var(--azul);
+                border-radius: 0 0 10px 0;
+            }
+        }
     }
 </style>

@@ -9,23 +9,23 @@ import mermaid from 'mermaid';
 import hljs from 'highlight.js';
 
 const ICONOS_MAP = {
-  info: 'ℹ️',
-  warning: '⚠️',
-  danger: '⛔',
-  success: '✅',
-  note: '📝',
-  tip: '💡',
-  important: '⚡',
-  check: '✅',
-  sparkles: '✨',
-  play: '▶️',
-  video: '🎬',
-  link: '🔗',
-  star: '⭐',
-  heart: '❤',
-  moon: '🌙',
-  code: '⌘',
-  camera: '📷'
+  info: 'info',
+  warning: 'triangle-alert',
+  danger: 'octagon-alert',
+  success: 'circle-check',
+  note: 'sticky-note',
+  tip: 'lightbulb',
+  important: 'zap',
+  check: 'check',
+  sparkles: 'sparkles',
+  play: 'play',
+  video: 'clapperboard',
+  link: 'link',
+  star: 'star',
+  heart: 'heart',
+  moon: 'moon',
+  code: 'code-xml',
+  camera: 'camera'
 };
 
 function convertirCalloutsGitHub(texto = '') {
@@ -68,10 +68,8 @@ function reemplazarIconosInline(texto = '') {
 
   return texto.replace(/:([a-zA-Z0-9_-]+):/g, (total, nombre) => {
     const clave = nombre.toLowerCase();
-    const simbolo = ICONOS_MAP[clave];
-    return simbolo
-      ? `<span class="md-icon md-icon--${clave}" aria-label="${nombre}">${simbolo}</span>`
-      : total;
+    const icono = ICONOS_MAP[clave] || clave;
+    return `<img class="md-icon md-icon--${clave}" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/${icono}.svg" alt="${nombre}" loading="lazy" />`;
   });
 }
 

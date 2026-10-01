@@ -10,8 +10,8 @@
 }
 
 mark {
-    background-color: #fef08a;
-    color: #854d0e;
+    background-color: color-mix(var(--amarillo), var(--blanco) 70%);
+    color: var(--negro);
     padding: 0.1em 0.3em;
     border-radius: 3px;
 }
@@ -43,9 +43,9 @@ mark {
 }
 
 .md-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
     margin: 0 0.15em;
     vertical-align: middle;
 }
@@ -55,34 +55,44 @@ mark {
     border-collapse: collapse;
     margin: 1.5em 0;
     overflow: hidden;
-    border-radius: 12px;
-    box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.08);
 }
 
 .md-table th,
 .md-table td {
     padding: 0.7em 0.9em;
-    border: 1px solid rgba(148, 163, 184, 0.4);
-    text-align: left;
+    border-bottom: 1px solid var(--beige);
 }
 
 .md-table th {
-    background: #f8fafc;
     font-weight: 700;
+    position: relative;
+    padding-left: 28px;
+    vertical-align: middle;
+    text-align: left;
+    &::before {
+        content: "";
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0.7em;
+        height: 0.7em;
+        background-color: var(--azul);
+    }
 }
 
+
 .md-table tbody tr:nth-child(even) {
-    background: rgba(148, 163, 184, 0.05);
+    background: transparent;
 }
 
 .md-blockquote {
-    border-left: 4px solid #3b82f6;
-    padding-left: 1rem;
-    color: #475569;
-    margin: 1em 0;
+    padding: 1em;
+    margin: 0;
+    text-align: center;
     font-style: italic;
-    background: rgba(59, 130, 246, 0.04);
-    border-radius: 0 8px 8px 0;
+    background: color-mix(var(--beige), var(--blanco) 85%);
+    border-radius: 10px;
 }
 
 .md-footnote__ref {
@@ -103,15 +113,16 @@ mark {
 }
 
 /* Bloques */
-.md-code-block,
+.md-code-block {
+    background-color: transparent;
+}
 .md-code-fence {
-    background-color: #1e293b;
+    background-color: transparent;
     color: var(--blanco-siempre);
     padding: 1em;
-    border-radius: 6px;
+    border-radius: 10px;
     overflow-x: auto;
     font-family: monospace;
-    margin: 1em 0;
     white-space: pre;
     display: block;
 }
@@ -176,13 +187,13 @@ mark {
 .md-mermaid {
     margin: 1.5em 0;
     overflow: auto;
-    border-radius: 12px;
-    background: #f8fafc;
+    background: transparent;
     padding: 1em;
-    border: 1px solid rgba(148, 163, 184, 0.3);
+    border: none;
 }
 
 .md-mermaid svg {
+    background-color: var(--blanco);
     max-width: 100%;
     height: auto;
     display: block;
@@ -196,13 +207,16 @@ mark {
     margin-bottom: 0.5em;
 }
 .md-h1 {
-    font-size: 2em;
+    font-size: 2.5em;
+    font-family: var(--fuente-estilizada);
+    color: var(--naranja);
 }
 .md-h2 {
     font-size: 1.5em;
 }
 .md-h3 {
     font-size: 1.2em;
+    color: var(--azul);
 }
 
 .md-ul, .md-ol {
@@ -233,26 +247,30 @@ mark {
 
 .md-container--info {
     border-left-color: var(--azul);
+    border-radius: 10px;
     background-color: color-mix(var(--azul), var(--blanco) 90%);
 }
 .md-container--warning {
+    border-radius: 10px;
     border-left-color: var(--naranja);
     background-color: color-mix(var(--naranja), var(--blanco) 90%);
 }
 .md-container--success {
+    border-radius: 10px;
     border-left-color: var(--verde);
     background-color: color-mix(var(--verde), var(--blanco) 90%);
 }
 .md-container--danger {
-    border-left-color: #ef4444;
-    background-color: color-mix(#ef4444, var(--blanco) 90%);
+    border-radius: 10px;
+    border-left-color: var(--rojo);
+    background-color: color-mix(var(--rojo), var(--blanco) 90%);
 }
 .md-container--note,
 .md-container--tip,
 .md-container--important,
 .md-container--details {
-    border-left-color: #8b5cf6;
-    background-color: color-mix(#8b5cf6, var(--blanco) 90%);
+    border-radius: 10px;
+    background-color: color-mix(var(--azul), var(--blanco) 95%);
 }
 
 .katex {

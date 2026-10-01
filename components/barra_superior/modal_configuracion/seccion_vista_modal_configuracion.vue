@@ -1,8 +1,8 @@
 <script setup>
     import Perfil from './perfil.vue'
-    import Administrador from './administrador.vue'
+    import Usuarios from './usuarios.vue'
     import Historial from './historial.vue'
-    import AcercaDe from './acerda__de.vue'
+    import AcercaDe from './acerda_de.vue'
 
     defineProps ({
         vista: {
@@ -15,10 +15,10 @@
 
 <template>
     <div class="seccion-vista-modal">
-        <Perfil v-if="vista === 'perfil'" />
-        <Administrador v-if="vista === 'administrador'" />
-        <Historial v-if="vista === 'historial'"/>
-        <AcercaDe v-if="vista === 'acerca_de'"/>
+            <Perfil v-if="vista === 'perfil'" />
+            <Usuarios v-if="vista === 'usuarios'" />
+            <Historial v-if="vista === 'historial'"/>
+            <AcercaDe v-if="vista === 'acerca_de'"/>
     </div>
 </template>
 

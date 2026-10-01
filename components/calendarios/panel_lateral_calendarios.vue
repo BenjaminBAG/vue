@@ -1,7 +1,7 @@
 <template>
     <div id="panel_lateral_calendarios">
-      <AreaDesplazamiento class="area-filtro-calendarios" :altura-max="'calc(100vh - 8em)'">
-        <SeccionFiltro @filtros-cambiados="actualizarFiltros" />
+        <AreaDesplazamiento class="area-filtro-calendarios" :altura-max="'calc(100vh - 8em)'">
+            <SeccionFiltro @filtros-cambiados="actualizarFiltros" />
 
             <div id="seccion_selector_calendarios">
                 <div class="titulo_h2">
@@ -41,17 +41,31 @@
 <script setup>
   import { computed, nextTick, onMounted, ref, watch } from 'vue'
     import { Calendar } from 'lucide-vue-next'
-    import { useSheets } from '../../composables/useSheets.ts'
-  import { buildEntity, filterBySelection } from '../../composables/useSheetData.ts'
+    import { useSheetCollection } from '../../composables/useSheetCollection'
+  import { filterBySelection } from '../../composables/useSheetData.ts'
     import BotonLimpiarFiltro from '../botones/btn-limpiar_filtro.vue'
     import SeccionFiltro from './seccion_filtro.vue'
     import AreaDesplazamiento from '../otros/area_desplazamiento.vue'
 
     const calendariosSeleccionados = ref([])
     const emit = defineEmits(['calendarios-seleccionados'])
-    const { getTable } = useSheets()
-  const calendarios = ref([])
-    const errorMensaje = ref('')
+  const {
+    items: calendarios,
+    errorMessage: errorMensaje,
+    load: cargarDatos
+  } = useSheetCollection({
+    tableName: 'calendarios',
+    mapping: {
+      id: ['id'],
+      nombre: ['nombre', 'titulo', 'documento', 'title'],
+      color: ['color'],
+      icono: ['icono', 'icon'],
+      idEtiqueta: ['id_etiqueta', 'idetiqueta', 'etiqueta', 'tag']
+    },
+    errorMessage: 'No se pudieron cargar los calendarios.',
+    logMessage: 'Error al cargar los calendarios',
+    filter: (item) => Boolean(item.nombre)
+  })
     const filtros = ref({ etiquetas: [], tipos: [] })
 
     const calendariosFiltrados = computed(() =>
@@ -91,26 +105,8 @@
   }
 
     const cargarChips = async () => {
-        try {
-            const data = await getTable('calendarios')
-
-      calendarios.value = data
-        .map((item, index) => buildEntity(item, {
-          id: ['id'],
-          nombre: ['nombre', 'titulo', 'documento', 'title'],
-          color: ['color'],
-          icono: ['icono', 'icon'],
-          idEtiqueta: ['id_etiqueta', 'idetiqueta', 'etiqueta', 'tag']
-        }, index))
-        .filter((item) => item.nombre)
-
-            errorMensaje.value = ''
-      await inicializarLucide()
-        } catch (error) {
-      console.error('Error al cargar los calendarios:', error)
-      errorMensaje.value = 'No se pudieron cargar los calendarios.'
-      calendarios.value = []
-    }
+      await cargarDatos()
+      if (!errorMensaje.value && calendarios.value.length) await inicializarLucide()
     }
 
     const alternarCalendario = (calendario) => {

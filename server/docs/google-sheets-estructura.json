@@ -125,8 +125,6 @@
             { "name": "id_usuario", "type": "string", "foreignKey": "usuarios.id", "required": true },
             { "name": "id_registro", "type": "string", "required": true },
             { "name": "fecha_hora", "type": "datetime", "required": true },
-            { "name": "valor_anterior", "type": "string" },
-            { "name": "valor_nuevo", "type": "string" },
             { "name": "tipo", "type": "string" }
         ]
     }

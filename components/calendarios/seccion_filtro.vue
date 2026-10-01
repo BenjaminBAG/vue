@@ -33,11 +33,13 @@
 import { computed, onMounted, ref } from 'vue'
 import { Filter, Tag } from 'lucide-vue-next'
 import { useSheets } from '../../composables/useSheets'
+import { useSheetAccess } from '../../composables/useSheetAccess'
 import { buildEntity } from '../../composables/useSheetData'
 import BotonLimpiarFiltro from '../botones/btn-limpiar_filtro.vue'
 
 const emit = defineEmits(['filtros-cambiados'])
 const { getTable } = useSheets()
+const { filterLabelsByPermission } = useSheetAccess()
 const etiquetas = ref([])
 const errorMensaje = ref('')
 
@@ -59,7 +61,7 @@ const limpiarFiltros = () => {
 const cargarEtiquetas = async () => {
     try {
         const data = await getTable('etiquetas')
-        etiquetas.value = data
+        etiquetas.value = filterLabelsByPermission(data)
             .map((item, index) => ({
                 ...buildEntity(item, {
                     id: ['id'],
@@ -89,11 +91,6 @@ onMounted(cargarEtiquetas)
     align-items: center;
     gap: 0.5em;
     margin-bottom: 0.75em;
-}
-
-.titulo-filtro h2 {
-    margin: 0;
-    font-size: 1.1em;
 }
 
 #seccion_filtro ul {

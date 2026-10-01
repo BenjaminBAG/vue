@@ -29,88 +29,22 @@
 </template>
 
 <script setup>
-    import { computed, onMounted, ref } from 'vue'
-    import { useSheets } from '../../composables/useSheets'
-    import { buildEntity, uniqueByField } from '../../composables/useSheetData'
+    import { onMounted } from 'vue'
+    import { Tag, Type } from 'lucide-vue-next'
+    import { useSheetFilterOptions } from '../../composables/useSheetFilterOptions'
     import BotonLimpiarFiltro from '../botones/btn-limpiar_filtro.vue'
 
     const emit = defineEmits(['filtros-cambiados'])
-    const { getTable } = useSheets()
-    const etiquetas = ref([])
-    const tipos = ref([])
-    const errorMensaje = ref('')
+    const {
+        etiquetas,
+        tipos,
+        hasActiveFilters: hayFiltrosActivos,
+        emitFilters: emitirFiltros,
+        clearFilters: limpiarFiltros,
+        load: cargarEtiquetas
+    } = useSheetFilterOptions('plantillas', (filtros) => emit('filtros-cambiados', filtros))
 
-    const hayFiltrosActivos = computed(() => {
-        const etiquetasActivas = etiquetas.value.filter((item) => item.seleccionado).length
-        const tiposActivos = tipos.value.filter((item) => item.seleccionado).length
-        return etiquetasActivas > 0 || tiposActivos > 0
-    })
-
-    const emitirFiltros = () => {
-        emit('filtros-cambiados', {
-            etiquetas: etiquetas.value
-                .filter((item) => item.seleccionado)
-                .map((item) => String(item.id).trim()),
-            tipos: tipos.value
-                .filter((item) => item.seleccionado)
-                .map((item) => String(item.tipo).trim())
-        })
-    }
-
-    const limpiarFiltros = () => {
-        etiquetas.value = etiquetas.value.map((item) => ({ ...item, seleccionado: false }))
-        tipos.value = tipos.value.map((item) => ({ ...item, seleccionado: false }))
-        emitirFiltros()
-    }
-
-    const cargarEtiquetas = async () => {
-        try {
-            const dataEtiquetas = await getTable('etiquetas')
-            etiquetas.value = dataEtiquetas
-                .map((item, index) => ({
-                    ...buildEntity(item, {
-                        id: ['id'],
-                        nombre: ['nombre'],
-                        color: ['color']
-                    }, index),
-                    seleccionado: false
-                }))
-                .filter((item) => item.nombre)
-
-            errorMensaje.value = ''
-
-            const dataTipos = await getTable('plantillas')
-            tipos.value = uniqueByField(
-                dataTipos
-                    .map((item) => ({
-                        tipo: String(item.tipo ?? '').trim(),
-                        seleccionado: false
-                    }))
-                    .filter((item) => item.tipo),
-                'tipo'
-            )
-        } catch (error) {
-            console.error('Error al cargar las etiquetas:', error)
-            errorMensaje.value = 'No se pudieron cargar los documentos.'
-        }
-    }
-
-    onMounted(() => {
-        cargarEtiquetas()
-    })
-</script>
-
-<script>
-    import { Filter, Tag, Type } from 'lucide-vue-next'
-
-    export default {
-        name: 'SeccionFiltro',
-        components: {
-            Filter,
-            Tag,
-            Type
-        }
-    }
+    onMounted(cargarEtiquetas)
 </script>
 
 <style>
