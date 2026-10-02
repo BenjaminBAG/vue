@@ -6,15 +6,15 @@
                 <span>Ingresa tus credenciales para acceder al portal</span>
             </section>
             <section id="seccion_inputs_formulario_login">
-                <label>Dirección de correo electrónico</label>
                 <InputRegular
+                    label="Dirección de correo electrónico"
                     v-model="email"
                     type="email"
                     placeholder="Escribe tu correo..."
                     required
                 />
-                <label>Contraseña</label>
                 <InputRegular
+                    label="Contraseña"
                     v-model="clave"
                     type="password"
                     placeholder="Escribe tu contraseña..."
@@ -32,7 +32,7 @@
 <script setup>
     import { ref } from 'vue'
     import BtnPrincipal from '../../components/botones/btn-principal.vue'
-    import InputRegular from '../../components/otros/input-regular.vue'
+    import InputRegular from '../../components/otros/InputRegular.vue'
     import { useAuth } from '../../composables/useAuth'
 
     const { iniciarSesion } = useAuth()

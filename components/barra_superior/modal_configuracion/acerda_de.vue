@@ -1,4 +1,5 @@
 <script setup>
+    import AreaDesplazamiento from '../../otros/AreaDesplazamiento.vue'
     const pilares = [
         "La calidad no se negocia. Desde el diseño hasta la ejecución, cuidamos cada detalle. Trabajamos con estándares altos y entrega impecable. La calidad es nuestro sello.",
         "Actuamos “como si”. Cuando un cliente tiene una necesidad, nos movemos. Investigamos, aprendemos y resolvemos. Nada se deja al azar: siempre encontramos cómo lograrlo.",
@@ -14,7 +15,9 @@
     <AreaDesplazamiento :altura-max="'calc(100vh * 0.6)'">
         <div class="acerca_de">
             <h2>Acerca de</h2>
-            <h3>Pilares Fundamentales</h3>
+            <h3>
+                <span>BAG Group</span>
+                Portal Empresarial</h3>
             <ol>
                 <li v-for="item in pilares"> {{ item }} </li>
             </ol>
@@ -29,6 +32,10 @@
             font-family: var(--fuente-estilizada);
             font-size: 3em;
             color: var(--azul);
+            text-align: right;
+            span {
+                color: var(--gris);
+            }
         }
     }
 </style>

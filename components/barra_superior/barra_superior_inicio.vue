@@ -1,6 +1,6 @@
 <script setup>
     import { ref } from 'vue'
-    import AreaDesplazamiento from '../otros/area_desplazamiento.vue'
+    import AreaDesplazamiento from '../otros/AreaDesplazamiento.vue'
     import BtnMenu from '../botones/btn-menu.vue'
     import BtnCircularMenu from '../botones/btn-circular-menu.vue'
     import CuadroFlotanteInicio from './cuadro_flotante_inicio.vue'

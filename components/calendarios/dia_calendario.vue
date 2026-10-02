@@ -13,7 +13,7 @@
 
 <script>
 import HitoCalendario from './hito_calendario.vue';
-import AreaDesplazamiento from '../otros/area_desplazamiento.vue';
+import AreaDesplazamiento from '../otros/AreaDesplazamiento.vue';
 
 export default {
     name: 'DiaCalendario',

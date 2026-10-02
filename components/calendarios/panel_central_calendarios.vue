@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import AreaDesplazamiento from '../otros/area_desplazamiento.vue';
+import AreaDesplazamiento from '../otros/AreaDesplazamiento.vue';
 import { ArrowLeft, ArrowRight } from 'lucide-vue-next';
 import { useSheets } from '../../composables/useSheets';
 import { buildEntity } from '../../composables/useSheetData';

@@ -12,10 +12,6 @@
           type: String,
           default: '100%'
         },
-        altura_max: {
-          type: String,
-          default: null
-        },
         eje: {
           type: String,
           default: 'vertical'
@@ -23,7 +19,7 @@
       },
       computed: {
         estiloArea() {
-          const valor = this.alturaMax || this.altura_max || '100%';
+          const valor = this.alturaMax || '100%';
           return {
             '--altura-max': valor
           };
@@ -44,15 +40,15 @@
         box-sizing: border-box;
         scrollbar-gutter: stable;
     }
-      .area_desplazamiento--horizontal {
+    .area_desplazamiento--horizontal {
         max-height: none;
         padding-right: 0;
         padding-bottom: 5px;
         overflow-x: auto;
         overflow-y: hidden;
         scrollbar-gutter: auto;
-      }
-      .area_desplazamiento--both {
+    }
+    .area_desplazamiento--both {
         overflow: auto;
     }
 </style>

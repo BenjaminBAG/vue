@@ -63,8 +63,7 @@
             background-color: color-mix(in srgb, var(--verde), var(--blanco) 70%);
         }
 
-        &:hover::before,
-        &.item-activo::before {
+        &:hover::before {
             transform: translateY(-50%) scale(1);
         }
     }

@@ -73,7 +73,7 @@
     import SeccionSelector from './seccion_selector.vue'
     import SeccionIndice from './seccion_indice.vue'
     import SeccionEditar from './seccion_editar.vue'
-    import AreaDesplazamiento from '../otros/area_desplazamiento.vue'
+    import AreaDesplazamiento from '../otros/AreaDesplazamiento.vue'
 
     const emit = defineEmits(['documento-seleccionado', 'vista-cambiada', 'contenido-editor-cambiado'])
 

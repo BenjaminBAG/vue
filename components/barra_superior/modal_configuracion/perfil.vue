@@ -1,9 +1,9 @@
 <script setup>
     import { computed, onMounted, ref } from 'vue'
     import { User, Tag } from 'lucide-vue-next'
-    import InputRegular from '../../otros/input-regular.vue'
+    import InputRegular from '../../otros/InputRegular.vue'
     import BtPrincipal from '../../botones/btn-principal.vue'
-    import AreaDesplazamiento from '../../otros/area_desplazamiento.vue'
+    import AreaDesplazamiento from '../../otros/AreaDesplazamiento.vue'
     import { useAuth } from '../../../composables/useAuth'
     import { useSheets } from '../../../composables/useSheets'
     import { buildEntity, getFieldValue } from '../../../composables/useSheetData'
@@ -69,15 +69,15 @@
             </header>
             <hr>
             <form action="">
-                <label for="">Cambiar nombre</label>
                 <InputRegular
-                    type="text"
-                    :modelValue="usuario.nombre"
+                label="Cambiar nombre"
+                type="text"
+                :modelValue="usuario.nombre"
                 />
-                <label for="">Cambiar imagen</label>
                 <InputRegular
-                    type="text"
-                    :modelValue="usuario.imagen"
+                label="Cambiar imagen"
+                type="text"
+                :modelValue="usuario.imagen"
                 />
                 <BtPrincipal texto="Guardar cambios"/>
             </form>

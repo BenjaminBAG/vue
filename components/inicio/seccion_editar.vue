@@ -1,10 +1,10 @@
 <script setup>
     import { computed, nextTick, onMounted, ref, watch } from 'vue'
-    import InputRegular from '../otros/input-regular.vue'
+    import InputRegular from '../otros/InputRegular.vue'
     import BtnPrincipal from '../botones/btn-principal.vue'
     import { Pencil } from 'lucide-vue-next'
-    import BarraHerramientasEdicion from '../otros/barra_herramientas_edicion.vue'
-    import Selector from '../otros/selector.vue'
+    import HerramientasEdicion from '../otros/HerramientasEdicion.vue'
+    import Selector from '../otros/Selector.vue'
     import { useSheets } from '../../composables/useSheets'
     import { buildEntity } from '../../composables/useSheetData'
     import TituloSeccion from '../otros/TituloSeccion.vue'
@@ -84,22 +84,22 @@
     <div id="seccion_editar">
         <TituloSeccion :icono=Pencil titulo="Editar el documento"/>
         <form>
-            <p><strong>Nombre del documento</strong></p>
             <InputRegular
+                label="Nombre del documento"
                 type="text"
                 placeholder=""
                 required
                 :value="documentoParaEditar.nombre"
             />
-            <p><strong>Etiqueta</strong></p>
+            <p>Etiqueta</p>
             <Selector v-model="etiquetaSeleccionada">
                 <option value="">Selecciona una etiqueta</option>
                 <option v-for="etiqueta in etiquetas" :key="etiqueta.id" :value="etiqueta.id">
                     {{ etiqueta.nombre }}
                 </option>
             </Selector>
-            <p><strong>Contenido</strong></p>
-            <BarraHerramientasEdicion @insertar-texto="insertarTextoEnEditor" />
+            <p>Contenido</p>
+            <HerramientasEdicion @insertar-texto="insertarTextoEnEditor" />
             <textarea
                 ref="textareaRef"
                 spellcheck="false"

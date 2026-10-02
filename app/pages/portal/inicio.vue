@@ -137,6 +137,7 @@
 
         #pantalla_general_inicio.menu-abierto > #panel_lateral_inicio {
             transform: translateX(0);
+            background-color: color-mix(in srgb, var(--beige), var(--blanco) 80%);
         }
     }
 </style>

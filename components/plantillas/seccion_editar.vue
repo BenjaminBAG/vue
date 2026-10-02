@@ -1,9 +1,9 @@
 <script setup>
     import { onMounted, ref, watch } from 'vue'
     import { Pencil } from 'lucide-vue-next'
-    import InputRegular from '../otros/input-regular.vue'
+    import InputRegular from '../otros/InputRegular.vue'
     import BtnPrincipal from '../botones/btn-principal.vue'
-    import Selector from '../otros/selector.vue'
+    import Selector from '../otros/Selector.vue'
     import { useSheets } from '../../composables/useSheets'
     import { buildEntity } from '../../composables/useSheetData'
     import TituloSeccion from '../otros/TituloSeccion.vue'
@@ -52,16 +52,16 @@
         <form @submit.prevent>
         <div v-for="item in claves" :key="item.id">
             <div :class="item.tipo">
-            <p>{{ item.nombre }}</p>
-            <InputRegular 
-                :type="item.tipo" 
-                :placeholder="item.placeholder" 
-                :value="item.valor_predeterminado" 
+            <InputRegular
+                :label="item.nombre"
+                :type="item.tipo"
+                :placeholder="item.placeholder"
+                :value="item.valor_predeterminado"
             />
             </div>
         </div>
 
-        <p>Etiqueta</p>
+        <label>Etiqueta</label>
         <Selector v-model="etiquetaSeleccionada">
             <option value="">Selecciona una etiqueta</option>
             <option v-for="etiqueta in etiquetas" :key="etiqueta.id" :value="etiqueta.id">

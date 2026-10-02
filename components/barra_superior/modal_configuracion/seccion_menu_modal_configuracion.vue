@@ -1,6 +1,7 @@
 <script setup>
     import { User, UsersRound, History , Info } from 'lucide-vue-next'
     import { ref } from 'vue'
+import ChipUnico from '../../otros/ChipUnico.vue'
 
     const vistaActiva = ref(null)
 
@@ -23,92 +24,30 @@
 
 <template>
     <div class="seccion-menu-modal">
-        <ul>
-            <li v-for="item in botones">
-                <button
-                    :class="{'boton_activo': vistaActiva === item.id}"
-                    @click="cambiarVista(item.id)"
-                >
-                    <component :is="item.icono" class="icono" />
-                    <p>{{ item.nombre }}</p>
-                </button>
-            </li>
-        </ul>
+
+        <ChipUnico v-for="item in botones"
+            :key="item.id"
+            :item="item"
+            :docSeleccionado="vistaActiva"
+            :icono="item.icono"
+            :acortar="true"
+            @click="cambiarVista(item.id)"
+            :class="{'boton_activo': vistaActiva === item.id}"
+        />
+
     </div>
 </template>
 
 <style scoped>
     .seccion-menu-modal {
         grid-column: 1;
-        padding: 2em;
-        ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            li {
-                button {
-                    position: relative;
-                    overflow: hidden;
-                    width: 100%;
-                    height: 2em;
-                    margin: 0.2em 0;
-                    padding: 0.5em 0.5em 0.5em 1em;
-                    font-size: 1em;
-                    text-align: left;
-                    border-radius: 10px;
-                    border: none;
-                    background-color: var(--blanco);
-                    transition: all 0.3s ease-in-out;
-                    display: flex;
-                    align-items: center;
-                    &::before {
-                        content: "";
-                        position: absolute;
-                        top: 50%;
-                        left: 0;
-                        transform: translateY(-50%) translateX(-15px);
-                        opacity: 0;
-                        border-top: 8px solid transparent;
-                        border-bottom: 8px solid transparent;
-                        border-left: 10px solid var(--naranja);
-                        transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
-                    }
-                    &:hover {
-                        cursor: pointer;
-                        padding-left: 1.5em;
-                        background-color: color-mix(var(--naranja), var(--blanco) 70%);
-                        &::before {
-                            opacity: 1;
-                            transform: translateY(-50%) translateX(5px);
-                        }
-                    }
-                    .icono {
-                        width: 1em;
-                        height: auto;
-                        margin-right: 0.5em;
-                    }
-                }
-                .boton_activo {
-                    padding-left: 1.5em;
-                    background-color: color-mix(var(--naranja), var(--blanco) 70%);
-                }
-            }
-        }
+        padding: 3em 1em; 
+        display: flex;
+        flex-direction: column;
+        min-width: 50px; 
     }
-    @media (max-width: 768px) {
-        .seccion-menu-modal {
-            padding-left: 0;
-            max-width: 15%;
-            ul {
-                li {
-                    button {
-                        width: 4em;
-                    }
-                    p {
-                        display: none;
-                    }
-                }
-            }
-        }
+    .boton_activo {
+        padding-left: 1.5em;
+        background-color: color-mix(var(--naranja), var(--blanco) 70%);
     }
 </style>

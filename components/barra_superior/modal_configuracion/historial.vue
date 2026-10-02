@@ -6,7 +6,7 @@
     import { buildEntity } from '../../../composables/useSheetData'
     import BtnDeshacer from './btn_deshacer.vue'
     import FiltroSoloYo from './filtro_solo_yo.vue'
-    import AreaDesplazamiento from '../../otros/area_desplazamiento.vue'
+    import AreaDesplazamiento from '../../otros/AreaDesplazamiento.vue'
 
     const { usuario } = useAuth()
     const { getTable } = useSheets()

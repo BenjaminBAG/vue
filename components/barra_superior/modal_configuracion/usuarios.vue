@@ -1,6 +1,6 @@
 <script setup>
-    import InputRegular from '../../otros/input-regular.vue'
-    import AreaDesplazamiento from '../../otros/area_desplazamiento.vue'
+    import InputRegular from '../../otros/InputRegular.vue'
+    import AreaDesplazamiento from '../../otros/AreaDesplazamiento.vue'
     import BtnPrincipal from '../../botones/btn-principal.vue'
 </script>
 
@@ -11,14 +11,10 @@
             <hr>
             <form action="">
                 <h3>Nuevo Usuario</h3>
-                <p>Nombre</p>
-                <InputRegular type="text" placeholder="Escribe el nombre completo del usuario" required/>
-                <p>Email</p>
-                <InputRegular type="email" placeholder="Escribe el email del usuario" required />
-                <p>Clave</p>
-                <InputRegular type="password" placeholder="Escribe una contraseña de 8 caracteres" required />
-                <p>Rol</p>
-                <InputRegular type="text" placeholder="Administrador || Lector" required />
+                <InputRegular label="Nombre" type="text" placeholder="Escribe el nombre completo del usuario" required/>
+                <InputRegular label="Email" type="email" placeholder="Escribe el email del usuario" required />
+                <InputRegular label="Clave" type="password" placeholder="Escribe una contraseña de 8 caracteres" required />
+                <InputRegular label="Rol" type="text" placeholder="Administrador || Lector" required />
                 <BtnPrincipal texto="Guardar" />
             </form>
         </div>
