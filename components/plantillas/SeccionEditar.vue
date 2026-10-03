@@ -96,7 +96,7 @@
         <TituloSeccion :icono="Pencil" titulo="Editar plantilla" />
         <form v-if="documentoParaEditar?.id" @submit.prevent="guardarCambios">
             <FormularioDinamico v-model="datos" :campos="campos" />
-            <BtnPrincipal :texto="guardando ? 'Guardando...' : 'Guardar cambios'" />
+            <BtnPrincipal :texto="guardando ? 'Guardando...' : 'Guardar cambios'" :disabled="guardando" />
             <p v-if="mensaje" :class="{ error }" role="status">{{ mensaje }}</p>
         </form>
         <p v-else>Selecciona una plantilla para editar sus datos.</p>

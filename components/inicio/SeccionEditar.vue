@@ -17,19 +17,38 @@
         modelValue: {
             type: String,
             default: ''
+        },
+        modo: {
+            type: String,
+            default: 'editar'
         }
     })
 
-    const emit = defineEmits(['update:modelValue'])
+    const emit = defineEmits(['update:modelValue', 'documento-guardado'])
     const textareaRef = ref(null)
     const etiquetas = ref([])
+    const nombreDocumento = ref('')
     const etiquetaSeleccionada = ref('')
+    const guardando = ref(false)
+    const mensaje = ref('')
+    const error = ref(false)
 
-    const { getTable } = useSheets()
+    const { getTable, saveRow, updateRow } = useSheets()
 
     watch(
-        () => props.documentoParaEditar?.idEtiqueta,
-        (idEtiqueta) => { etiquetaSeleccionada.value = String(idEtiqueta ?? '').trim() },
+        [() => props.modo, () => props.documentoParaEditar?.id],
+        ([modo]) => {
+            if (modo === 'nuevo') {
+                nombreDocumento.value = ''
+                etiquetaSeleccionada.value = ''
+                return
+            }
+
+            nombreDocumento.value = String(props.documentoParaEditar?.nombre ?? '')
+            etiquetaSeleccionada.value = String(
+                props.documentoParaEditar?.idEtiqueta ?? props.documentoParaEditar?.id_etiqueta ?? ''
+            ).trim()
+        },
         { immediate: true }
     )
 
@@ -54,6 +73,54 @@
 
     const actualizarContenido = (event) => {
         emit('update:modelValue', event.target.value)
+    }
+
+    const guardarDocumento = async () => {
+        const esNuevo = props.modo === 'nuevo'
+        const idExistente = props.documentoParaEditar?.id
+        if (!esNuevo && !idExistente) return
+
+        guardando.value = true
+        mensaje.value = ''
+        error.value = false
+
+        const id = idExistente || globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`
+        const nombre = nombreDocumento.value.trim()
+        const contenidoMarkdown = contenidoActual.value
+        const tipo = props.documentoParaEditar?.tipo || 'markdown'
+
+        try {
+            const fila = {
+                id,
+                nombre,
+                tipo,
+                contenido_markdown: contenidoMarkdown,
+                id_etiqueta: etiquetaSeleccionada.value
+            }
+
+            if (esNuevo) {
+                await saveRow('documentos', fila)
+            } else {
+                await updateRow('documentos', fila)
+            }
+
+            emit('documento-guardado', {
+                ...props.documentoParaEditar,
+                id,
+                nombre,
+                tipo,
+                contenidoMarkdown,
+                idEtiqueta: etiquetaSeleccionada.value
+            }, props.modo)
+            await nextTick()
+            mensaje.value = esNuevo ? 'Documento guardado correctamente.' : 'Documento actualizado correctamente.'
+        } catch (saveError) {
+            console.error('Error al guardar el documento:', saveError)
+            error.value = true
+            mensaje.value = 'No se pudo guardar el documento. Comprueba la conexión con Google Sheets.'
+        } finally {
+            guardando.value = false
+        }
     }
 
     const insertarTextoEnEditor = (texto) => {
@@ -82,14 +149,14 @@
 
 <template>
     <div id="seccion_editar">
-        <TituloSeccion :icono=Pencil titulo="Editar el documento"/>
-        <form>
+        <TituloSeccion :icono="Pencil" :titulo="modo === 'nuevo' ? 'Nuevo documento' : 'Editar el documento'" />
+        <form v-if="modo === 'nuevo' || documentoParaEditar?.id" @submit.prevent="guardarDocumento">
             <InputRegular
                 label="Nombre del documento"
                 type="text"
                 placeholder=""
                 required
-                :value="documentoParaEditar.nombre"
+                v-model="nombreDocumento"
             />
             <p>Etiqueta</p>
             <Selector v-model="etiquetaSeleccionada">
@@ -107,8 +174,10 @@
                 :value="contenidoActual"
                 @input="actualizarContenido"
             ></textarea>
-            <BtnPrincipal texto="Guardar" />
+            <BtnPrincipal :texto="guardando ? 'Guardando...' : 'Guardar'" :disabled="guardando" />
+            <p v-if="mensaje" :class="{ error }" role="status">{{ mensaje }}</p>
         </form>
+        <p v-else>Selecciona un documento para editarlo.</p>
     </div>
 </template>
 
@@ -137,5 +206,9 @@
                 border-radius: 0 0 10px 0;
             }
         }
+    }
+
+    .error {
+        color: #a12622;
     }
 </style>

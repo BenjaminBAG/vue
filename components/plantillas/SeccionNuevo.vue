@@ -50,15 +50,7 @@
         { id: `${key}-tipo`, clave: 'tipo', nombre: 'Tipo de campo', tipo: 'select', requerido: true, opciones: tiposClave },
         { id: `${key}-placeholder`, clave: 'placeholder', nombre: 'Texto de ayuda', tipo: 'text' },
         { id: `${key}-esTabla`, clave: 'esTabla', nombre: 'Columna repetible en tabla', tipo: 'checkbox' },
-        {
-            id: `${key}-nombreTabla`,
-            clave: 'nombreTabla',
-            nombre: 'Nombre de la tabla',
-            tipo: 'text',
-            placeholder: 'Ej. Productos',
-            requerido: true,
-            visibleSi: { clave: 'esTabla', valor: true }
-        }
+        { id: `${key}-nombreTabla`, clave: 'nombreTabla', nombre: 'Nombre de la tabla', tipo: 'text', placeholder: 'Ej. Productos', requerido: true, visibleSi: { clave: 'esTabla', valor: true } }
     ]
 
     const agregarClave = () => claves.value.push(nuevaClave())
@@ -167,7 +159,7 @@
                 <FormularioDinamico v-model="clave.valores" :campos="camposClave(clave.key)" />
             </section>
 
-            <BtnPrincipal :texto="guardando ? 'Guardando...' : 'Guardar plantilla'" />
+            <BtnPrincipal :texto="guardando ? 'Guardando...' : 'Guardar plantilla'" :disabled="guardando" />
             <p v-if="mensaje" :class="{ error }" role="status">{{ mensaje }}</p>
         </form>
     </section>
@@ -176,13 +168,11 @@
 <style scoped>
     .seccion-nueva {
         padding: 2em 0;
+        form {
+            display: grid;
+            gap: 1.25em;
+        }
     }
-
-    .seccion-nueva form {
-        display: grid;
-        gap: 1.25em;
-    }
-
     .encabezado-claves,
     .encabezado-clave {
         display: flex;
@@ -190,17 +180,14 @@
         justify-content: space-between;
         gap: 0.75em;
     }
-
     .clave-configuracion {
         padding: 1em 0;
         border-top: 1px solid color-mix(in srgb, var(--negro), transparent 75%);
     }
-
     .encabezado-claves h3,
     .encabezado-clave h4 {
         margin: 0;
     }
-
     button {
         display: inline-flex;
         align-items: center;
@@ -212,13 +199,11 @@
         background: var(--blanco);
         color: var(--negro);
         cursor: pointer;
+        svg {
+            width: 1.2em;
+            height: 1.2em;
+        }
     }
-
-    button svg {
-        width: 1.2em;
-        height: 1.2em;
-    }
-
     .error {
         color: #a12622;
     }

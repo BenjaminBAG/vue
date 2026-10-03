@@ -13,6 +13,7 @@
         "name": "usuarios",
         "range": "usuarios!A:Z",
         "primaryKey": "id",
+        "ambito": "privado",
         "fields": [
             { "name": "id", "type": "string", "required": true },
             { "name": "nombre", "type": "string" },
@@ -29,6 +30,7 @@
         "name": "etiquetas",
         "range": "etiquetas!A:Z",
         "primaryKey": "id",
+        "ambito": "privado",
         "fields": [
             { "name": "id", "type": "string", "required": true },
             { "name": "nombre", "type": "string" },
@@ -45,6 +47,7 @@
         "name": "permisos",
         "range": "permisos!A:Z",
         "primaryKey": "id",
+        "ambito": "privado",
         "fields": [
             { "name": "id", "type": "string", "required": true },
             { "name": "permiso", "type": "string" },
@@ -56,6 +59,7 @@
         "name": "calendarios",
         "range": "calendarios!A:Z",
         "primaryKey": "id",
+        "ambito": "público",
         "fields": [
             { "name": "id", "type": "string", "required": true },
             { "name": "nombre", "type": "string" },
@@ -71,6 +75,7 @@
         "name": "hitos",
         "range": "hitos!A:Z",
         "primaryKey": "id",
+        "ambito": "privado",
         "fields": [
             { "name": "id", "type": "string", "required": true },
             { "name": "nombre", "type": "string" },
@@ -84,6 +89,7 @@
         "name": "documentos",
         "range": "documentos!A:Z",
         "primaryKey": "id",
+        "ambito": "público",
         "fields": [
             { "name": "id", "type": "string", "required": true },
             { "name": "nombre", "type": "string" },
@@ -96,6 +102,7 @@
         "name": "plantillas",
         "range": "plantillas!A:Z",
         "primaryKey": "id",
+        "ambito": "público",
         "fields": [
             { "name": "id", "type": "string", "required": true },
             { "name": "nombre", "type": "string" },
@@ -108,6 +115,7 @@
         "name": "claves_plantillas",
         "range": "claves_plantillas!A:Z",
         "primaryKey": "id",
+        "ambito": "privado",
         "fields": [
             { "name": "id", "type": "string", "required": true },
             { "name": "nombre", "type": "string" },
@@ -131,15 +139,16 @@
         "name": "cambios",
         "range": "cambios!A:Z",
         "primaryKey": "id",
+        "ambito": "ninguno",
         "fields": [
             { "name": "id", "type": "string", "required": true },
             { "name": "id_usuario", "type": "string", "foreignKey": "usuarios.id", "required": true },
             { "name": "id_registro", "type": "string", "required": true },
             { "name": "fecha_hora", "type": "datetime", "required": true },
-            { "name": "tipo", "type": "string" },
+            { "name": "tipo", "type": "string" , "enum": ["creación", "modificación", "eliminación"] },
             { "name": "valor_anterior", "type": "string" },
             { "name": "valor_nuevo", "type": "string" },
-            { "name": "ambito", "type": "string" }
+            { "name": "ambito", "type": "string", "enum": ["público", "privado"] }
         ]
     }
 ]

@@ -13,6 +13,7 @@
 
     const vistaActiva = ref('selector')
     const contenidoEditor = ref('')
+    const selectorVersion = ref(0)
 
     const cambiarVista = (nuevaVista) => {
         vistaActiva.value = nuevaVista
@@ -29,6 +30,18 @@
     const actualizarContenidoEditor = (nuevoTexto) => {
         contenidoEditor.value = nuevoTexto
         emit('contenido-editor-cambiado', nuevoTexto)
+    }
+
+    const actualizarDocumentoGuardado = (documento, modo) => {
+        documentoSeleccionado.value = documento
+        contenidoEditor.value = documento.contenidoMarkdown || ''
+        selectorVersion.value += 1
+        emit('documento-seleccionado', documento)
+
+        if (modo === 'nuevo') {
+            vistaActiva.value = 'editar'
+            emit('vista-cambiada', 'editar')
+        }
     }
 
     const emitirDocumentoSeleccionado = (documento) => {
@@ -60,7 +73,7 @@
         <KeepAlive>
             <AreaDesplazamiento v-if="vistaActiva === 'selector'"
                 id="contenedor_secciones"
-                key="selector"
+                :key="`selector-${selectorVersion}`"
                 :altura-max="'calc(100vh - 12em)'"
             >
                 <SeccionSelector @documento-seleccionado="emitirDocumentoSeleccionado" />
@@ -79,8 +92,10 @@
             >
                 <SeccionEditar
                     :documento-para-editar="documentoSeleccionado"
+                    modo="editar"
                     :model-value="contenidoEditor"
                     @update:modelValue="actualizarContenidoEditor"
+                    @documento-guardado="actualizarDocumentoGuardado($event, 'editar')"
                 />
             </AreaDesplazamiento>
             <AreaDesplazamiento v-else-if="vistaActiva === 'nuevo'"
@@ -90,8 +105,10 @@
             >
                 <SeccionEditar
                     :documento-para-editar="documentoSeleccionado || { nombre: '', contenidoMarkdown: '' }"
+                    modo="nuevo"
                     :model-value="contenidoEditor"
                     @update:modelValue="actualizarContenidoEditor"
+                    @documento-guardado="actualizarDocumentoGuardado($event, 'nuevo')"
                 />
             </AreaDesplazamiento>
         </KeepAlive>

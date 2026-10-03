@@ -94,13 +94,23 @@ export const useSheets = () => {
     })
   }
 
+  const deleteRow = async (tableName: string, id: string | number) => {
+    return await request({
+      action: 'delete',
+      table: tableName,
+      id,
+      method: 'POST'
+    })
+  }
+
   return {
     fetchSheetRange,
     getTable,
     getById,
     saveRows,
     saveRow,
-    updateRow
+    updateRow,
+    deleteRow
   }
 }
 

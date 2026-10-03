@@ -236,7 +236,6 @@ mark {
 .md-container summary {
     font-weight: 700;
     margin-bottom: 0.4em !important;
-    cursor: pointer;
 }
 
 .md-container__content {
@@ -270,6 +269,7 @@ mark {
     background-color: color-mix(var(--azul), var(--blanco) 80%);
     border: none;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .katex {
@@ -295,3 +295,7 @@ mark {
     margin-bottom: 0;
 }
 
+a {
+    color: var(--naranja);
+    text-decoration: underline;
+}

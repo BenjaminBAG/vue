@@ -33,7 +33,7 @@
         if (['booleano', 'boolean', 'checkbox'].includes(tipo)) return 'checkbox'
         if (['seleccion', 'select'].includes(tipo)) return 'select'
 
-        return ['text', 'email', 'tel', 'time', 'datetime-local'].includes(tipo) ? tipo : 'text'
+        return ['text', 'password', 'email', 'tel', 'time', 'datetime-local'].includes(tipo) ? tipo : 'text'
     }
 
     const placeholderDe = (campo) => {

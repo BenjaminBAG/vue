@@ -81,3 +81,7 @@ npm install markdown-it-container
 npm install markdown-it-mark
 
 configuración de API de Google Sheets en [este enlace](https://console.cloud.google.com/apis/credentials?project=noble-particle-472522-u9).
+
+npm install googleapis
+
+npx nuxi module add ui

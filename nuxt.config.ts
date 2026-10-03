@@ -11,6 +11,12 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     googleSheetId: '',
-    googleSheetsApiKey: ''
-  }
+    googleSheetsApiKey: '',
+    googleServiceAccountKey: ''
+  },
+  modules: [
+    '@nuxt/ui'
+  ]
 })
+
+    googleServiceAccountKey: ''
