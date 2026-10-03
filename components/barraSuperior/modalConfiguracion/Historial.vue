@@ -1,11 +1,11 @@
 <script setup>
     import { computed, onMounted, ref } from 'vue'
     import { Asterisk, Clock, User, List } from 'lucide-vue-next'
-    import { useAuth } from '../../../composables/useAuth'
-    import { useSheets } from '../../../composables/useSheets'
-    import { buildEntity } from '../../../composables/useSheetData'
-    import BtnDeshacer from './btn_deshacer.vue'
-    import FiltroSoloYo from './filtro_solo_yo.vue'
+    import { useAuth } from '../../../composables/useAuth.ts'
+    import { useSheets } from '../../../composables/useSheets.ts'
+    import { buildEntity } from '../../../composables/useSheetData.ts'
+    import BtnDeshacer from './BtnDeshacer.vue'
+    import FiltroSoloYo from './FiltroSoloYo.vue'
     import AreaDesplazamiento from '../../otros/AreaDesplazamiento.vue'
 
     const { usuario } = useAuth()
@@ -21,7 +21,7 @@
     }
 
     const cambiosVisibles = computed(() => {
-        if (!soloYo.value) return cambios.value
+        if (!soloYo.value) return cambios.value.filter(x => x.ambito !== 'privado' || x.ambito === 'privado' && esCambioPropio(x))
         return cambios.value.filter(esCambioPropio)
     })
 
@@ -42,7 +42,10 @@
                 idUsuario: ['id_usuario', 'idusuario'],
                 idRegistro: ['id_registro', 'idregistro'],
                 fechaHora: ['fecha_hora', 'fechahora'],
-                tipo: ['tipo']
+                tipo: ['tipo'],
+                valorAnterior: ['valor_anterior'],
+                valorNuevo: ['valor_nuevo'],
+                ambito: ['ambito']
             }, index))
             usuarios.value = usuariosRaw.map((item, index) => buildEntity(item, {
                 id: ['id'],
@@ -62,6 +65,7 @@
     <AreaDesplazamiento :altura-max="'calc(100vh * 0.6)'">
         <div class="historial">
             <h2>Historial de cambios</h2>
+            <p>Se muestran todos los cambios públicos y los privados de tu usuario.</p>
             <FiltroSoloYo v-model="soloYo" />
             <p v-if="errorMensaje" class="mensaje-historial">{{ errorMensaje }}</p>
             <table>
@@ -79,7 +83,16 @@
                         <td>{{ item.id }}</td>
                         <td>{{ item.fechaHora }}</td>
                         <td>{{ obtenerNombreUsuario(item.idUsuario) }}</td>
-                        <td>{{ item.tipo }} en {{ item.idRegistro }}</td>
+                        <td>
+                            {{ item.tipo }} ({{ item.ambito }}) en {{ item.idRegistro }}: 
+                            <span class="valor-anterior">
+                                {{ item.valorAnterior === "" ? "(vacío)" : item.valorAnterior }}
+                            </span> 
+                            -> 
+                            <span class="valor-nuevo">
+                                {{ item.valorNuevo === "" ? "(vacío)" : item.valorNuevo }}
+                            </span>
+                        </td>
                         <td v-if="esCambioPropio(item)"><BtnDeshacer /></td>
                         <td v-else></td>
                     </tr>
@@ -95,11 +108,9 @@
 <style scoped>
     .historial {
         padding: 2em;
-
         table {
             width: 100%;
             border-collapse: collapse;
-
             .cabecera {
                 .id, .tiempo, .nombre, .descripcion, .deshacer  {
                     text-align: left;
@@ -111,13 +122,21 @@
                     stroke-width: 0.2em;
                 }
             }
-
             td, th {
                 padding: 0.6em 0.4em;
+                .valor-anterior {
+                    font-family: var(--fuente-mono);
+                    font-size: 0.8em;
+                    color: var(--rojo)
+                }
+                .valor-nuevo {
+                    font-family: var(--fuente-mono);
+                    font-size: 0.8em;
+                    color: var(--verde)
+                }
             }
         }
     }
-
     .mensaje-historial {
         padding: 0.75em 0;
         color: var(--gris);

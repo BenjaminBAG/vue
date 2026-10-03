@@ -11,7 +11,7 @@
 </template>
 
 <script>
-    import TarjetaInfo from './tarjeta_info.vue'
+    import TarjetaInfo from './TarjetaInfo.vue'
 
     export default {
       name: 'SeccionPresentacionLogin',

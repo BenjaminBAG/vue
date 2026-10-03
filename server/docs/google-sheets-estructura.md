@@ -121,11 +121,19 @@ erDiagram
     claves_plantillas {
         string id PK
         string nombre
-        string tipo
+      string tipo "texto | numero | moneda | fecha | imagen | documento | texto_largo"
         string placeholder
         boolean es_tabla
+      string id_plantilla FK
+        string nombre_tabla
     }
 ```
+
+  `tipo` determina el control generado al llenar una plantilla. Los valores admitidos son `texto`, `numero`, `moneda`, `fecha`, `imagen`, `documento` y `texto_largo`. Los campos `imagen` y `documento` almacenan una URL o referencia; la aplicación no carga archivos binarios.
+
+  Cuando `es_tabla` es `true`, la clave se muestra como una columna repetible dentro de una tabla y el usuario puede agregar filas. Cada celda conserva el control determinado por `tipo`.
+
+  `nombre_tabla` agrupa las claves repetibles que forman parte de la misma tabla. En la creación de plantillas se solicita cuando `es_tabla` está activado.
 
 ## Tabla de configuración sugerida
 

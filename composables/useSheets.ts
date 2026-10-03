@@ -85,12 +85,22 @@ export const useSheets = () => {
     return await saveRows(tableName, [row])
   }
 
+  const updateRow = async (tableName: string, row: Record<string, any>) => {
+    return await request({
+      action: 'update',
+      table: tableName,
+      payload: { row },
+      method: 'POST'
+    })
+  }
+
   return {
     fetchSheetRange,
     getTable,
     getById,
     saveRows,
-    saveRow
+    saveRow,
+    updateRow
   }
 }
 

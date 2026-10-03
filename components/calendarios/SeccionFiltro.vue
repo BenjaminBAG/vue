@@ -4,7 +4,7 @@
     import { useSheets } from '../../composables/useSheets'
     import { useSheetAccess } from '../../composables/useSheetAccess'
     import { buildEntity } from '../../composables/useSheetData'
-    import BotonLimpiarFiltro from '../botones/btn-limpiar_filtro.vue'
+    import BotonLimpiarFiltro from '../botones/BtnLimpiarFiltro.vue'
     import ChipReactivo from '../otros/ChipReactivo.vue'
 
     const emit = defineEmits(['filtros-cambiados'])

@@ -1,8 +1,8 @@
 <script setup>
     import { onMounted } from 'vue'
     import { MousePointerClick } from 'lucide-vue-next'
-    import { useSheetSelector } from '../../composables/useSheetSelector'
-    import SeccionFiltro from '../../components/inicio/seccion_filtro.vue'
+    import { useSheetSelector } from '../../composables/useSheetSelector.ts'
+    import SeccionFiltro from '../../components/inicio/SeccionFiltro.vue'
     import TituloSeccion from '../otros/TituloSeccion.vue'
     import Busqueda from '../otros/Busqueda.vue'
     import ChipUnico from '../otros/ChipUnico.vue'
@@ -13,6 +13,7 @@
         filteredItems: documentosFiltrados,
         errorMessage: errorMensaje,
         updateFilters: actualizarFiltros,
+        updateSearch: actualizarBusqueda,
         selectItem: seleccionarDocumento,
         load: cargarDocumentos
     } = useSheetSelector({
@@ -36,7 +37,7 @@
     <div id="seccion_lista">
         <TituloSeccion :icono=MousePointerClick titulo="Selección de Documentos"/>
         <SeccionFiltro @filtros-cambiados="actualizarFiltros" />
-        <Busqueda @buscar="actualizarFiltros" />
+        <Busqueda @buscar="actualizarBusqueda" />
         
         <ChipUnico v-if="documentosFiltrados.length" v-for="item in documentosFiltrados"
         :docSeleccionado="documentoSeleccionado"

@@ -31,9 +31,9 @@
 
 <script setup>
     import { ref } from 'vue'
-    import BtnPrincipal from '../../components/botones/btn-principal.vue'
+    import BtnPrincipal from '../botones/BtnPrincipal.vue'
     import InputRegular from '../../components/otros/InputRegular.vue'
-    import { useAuth } from '../../composables/useAuth'
+    import { useAuth } from '../../composables/useAuth.ts'
 
     const { iniciarSesion } = useAuth()
     const email = ref('')

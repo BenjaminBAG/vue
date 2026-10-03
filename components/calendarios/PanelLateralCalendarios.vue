@@ -38,8 +38,8 @@
     import { Calendar } from 'lucide-vue-next'
     import { useSheetCollection } from '../../composables/useSheetCollection'
     import { filterBySelection } from '../../composables/useSheetData.ts'
-    import BotonLimpiarFiltro from '../botones/btn-limpiar_filtro.vue'
-    import SeccionFiltro from './seccion_filtro.vue'
+    import BotonLimpiarFiltro from '../botones/BtnLimpiarFiltro.vue'
+    import SeccionFiltro from './SeccionFiltro.vue'
     import AreaDesplazamiento from '../otros/AreaDesplazamiento.vue'
     import TituloSeccion from '../otros/TituloSeccion.vue'
 

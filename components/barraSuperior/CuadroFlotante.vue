@@ -1,9 +1,9 @@
 <script setup>
     import { ref } from 'vue'
     import { CircleQuestionMark, Bell, Settings } from 'lucide-vue-next'
-    import CerrarSesion from './cerrar_sesion.vue'
-    import ModalConfiguracion from './modal_configuracion/modal_configuracion.vue'
-    import ModalNotificaciones from './modal_notificaciones.vue'
+    import CerrarSesion from './CerrarSesion.vue'
+    import ModalConfiguracion from './modalConfiguracion/ModalConfiguracion.vue'
+    import ModalNotificaciones from './modalNotificaciones/ModalNotificaciones.vue'
 
     defineOptions({
         name: 'CuadroFlotanteInicio'

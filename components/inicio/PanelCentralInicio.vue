@@ -106,8 +106,8 @@
         height: 100%;
         min-height: calc(100vh - 10em);
         padding: 3em 6em;
-        box-shadow: 0 0 0.5em 0.2em var(--beige);
-        background-color: var(--blanco);
+        /* box-shadow: 0 0 0.5em 0.2em var(--beige);
+        background-color: var(--blanco); */
         font-size: 1em;
         max-width: 100%;
         box-sizing: border-box;

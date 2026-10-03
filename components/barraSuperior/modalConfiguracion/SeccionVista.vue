@@ -1,8 +1,8 @@
 <script setup>
-    import Perfil from './perfil.vue'
-    import Usuarios from './usuarios.vue'
-    import Historial from './historial.vue'
-    import AcercaDe from './acerda_de.vue'
+    import Perfil from './Perfil.vue'
+    import Usuarios from './Usuarios.vue'
+    import Historial from './Historial.vue'
+    import AcercaDe from './AcercaDe.vue'
 
     defineProps ({
         vista: {

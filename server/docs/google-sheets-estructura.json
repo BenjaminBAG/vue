@@ -111,9 +111,20 @@
         "fields": [
             { "name": "id", "type": "string", "required": true },
             { "name": "nombre", "type": "string" },
-            { "name": "tipo", "type": "string" },
+            {
+                "name": "tipo",
+                "type": "string",
+                "description": "Tipo de control dinámico del campo de la plantilla.",
+                "enum": ["texto", "numero", "moneda", "fecha", "imagen", "documento", "texto_largo"]
+            },
             { "name": "placeholder", "type": "string" },
-            { "name": "es_tabla", "type": "boolean" }
+            { "name": "es_tabla", "type": "boolean" },
+            { "name": "id_plantilla", "type": "string", "foreignKey": "plantillas.id" },
+            {
+                "name": "nombre_tabla",
+                "type": "string",
+                "description": "Agrupa las claves repetibles es_tabla=true que pertenecen a la misma tabla del documento."
+            }
         ]
     },
     {
@@ -125,7 +136,10 @@
             { "name": "id_usuario", "type": "string", "foreignKey": "usuarios.id", "required": true },
             { "name": "id_registro", "type": "string", "required": true },
             { "name": "fecha_hora", "type": "datetime", "required": true },
-            { "name": "tipo", "type": "string" }
+            { "name": "tipo", "type": "string" },
+            { "name": "valor_anterior", "type": "string" },
+            { "name": "valor_nuevo", "type": "string" },
+            { "name": "ambito", "type": "string" }
         ]
     }
 ]

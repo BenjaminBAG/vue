@@ -1,11 +1,10 @@
 <script setup>
     import { ref } from 'vue'
     import AreaDesplazamiento from '../otros/AreaDesplazamiento.vue'
-    import BtnMenu from '../botones/btn-menu.vue'
-    import BtnCircularMenu from '../botones/btn-circular-menu.vue'
-    import CuadroFlotanteInicio from './cuadro_flotante_inicio.vue'
+    import BtnMenu from '../botones/BtnMenu.vue'
+    import BtnCircularMenu from '../botones/BtnCircularMenu.vue'
+    import CuadroFlotanteInicio from './CuadroFlotante.vue'
 
-    // Define el nombre del componente (reemplaza al viejo export default)
     defineOptions({
         name: 'BarraSuperiorInicio'
     })
@@ -18,7 +17,6 @@
         }
     }
 
-    // Tu switch ahora funciona porque el template sí tiene acceso a él
     const cambiarDePagina = (pagina) => {
         switch (pagina) {
             case 'documentos': 
@@ -68,72 +66,74 @@
         justify-content: space-between;
         align-items: center;
         color: var(--blanco-siempre);
+        #seccion_titulo {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            font-size: 0.8em;
+            min-width: 0;
+        }
+        #seccion_botones {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            margin-right: 1em;
+            min-width: 0;
+            #paginas {
+                display: flex;
+                flex-wrap: nowrap;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+                align-items: center;
+                scrollbar-width: none;
+                scrollbar-gutter: auto;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+            }
+        }
     }
-    #barra_superior #seccion_titulo {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
-        font-size: 0.8em;
-        min-width: 0;
+    .contenedor-menu {
+        position: relative;
+        display: inline-block;
     }
     @media (max-width: 768px) {
         #barra_superior {
             gap: 0.5em;
             min-width: 0;
-        }
-        #barra_superior #seccion_titulo img {
-            height: 50px;
-            max-width: 120px;
-            object-fit: contain;
-        }
-        #barra_superior #seccion_titulo h1 {
-            display: none;
-        }
-        #barra_superior #seccion_botones {
-            flex: 1 1 auto;
-            min-width: 0;
-            margin-right: 0.5em;
-            gap: 0.25em;
-        }
-        #barra_superior #seccion_botones #paginas {
-            flex: 1 1 auto;
-            min-width: 0;
-        }
-        #barra_superior #seccion_botones #paginas :deep(.boton_menu) {
-            flex: 0 0 auto;
-            height: 2.5em;
-            margin: 0.25em;
-            padding: 0 0.5em;
-            font-size: 0.75em;
+            #seccion_titulo {
+                img {
+                height: 50px;
+                max-width: 120px;
+                object-fit: contain;
+                }
+                h1 {
+                    display: none;
+                }
+            }
+            #seccion_botones {
+                flex: 1 1 auto;
+                min-width: 0;
+                margin-right: 0.5em;
+                gap: 0.25em;
+            }
+            #paginas {
+                flex: 1 1 auto;
+                min-width: 0;
+                &:deep(.boton_menu) {
+                    flex: 0 0 auto;
+                    height: 2.5em;
+                    margin: 0.25em;
+                    padding: 0 0.5em;
+                    font-size: 0.75em;
+                }
+            }
         }
         #barra_superior .contenedor-menu,
         #barra_superior .contenedor-menu > button {
             flex: 0 0 auto;
         }
-    }
-    #barra_superior #seccion_botones {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        margin-right: 1em;
-        min-width: 0;
-    }
-    #barra_superior #seccion_botones #paginas {
-        display: flex;
-        flex-wrap: nowrap;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-        align-items: center;
-        scrollbar-width: none;
-        scrollbar-gutter: auto;
-    }
-    #barra_superior #seccion_botones #paginas::-webkit-scrollbar {
-        display: none;
-    }
-    .contenedor-menu {
-        position: relative; /* Eje de referencia para el cuadro flotante */
-        display: inline-block;
     }
 </style>

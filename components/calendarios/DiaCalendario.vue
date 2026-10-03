@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import HitoCalendario from './hito_calendario.vue';
+import HitoCalendario from './HitoCalendario.vue';
 import AreaDesplazamiento from '../otros/AreaDesplazamiento.vue';
 
 export default {

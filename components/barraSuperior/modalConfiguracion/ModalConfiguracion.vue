@@ -1,9 +1,9 @@
 <script setup>
     import { X } from 'lucide-vue-next'
-    import SeccionMenu from './seccion_menu_modal_configuracion.vue'
-    import seccionVista from './seccion_vista_modal_configuracion.vue'
+    import SeccionMenu from './SeccionMenu.vue'
+    import seccionVista from './SeccionVista.vue'
     import { ref } from 'vue'
-    import btnCircularCerrar from '~~/components/botones/btn-circular-cerrar.vue'
+    import BtnCircularCerrar from '~~/components/botones/BtnCircularCerrar.vue'
 
     defineProps({
         modelValue: {
@@ -34,7 +34,7 @@
             >
                 <header>
                     <h2 id="titulo-configuracion">Configuración</h2>
-                    <btnCircularCerrar type="button" aria-label="Cerrar configuración" @click="cerrar"/>
+                    <BtnCircularCerrar type="button" aria-label="Cerrar configuración" @click="cerrar"/>
                 </header>
                 <div class="contenido-modal">
                     <SeccionMenu @actualizacion-vista="actualizarVista"/>

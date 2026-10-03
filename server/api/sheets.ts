@@ -96,6 +96,19 @@ const fetchSheetValues = async (sheetId: string, apiKey: string, range: string):
   return await $fetch<SheetResponse>(url)
 }
 
+const columnLabel = (columnNumber: number) => {
+  let number = columnNumber
+  let label = ''
+
+  while (number > 0) {
+    const remainder = (number - 1) % 26
+    label = String.fromCharCode(65 + remainder) + label
+    number = Math.floor((number - 1) / 26)
+  }
+
+  return label
+}
+
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
   const sheetId = config.googleSheetId
@@ -145,6 +158,68 @@ export default defineEventHandler(async (event) => {
 
       const data = await fetchSheetValues(sheetId, apiKey, range)
       return parseGoogleSheetRows(data.values || [])
+    }
+
+    if (action === 'update') {
+      const { table } = resolveTableFromRequest(query)
+      const tableName = typeof query.table === 'string' ? query.table : ''
+
+      if (!tableName || !table) {
+        throw createError({
+          statusCode: 400,
+          statusMessage: 'Se requiere una tabla válida para actualizar datos'
+        })
+      }
+
+      const body = await readBody(event)
+      const row = toTableRow(table, body?.row || body)
+      const fieldNames = getFieldNames(table)
+      const primaryKey = table.primaryKey || 'id'
+      const primaryKeyIndex = fieldNames.findIndex((fieldName) => normalizeKey(fieldName) === normalizeKey(primaryKey))
+      const id = String(row[primaryKey] ?? '').trim()
+
+      if (primaryKeyIndex < 0 || !id) {
+        throw createError({
+          statusCode: 400,
+          statusMessage: `Se requiere ${primaryKey} para actualizar ${tableName}`
+        })
+      }
+
+      const sheetData = await fetchSheetValues(sheetId, apiKey, table.range)
+      const sheetRows = sheetData.values || []
+      const headerIndex = (sheetRows[0] || []).findIndex((header) => normalizeKey(String(header ?? '')) === normalizeKey(primaryKey))
+
+      if (headerIndex < 0) {
+        throw createError({
+          statusCode: 400,
+          statusMessage: `No se encontró la columna ${primaryKey} en ${tableName}`
+        })
+      }
+
+      const rowIndex = sheetRows.slice(1).findIndex((sheetRow) =>
+        String(sheetRow[headerIndex] ?? '').trim() === id
+      )
+
+      if (rowIndex < 0) {
+        throw createError({
+          statusCode: 404,
+          statusMessage: `No se encontró el registro ${id} en ${tableName}`
+        })
+      }
+
+      const sheetName = table.range.split('!')[0]
+      const sheetRowNumber = rowIndex + 2
+      const updateRange = `${sheetName}!A${sheetRowNumber}:${columnLabel(fieldNames.length)}${sheetRowNumber}`
+      const updateUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(updateRange)}?key=${apiKey}&valueInputOption=RAW`
+
+      await $fetch(updateUrl, {
+        method: 'PUT',
+        body: {
+          values: [fieldNames.map((fieldName) => row[fieldName] ?? '')]
+        }
+      })
+
+      return { ok: true, table: table.name, id }
     }
 
     if (action === 'append' || action === 'save' || action === 'saveRows') {

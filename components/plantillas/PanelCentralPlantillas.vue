@@ -1,6 +1,5 @@
 <template>
     <div id="panel_central_plantilla">
-        <!-- Usamos v-bind (:src) para pasar la URL dinámica -->
         <iframe 
             id="contenedor_documento" 
             :src="urlPlantilla" 
@@ -14,12 +13,10 @@
     export default {
         name: 'PanelCentralPlantillas',
         props: {
-            // Si pasas el objeto completo del documento
             documento: {
                 type: Object,
                 default: () => ({})
             },
-            // Si prefieres pasar directamente la URL como string
             documentoEnEdicion: {
                 type: String,
                 default: ''
@@ -31,6 +28,7 @@
         },
         computed: {
             urlPlantilla() {
+                if (this.vistaActiva === 'nuevo') return this.documentoEnEdicion || '';
                 return this.documento?.urlDocumento || this.documentoEnEdicion || '';
             },
         }

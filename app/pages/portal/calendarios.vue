@@ -21,9 +21,9 @@
 </template>
 
 <script>
-    import BarraSuperiorInicio from '../../../components/barra_superior/barra_superior_inicio.vue'
-    import PanelLateralCalendarios from '../../../components/calendarios/panel_lateral_calendarios.vue'
-    import PanelCentralCalendarios from '../../../components/calendarios/panel_central_calendarios.vue'
+    import BarraSuperiorInicio from '../../../components/barraSuperior/BarraSuperiorInicio.vue'
+    import PanelLateralCalendarios from '../../../components/calendarios/PanelLateralCalendarios.vue'
+    import PanelCentralCalendarios from '../../../components/calendarios/PanelCentralCalendarios.vue'
 
     export default {
         components: {
@@ -111,6 +111,7 @@
         }
         #pantalla_general_inicio.menu-abierto > .panel-lateral-movil {
             transform: translateX(0);
+            background-color: color-mix(in srgb, var(--beige), var(--blanco) 80%);
         }
     }
 </style>

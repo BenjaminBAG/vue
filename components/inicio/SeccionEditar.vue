@@ -1,12 +1,12 @@
 <script setup>
     import { computed, nextTick, onMounted, ref, watch } from 'vue'
     import InputRegular from '../otros/InputRegular.vue'
-    import BtnPrincipal from '../botones/btn-principal.vue'
+    import BtnPrincipal from '../botones/BtnPrincipal.vue'
     import { Pencil } from 'lucide-vue-next'
     import HerramientasEdicion from '../otros/HerramientasEdicion.vue'
     import Selector from '../otros/Selector.vue'
-    import { useSheets } from '../../composables/useSheets'
-    import { buildEntity } from '../../composables/useSheetData'
+    import { useSheets } from '../../composables/useSheets.ts'
+    import { buildEntity } from '../../composables/useSheetData.ts'
     import TituloSeccion from '../otros/TituloSeccion.vue'
 
     const props = defineProps({

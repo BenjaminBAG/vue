@@ -2,11 +2,11 @@
     import { computed, onMounted, ref } from 'vue'
     import { User, Tag } from 'lucide-vue-next'
     import InputRegular from '../../otros/InputRegular.vue'
-    import BtPrincipal from '../../botones/btn-principal.vue'
+    import BtPrincipal from '../../botones/BtnPrincipal.vue'
     import AreaDesplazamiento from '../../otros/AreaDesplazamiento.vue'
-    import { useAuth } from '../../../composables/useAuth'
-    import { useSheets } from '../../../composables/useSheets'
-    import { buildEntity, getFieldValue } from '../../../composables/useSheetData'
+    import { useAuth } from '../../../composables/useAuth.ts'
+    import { useSheets } from '../../../composables/useSheets.ts'
+    import { buildEntity, getFieldValue } from '../../../composables/useSheetData.ts'
 
     const { usuario: usuarioSesion } = useAuth()
     const { getTable } = useSheets()

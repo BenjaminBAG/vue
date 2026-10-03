@@ -208,7 +208,7 @@ mark {
 .md-h1 {
     font-size: 2.5em;
     font-family: var(--fuente-estilizada);
-    color: var(--naranja);
+    color: var(--azul);
 }
 .md-h2 {
     font-size: 1.5em;
@@ -225,10 +225,9 @@ mark {
 
 /* Contenedores ::: info */
 .md-container {
-    padding: 1em;
+    padding: 1em 1em;
     margin: 1em 0;
-    border-left: 4px solid #94a3b8;
-    border-radius: 0 8px 8px 0;
+    border: none;
     background-color: #f8fafc;
     box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.1);
 }
@@ -245,31 +244,32 @@ mark {
 }
 
 .md-container--info {
-    border-left-color: var(--azul);
+    border: none;
     border-radius: 10px;
-    background-color: color-mix(var(--azul), var(--blanco) 90%);
+    background-color: color-mix(var(--azul), var(--blanco) 80%);
 }
 .md-container--warning {
+    border: none;
     border-radius: 10px;
-    border-left-color: var(--naranja);
-    background-color: color-mix(var(--naranja), var(--blanco) 90%);
+    background-color: color-mix(var(--naranja), var(--blanco) 80%);
 }
 .md-container--success {
+    border: none;
     border-radius: 10px;
-    border-left-color: var(--verde);
-    background-color: color-mix(var(--verde), var(--blanco) 90%);
+    background-color: color-mix(var(--verde), var(--blanco) 80%);
 }
 .md-container--danger {
+    border: none;
     border-radius: 10px;
-    border-left-color: var(--rojo);
-    background-color: color-mix(var(--rojo), var(--blanco) 90%);
+    background-color: color-mix(var(--rojo), var(--blanco) 80%);
 }
 .md-container--note,
 .md-container--tip,
 .md-container--important,
 .md-container--details {
+    background-color: color-mix(var(--azul), var(--blanco) 80%);
+    border: none;
     border-radius: 10px;
-    background-color: color-mix(var(--azul), var(--blanco) 95%);
 }
 
 .katex {

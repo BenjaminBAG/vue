@@ -1,10 +1,11 @@
 import { computed, ref } from 'vue'
 import { useSheetCollection } from './useSheetCollection'
-import { filterBySelection } from './useSheetData'
+import { filterBySearch, filterBySelection } from './useSheetData'
 
 type SelectionFilters = {
   etiquetas: string[]
   tipos: string[]
+  busqueda: string
 }
 
 type SheetSelectorOptions = {
@@ -23,7 +24,7 @@ export const useSheetSelector = ({
   onSelected
 }: SheetSelectorOptions) => {
   const selectedItem = ref<Record<string, any> | null>(null)
-  const filters = ref<SelectionFilters>({ etiquetas: [], tipos: [] })
+  const filters = ref<SelectionFilters>({ etiquetas: [], tipos: [], busqueda: '' })
   const { items, errorMessage: loadError, load } = useSheetCollection({
     tableName,
     mapping,
@@ -33,14 +34,21 @@ export const useSheetSelector = ({
   })
 
   const filteredItems = computed(() =>
-    filterBySelection(items.value, filters.value.etiquetas, filters.value.tipos)
+    filterBySearch(
+      filterBySelection(items.value, filters.value.etiquetas, filters.value.tipos),
+      filters.value.busqueda
+    )
   )
 
   const updateFilters = (value?: Partial<SelectionFilters> | null) => {
     filters.value = {
-      etiquetas: value?.etiquetas ?? [],
-      tipos: value?.tipos ?? []
+      ...filters.value,
+      ...value
     }
+  }
+
+  const updateSearch = (busqueda: string) => {
+    filters.value.busqueda = busqueda
   }
 
   const selectItem = (item: Record<string, any>) => {
@@ -48,5 +56,5 @@ export const useSheetSelector = ({
     onSelected(item)
   }
 
-  return { selectedItem, filteredItems, errorMessage: loadError, updateFilters, selectItem, load }
+  return { selectedItem, filteredItems, errorMessage: loadError, updateFilters, updateSearch, selectItem, load }
 }

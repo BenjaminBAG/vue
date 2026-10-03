@@ -75,6 +75,19 @@ export const filterBySelection = (
   })
 }
 
+export const filterBySearch = (items: Record<string, any>[], searchText = '') => {
+  const query = normalizeSheetText(searchText)
+  if (!query) return items
+
+  return items.filter((item) =>
+    Object.entries(item).some(([key, value]) => {
+      if (['id', 'idetiqueta'].includes(normalizeSheetKey(key))) return false
+      if (typeof value !== 'string' && typeof value !== 'number') return false
+      return normalizeSheetText(value).includes(query)
+    })
+  )
+}
+
 export const uniqueByField = (items: Record<string, any>[], fieldName: string) => {
   const unique = new Map<string, Record<string, any>>()
 

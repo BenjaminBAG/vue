@@ -8,10 +8,10 @@
 </template>
 
 <script setup>
-    import SeccionTitulo from '../../components/login/seccion_titulo_login.vue'
-    import SeccionFormulario from '../../components/login/seccion_formulario_login.vue'
-    import SeccionPresentacion from '../../components/login/seccion_presentacion_login.vue'
-    import SeccionPie from '../../components/login/seccion_pie_login.vue'
+    import SeccionTitulo from '../../components/login/SeccionTituloLogin.vue'
+    import SeccionFormulario from '../../components/login/SeccionFormularioLogin.vue'
+    import SeccionPresentacion from '../../components/login/SeccionPresentacionLogin.vue'
+    import SeccionPie from '../../components/login/SeccionPieLogin.vue'
 
     definePageMeta({
         middleware: ['auth']

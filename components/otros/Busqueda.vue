@@ -1,18 +1,24 @@
-<script setup> 
+<script setup lang="ts">
     import { Search } from 'lucide-vue-next' 
+
+    const emit = defineEmits<{ buscar: [texto: string] }>()
+
+    const emitirBusqueda = (event: Event) => {
+        emit('buscar', (event.target as HTMLInputElement).value)
+    }
 </script> 
 
 <template> 
-    <form action=""> 
+    <form class="formulario-busqueda" @submit.prevent>
         <div class="barra-busqueda">
             <Search />
-            <input type="search" name="q" placeholder="Buscar contenido..." required>
+            <input type="search" name="q" placeholder="Buscar contenido..." @input="emitirBusqueda">
         </div>
     </form> 
 </template> 
 
-<style> 
-    form { 
+<style scoped>
+    .formulario-busqueda {
         margin-bottom: 1em; 
         .barra-busqueda {
             position: relative;

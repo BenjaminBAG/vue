@@ -1,7 +1,7 @@
 <script setup>
     import InputRegular from '../../otros/InputRegular.vue'
     import AreaDesplazamiento from '../../otros/AreaDesplazamiento.vue'
-    import BtnPrincipal from '../../botones/btn-principal.vue'
+    import BtnPrincipal from '../../botones/BtnPrincipal.vue'
 </script>
 
 <template>

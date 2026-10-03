@@ -35,9 +35,9 @@
 <script>
 import AreaDesplazamiento from '../otros/AreaDesplazamiento.vue';
 import { ArrowLeft, ArrowRight } from 'lucide-vue-next';
-import { useSheets } from '../../composables/useSheets';
-import { buildEntity } from '../../composables/useSheetData';
-import DiaCalendario from './dia_calendario.vue';
+import { useSheets } from '../../composables/useSheets.ts';
+import { buildEntity } from '../../composables/useSheetData.ts';
+import DiaCalendario from './DiaCalendario.vue';
 
 export default {
     name: 'PanelCentralCalendarios',

@@ -2,7 +2,7 @@
     import { onMounted } from 'vue'
     import { Tag, Type } from 'lucide-vue-next'
     import { useSheetFilterOptions } from '../../composables/useSheetFilterOptions'
-    import BotonLimpiarFiltro from '../botones/btn-limpiar_filtro.vue'
+    import BotonLimpiarFiltro from '../botones/BtnLimpiarFiltro.vue'
     import ChipReactivo from '../otros/ChipReactivo.vue'
 
     const emit = defineEmits(['filtros-cambiados'])
@@ -13,7 +13,7 @@
         emitFilters: emitirFiltros,
         clearFilters: limpiarFiltros,
         load: cargarEtiquetas
-    } = useSheetFilterOptions('plantillas', (filtros) => emit('filtros-cambiados', filtros))
+    } = useSheetFilterOptions('documentos', (filtros) => emit('filtros-cambiados', filtros))
 
     onMounted(cargarEtiquetas)
 </script>
@@ -41,7 +41,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
     #seccion_filtro {
         padding-right: 1em;
         min-height: 150px;
