@@ -8,6 +8,8 @@ import markdownItKatex from 'markdown-it-katex';
 import mermaid from 'mermaid';
 import hljs from 'highlight.js';
 
+let siguienteIdMermaid = 0;
+
 const ICONOS_MAP = {
   info: 'info',
   warning: 'triangle-alert',
@@ -321,7 +323,8 @@ export function inicializarMarkdownEnPagina(rootElement) {
   window.mermaid.initialize({
     startOnLoad: false,
     securityLevel: 'loose',
-    theme: 'default'
+    theme: 'default',
+    suppressErrorRendering: true
   });
 
   const diagramas = rootElement.querySelectorAll('.mermaid');
@@ -336,12 +339,18 @@ export function inicializarMarkdownEnPagina(rootElement) {
     contenedor.dataset.mermaidRendered = 'true';
     bloque.replaceWith(contenedor);
 
-    window.mermaid.render(`mermaid-${Date.now()}-${indice}`, codigo)
+    window.mermaid.render(`mermaid-${++siguienteIdMermaid}`, codigo)
       .then(({ svg }) => {
         contenedor.innerHTML = svg;
       })
       .catch(() => {
-        contenedor.innerHTML = `<pre class="md-code-block">${document.createTextNode(codigo).textContent}</pre>`;
+        const bloqueCodigo = document.createElement('pre');
+        const codigoSeguro = document.createElement('code');
+        bloqueCodigo.className = 'md-code-block';
+        codigoSeguro.className = 'hljs md-code-fence';
+        codigoSeguro.textContent = codigo;
+        bloqueCodigo.append(codigoSeguro);
+        contenedor.replaceWith(bloqueCodigo);
       });
   });
 }

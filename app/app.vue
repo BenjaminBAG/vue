@@ -7,5 +7,6 @@
 <style>
     * {
         font-family: var(--fuente-regular);
+        font-size: var(--tamanno-regular);
     }
 </style>

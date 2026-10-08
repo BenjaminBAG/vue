@@ -5,6 +5,10 @@
         activo: {
             type: Boolean,
             default: false
+        },
+        deshabilitado: {
+            type: Boolean,
+            default: false
         }
     })
 </script>
@@ -13,8 +17,9 @@
     <button
         type="button"
         :class="{ 'is-active': activo }"
+        :disabled="deshabilitado"
         aria-label="Llenar plantilla"
-        title="Llenar plantilla"
+        :title="deshabilitado ? 'Selecciona una plantilla para llenarla' : 'Llenar plantilla'"
     >
         <FileText aria-hidden="true" />
     </button>
@@ -32,14 +37,19 @@
         transition: transform 0.3s ease;
     }
 
-    button:hover {
+    button:hover:not(:disabled) {
         background-color: var(--verde);
         transform: rotate(7deg) scale(1.1);
     }
 
-    button:hover svg,
+    button:hover:not(:disabled) svg,
     button.is-active svg {
         color: var(--blanco);
+    }
+
+    button:disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
     }
 
     button.is-active {

@@ -7,6 +7,7 @@
     line-height: 1.6;
     margin-bottom: 1em;
     white-space: normal;
+    text-align: justify;
 }
 
 mark {
@@ -19,10 +20,10 @@ mark {
 .md-code-inline {
     background-color: #f1f5f9;
     color: #0f172a;
-    padding: 0.2em 0.4em;
+    padding: 0em 0.4em;
     border-radius: 4px;
     font-family: monospace;
-    font-size: 0.9em;
+    font-size: 1.2em;
 }
 
 .md-image {
@@ -57,28 +58,16 @@ mark {
     overflow: hidden;
 }
 
-.md-table th,
+.md-table th {
+    padding: 0.7em 0.9em;
+    border: 2px solid var(--beige);
+    background-color: color-mix(transparent, var(--negro) 10%);
+    font-weight: 700;
+    vertical-align: middle;
+}
 .md-table td {
     padding: 0.7em 0.9em;
-    border-bottom: 1px solid var(--beige);
-}
-
-.md-table th {
-    font-weight: 700;
-    position: relative;
-    padding-left: 28px;
-    vertical-align: middle;
-    text-align: left;
-    &::before {
-        content: "";
-        position: absolute;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 0.7em;
-        height: 0.7em;
-        background-color: var(--azul);
-    }
+    border: 2px solid var(--beige);
 }
 
 .md-table tbody tr:nth-child(even) {

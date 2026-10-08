@@ -225,6 +225,7 @@
 <style scoped>
     #barra-herramientas-edicion {
         width: 100%;
+        box-sizing: border-box;
         background-color: var(--beige);
         border-radius: 10px 10px 0 0;
         border: none;
@@ -233,6 +234,7 @@
         gap: 0.2em;
         position: sticky;
         top: 0;
+        z-index: 2;
         display: flex;
         flex-direction: column;
         div {

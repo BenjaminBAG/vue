@@ -30,6 +30,9 @@ type SheetsClient = ReturnType<typeof google.sheets>
 const normalizeKey = (value: string) =>
   String(value ?? '').trim().toLowerCase().replace(/[^a-z0-9]/g, '')
 
+const normalizeIdentifier = (value: unknown) =>
+  String(value ?? '').trim()
+
 const getTableDefinition = (tableName: string): TableDefinition | null => {
   const tables = Array.isArray((sheetSchema as any)?.tables) ? (sheetSchema as any).tables : []
   const target = String(tableName ?? '').trim().toLowerCase()
@@ -167,6 +170,28 @@ const serializeAuditRecord = (table: TableDefinition, row: Record<string, any>) 
     throw createError({ statusCode: 413, statusMessage: 'El registro es demasiado grande para guardarse completo en la auditoría.' })
   }
   return serialized
+}
+
+const deserializeAuditRecord = (serialized: string | null | undefined) => {
+  if (!serialized) return { table: null, values: {} }
+
+  try {
+    const parsed = JSON.parse(serialized)
+    if (!Array.isArray(parsed)) return { table: null, values: {} }
+
+    const [tableEntry, ...fieldEntries] = parsed
+    const tableName = typeof tableEntry?.[1] === 'string' ? tableEntry[1] : ''
+    return {
+      table: tableName,
+      values: Object.fromEntries(
+        fieldEntries
+          .filter((entry): entry is [string, any] => Array.isArray(entry) && entry.length >= 2)
+          .map(([key, value]) => [key, value ?? ''])
+      )
+    }
+  } catch {
+    return { table: null, values: {} }
+  }
 }
 
 const createAuditRow = (
@@ -401,6 +426,71 @@ export default defineEventHandler(async (event) => {
       await updateAndAudit(sheets, sheetId, table, tableSheetId, updateRequest, [auditRow])
 
       return { ok: true, table: table.name, id, updatedFields: changedFields }
+    }
+
+    if (action === 'undo') {
+      const changeId = typeof query.id === 'string' ? query.id.trim() : ''
+      if (!changeId) {
+        throw createError({ statusCode: 400, statusMessage: 'Se requiere un id de cambio para deshacer.' })
+      }
+
+      const actorId = await getActorId(event, sheets, sheetId)
+      const auditTable = getTableDefinition('cambios')
+      if (!auditTable) throw createError({ statusCode: 500, statusMessage: 'No existe la tabla cambios en el esquema.' })
+      const auditSheetData = await fetchSheetValues(sheets, sheetId, auditTable.range)
+      const auditRows = parseGoogleSheetRows(auditSheetData.values || [])
+      const auditRow = auditRows.find((row) => String(row.id ?? '').trim() === changeId)
+      if (!auditRow) throw createError({ statusCode: 404, statusMessage: `No se encontró el cambio ${changeId}.` })
+
+      const usersTable = getTableDefinition('usuarios')
+      const usersRows = usersTable ? parseGoogleSheetRows((await fetchSheetValues(sheets, sheetId, usersTable.range)).values || []) : []
+      const usuarioRegistrado = usersRows.find((user) => normalizeIdentifier(user[normalizeKey(usersTable?.primaryKey || 'id')]) === actorId)
+      const idUsuarioCambio = normalizeIdentifier(auditRow.id_usuario)
+      if (!usuarioRegistrado || idUsuarioCambio !== normalizeIdentifier(usuarioRegistrado[normalizeKey(usersTable?.primaryKey || 'id')])) {
+        throw createError({
+          statusCode: 403,
+          statusMessage: `No puedes deshacer un cambio que no pertenece a tu usuario. Sesión: ${actorId}. Cambio: ${idUsuarioCambio}.`
+        })
+      }
+
+      const actionType = String(auditRow.tipo ?? '').trim()
+      const previousAudit = deserializeAuditRecord(String(auditRow.valor_anterior ?? ''))
+      const targetId = String(auditRow.id_registro ?? '').trim()
+      const targetTable = previousAudit.table ? getTableDefinition(previousAudit.table) : null
+      if (!targetTable) throw createError({ statusCode: 500, statusMessage: 'No se pudo identificar la tabla del cambio.' })
+
+      const tableRows = parseGoogleSheetRows((await fetchSheetValues(sheets, sheetId, targetTable.range)).values || [])
+      const primaryKey = targetTable.primaryKey || 'id'
+      const rowIndex = tableRows.findIndex((row) => String(row[normalizeKey(primaryKey)] ?? '').trim() === targetId)
+      const row = toTableRow(targetTable, previousAudit.values)
+
+      if (actionType === 'creación') {
+        if (rowIndex < 0) throw createError({ statusCode: 404, statusMessage: `No se encontró el registro ${targetId} para deshacer su creación.` })
+        const tableSheetId = await getSheetId(sheets, sheetId, getTableSheetName(targetTable))
+        await sheets.spreadsheets.batchUpdate({
+          spreadsheetId: sheetId,
+          requestBody: { requests: [{ deleteDimension: { range: { sheetId: tableSheetId, dimension: 'ROWS', startIndex: rowIndex + 1, endIndex: rowIndex + 2 } } }] }
+        })
+      } else if (actionType === 'eliminación') {
+        const tableSheetId = await getSheetId(sheets, sheetId, getTableSheetName(targetTable))
+        await sheets.spreadsheets.batchUpdate({
+          spreadsheetId: sheetId,
+          requestBody: { requests: [appendCellsRequest(tableSheetId, [row], getFieldNames(targetTable))] }
+        })
+      } else if (actionType === 'modificación') {
+        if (rowIndex < 0) throw createError({ statusCode: 404, statusMessage: `No se encontró el registro ${targetId} para restaurar su estado anterior.` })
+        const sheetRowNumber = rowIndex + 2
+        const updateRequest = {
+          updateCells: {
+            start: { sheetId: await getSheetId(sheets, sheetId, getTableSheetName(targetTable)), rowIndex: sheetRowNumber - 1, columnIndex: 0 },
+            rows: [rowData(row, getFieldNames(targetTable))],
+            fields: 'userEnteredValue'
+          }
+        }
+        await sheets.spreadsheets.batchUpdate({ spreadsheetId: sheetId, requestBody: { requests: [updateRequest] } })
+      }
+
+      return { ok: true, table: targetTable.name, id: targetId, undo: true, action: actionType }
     }
 
     if (action === 'delete') {

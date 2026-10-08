@@ -95,7 +95,8 @@
             { "name": "nombre", "type": "string" },
             { "name": "tipo", "type": "string" },
             { "name": "contenido_markdown", "type": "string" },
-            { "name": "id_etiqueta", "type": "string", "foreignKey": "etiquetas.id" }
+            { "name": "id_etiqueta", "type": "string", "foreignKey": "etiquetas.id" },
+            { "name": "estatus", "type": "string", "enum": ["borrador", "publicado"] }
         ]
     },
     {

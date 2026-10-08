@@ -14,14 +14,17 @@
     }
     const actualizarVista = (nuevaVista) => {
         vistaActiva.value = nuevaVista
+        titulos.value = []
     }
     const actualizarDocumentoSeleccionado = (documento) => {
         documentoSeleccionado.value = documento
         documentoEnEdicion.value = documento?.contenidoMarkdown || documento?.contenido || ''
+        titulos.value = []
         menuAbierto.value = false
     }
     const actualizarContenidoEnEdicion = (nuevoTexto) => {
         documentoEnEdicion.value = nuevoTexto
+        titulos.value = []
     }
 </script>
 

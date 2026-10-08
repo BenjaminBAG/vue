@@ -9,11 +9,13 @@
     import AreaDesplazamiento from '../../otros/AreaDesplazamiento.vue'
 
     const { usuario } = useAuth()
-    const { getTable } = useSheets()
+    const { getTable, undoChange } = useSheets()
     const cambios = ref([])
     const usuarios = ref([])
     const soloYo = ref(false)
     const errorMensaje = ref('')
+    const descripcionActiva = ref(null)
+    const cambioEnProgreso = ref(null)
 
     const esCambioPropio = (item) => {
         const idUsuarioActivo = String(usuario.value?.id ?? '').trim()
@@ -24,6 +26,12 @@
         if (!soloYo.value) return cambios.value.filter(x => x.ambito !== 'privado' || x.ambito === 'privado' && esCambioPropio(x))
         return cambios.value.filter(esCambioPropio)
     })
+
+    const cambiosOrdenados = computed(() => [...cambiosVisibles.value].sort((a, b) => {
+        const fechaA = new Date(a.fechaHora || 0).getTime()
+        const fechaB = new Date(b.fechaHora || 0).getTime()
+        return fechaB - fechaA
+    }))
 
     const obtenerNombreUsuario = (idUsuario) => {
         const usuarioEncontrado = usuarios.value.find((u) => u.id === idUsuario)
@@ -58,6 +66,22 @@
         }
     }
 
+    const deshacerCambio = async (cambio) => {
+        if (!cambio?.id || cambioEnProgreso.value) return
+
+        cambioEnProgreso.value = cambio.id
+        errorMensaje.value = ''
+        try {
+            await undoChange(cambio.id)
+            await cargarHistorial()
+        } catch (error) {
+            console.error('Error al deshacer el cambio:', error)
+            errorMensaje.value = error?.data?.statusMessage || error?.message || 'No se pudo deshacer el cambio.'
+        } finally {
+            cambioEnProgreso.value = null
+        }
+    }
+
     onMounted(cargarHistorial)
 </script>
 
@@ -79,24 +103,40 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in cambiosVisibles" :key="item.id">
+                    <tr v-for="item in cambiosOrdenados" :key="item.id">
                         <td>{{ item.id }}</td>
                         <td>{{ item.fechaHora }}</td>
                         <td>{{ obtenerNombreUsuario(item.idUsuario) }}</td>
                         <td>
-                            {{ item.tipo }} ({{ item.ambito }}) en {{ item.idRegistro }}: 
-                            <span class="valor-anterior">
-                                {{ item.valorAnterior === "" ? "(vacío)" : item.valorAnterior }}
-                            </span> 
-                            -> 
-                            <span class="valor-nuevo">
-                                {{ item.valorNuevo === "" ? "(vacío)" : item.valorNuevo }}
-                            </span>
+                            <button
+                                type="button"
+                                class="boton-mostrar-descripcion"
+                                :aria-expanded="String(item.id === descripcionActiva)"
+                                @click="descripcionActiva = descripcionActiva === item.id ? null : item.id"
+                            >
+                                {{ item.tipo }} ({{ item.ambito }}) en {{ item.idRegistro }}
+                                <span class="texto-toggle">{{ descripcionActiva === item.id ? 'Ocultar' : 'Mostrar' }}</span>
+                            </button>
+                            <div v-if="descripcionActiva === item.id" class="descripcion-expandida">
+                                <span class="valor-anterior">
+                                    {{ item.valorAnterior === "" ? "(vacío)" : item.valorAnterior }}
+                                </span>
+                                <span class="flecha">→</span>
+                                <span class="valor-nuevo">
+                                    {{ item.valorNuevo === "" ? "(vacío)" : item.valorNuevo }}
+                                </span>
+                            </div>
                         </td>
-                        <td v-if="esCambioPropio(item)"><BtnDeshacer /></td>
+                        <td v-if="esCambioPropio(item)">
+                            <BtnDeshacer
+                                :deshabilitado="cambioEnProgreso !== null"
+                                :cargando="cambioEnProgreso === item.id"
+                                @deshacer="deshacerCambio(item)"
+                            />
+                        </td>
                         <td v-else></td>
                     </tr>
-                    <tr v-if="!errorMensaje && cambiosVisibles.length === 0">
+                    <tr v-if="!errorMensaje && cambiosOrdenados.length === 0">
                         <td colspan="5" class="mensaje-historial">No hay cambios para mostrar.</td>
                     </tr>
                 </tbody>
@@ -124,6 +164,7 @@
             }
             td, th {
                 padding: 0.6em 0.4em;
+                vertical-align: top;
                 .valor-anterior {
                     font-family: var(--fuente-mono);
                     font-size: 0.8em;
@@ -133,6 +174,40 @@
                     font-family: var(--fuente-mono);
                     font-size: 0.8em;
                     color: var(--verde)
+                }
+            }
+            .boton-mostrar-descripcion {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1em;
+                width: 100%;
+                padding: 0;
+                border: none;
+                background: transparent;
+                color: inherit;
+                cursor: pointer;
+                text-align: left;
+                .texto-toggle {
+                    color: var(--gris);
+                    font-size: 0.8em;
+                    white-space: nowrap;
+                }
+            }
+            .descripcion-expandida {
+                display: flex;
+                align-items: center;
+                gap: 0.5em;
+                width: 100%;
+                max-width: 100%;
+                margin-top: 0.5em;
+                padding: 0.75em;
+                overflow-wrap: anywhere;
+                overflow-x: auto;
+                border-radius: 0.5em;
+                background-color: color-mix(in srgb, var(--gris-claro, #f0f0f0) 60%, transparent);
+                .flecha {
+                    flex-shrink: 0;
                 }
             }
         }

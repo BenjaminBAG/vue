@@ -3,17 +3,17 @@
     <div class="animation-container">
       <!-- Triángulo Isósceles Naranja (Entra 1ro, Estaciona a la Derecha, Sale 1ro) -->
       <svg class="shape triangle" viewBox="0 0 100 100">
-        <polygon points="15,15 15,85 85,50" fill="#FF8C00" />
+        <polygon points="15,15 15,85 85,50" fill="#ef7a6b" />
       </svg>
       
       <!-- Cuadro Azul (Entra 2do, Estaciona al Centro, Sale 2do) -->
       <svg class="shape square" viewBox="0 0 100 100">
-        <rect x="20" y="20" width="60" height="60" rx="4" fill="#007AFF" />
+        <rect x="20" y="20" width="60" height="60" rx="4" fill="#3f81ac" />
       </svg>
       
       <!-- Círculo Verde (Entra 3ro, Estaciona a la Izquierda, Sale 3ro) -->
       <svg class="shape circle" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="30" fill="#34C759" />
+        <circle cx="50" cy="50" r="30" fill="#38814b" />
       </svg>
     </div>
   </div>
@@ -30,7 +30,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(245, 247, 250, 0.95);
+  background-color: color-mix(in srgb, var(--beige), var(--blanco) 80%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -54,13 +54,13 @@
 }
 
 .triangle {
-  animation: slide-triangle 2.4s infinite;
+  animation: slide-triangle 0.5s infinite;
 }
 .square {
-  animation: slide-square 2.4s infinite;
+  animation: slide-square 0.5s infinite;
 }
 .circle {
-  animation: slide-circle 2.4s infinite;
+  animation: slide-circle 0.5s infinite;
 }
 
 /* 

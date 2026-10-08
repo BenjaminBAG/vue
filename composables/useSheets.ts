@@ -103,6 +103,14 @@ export const useSheets = () => {
     })
   }
 
+  const undoChange = async (changeId: string | number) => {
+    return await request({
+      action: 'undo',
+      id: changeId,
+      method: 'POST'
+    })
+  }
+
   return {
     fetchSheetRange,
     getTable,
@@ -110,7 +118,8 @@ export const useSheets = () => {
     saveRows,
     saveRow,
     updateRow,
-    deleteRow
+    deleteRow,
+    undoChange
   }
 }
 

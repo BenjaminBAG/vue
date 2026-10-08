@@ -36,18 +36,18 @@
             height: auto;
             border: none;
         }
-    }
-    button:hover { 
-        background-color: var(--verde); 
-        transform: rotate(7deg) scale(1.1);
-        svg {
-            color: var(--blanco); 
+        &:hover { 
+            background-color: var(--verde); 
+            transform: rotate(7deg) scale(1.1);
+            svg {
+                color: var(--blanco); 
+            }
         }
-    }
-    button.is-active {
-        background-color: var(--negro);
-    }
-    button.is-active svg {
-        color: var(--blanco);
+        &.is-active {
+            background-color: var(--negro);
+            svg {
+                color: var(--blanco);
+            }
+        }
     }
 </style>

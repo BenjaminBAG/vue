@@ -5,6 +5,7 @@
     import { Pencil } from 'lucide-vue-next'
     import HerramientasEdicion from '../otros/HerramientasEdicion.vue'
     import Selector from '../otros/Selector.vue'
+    import EditorMarkdown from '../otros/EditorMarkdown.vue'
     import { useSheets } from '../../composables/useSheets.ts'
     import { buildEntity } from '../../composables/useSheetData.ts'
     import TituloSeccion from '../otros/TituloSeccion.vue'
@@ -25,9 +26,11 @@
     })
 
     const emit = defineEmits(['update:modelValue', 'documento-guardado'])
-    const textareaRef = ref(null)
+    const editorMarkdownRef = ref(null)
     const etiquetas = ref([])
     const nombreDocumento = ref('')
+    const tipoDocumento = ref('markdown')
+    const estatusDocumento = ref('borrador')
     const etiquetaSeleccionada = ref('')
     const guardando = ref(false)
     const mensaje = ref('')
@@ -40,11 +43,15 @@
         ([modo]) => {
             if (modo === 'nuevo') {
                 nombreDocumento.value = ''
+                tipoDocumento.value = 'markdown'
+                estatusDocumento.value = 'borrador'
                 etiquetaSeleccionada.value = ''
                 return
             }
 
             nombreDocumento.value = String(props.documentoParaEditar?.nombre ?? '')
+            tipoDocumento.value = String(props.documentoParaEditar?.tipo ?? 'markdown')
+            estatusDocumento.value = String(props.documentoParaEditar?.estatus ?? 'borrador')
             etiquetaSeleccionada.value = String(
                 props.documentoParaEditar?.idEtiqueta ?? props.documentoParaEditar?.id_etiqueta ?? ''
             ).trim()
@@ -71,8 +78,8 @@
         return props.documentoParaEditar?.contenidoMarkdown || ''
     })
 
-    const actualizarContenido = (event) => {
-        emit('update:modelValue', event.target.value)
+    const actualizarContenido = (contenido) => {
+        emit('update:modelValue', contenido)
     }
 
     const guardarDocumento = async () => {
@@ -87,7 +94,8 @@
         const id = idExistente || globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`
         const nombre = nombreDocumento.value.trim()
         const contenidoMarkdown = contenidoActual.value
-        const tipo = props.documentoParaEditar?.tipo || 'markdown'
+        const tipo = tipoDocumento.value.trim()
+        const estatus = estatusDocumento.value
 
         try {
             const fila = {
@@ -95,7 +103,8 @@
                 nombre,
                 tipo,
                 contenido_markdown: contenidoMarkdown,
-                id_etiqueta: etiquetaSeleccionada.value
+                id_etiqueta: etiquetaSeleccionada.value,
+                estatus
             }
 
             if (esNuevo) {
@@ -110,7 +119,8 @@
                 nombre,
                 tipo,
                 contenidoMarkdown,
-                idEtiqueta: etiquetaSeleccionada.value
+                idEtiqueta: etiquetaSeleccionada.value,
+                estatus
             }, props.modo)
             await nextTick()
             mensaje.value = esNuevo ? 'Documento guardado correctamente.' : 'Documento actualizado correctamente.'
@@ -124,26 +134,15 @@
     }
 
     const insertarTextoEnEditor = (texto) => {
-        const textarea = textareaRef.value
+        const editor = editorMarkdownRef.value
         const valorActual = contenidoActual.value || ''
 
-        if (!textarea) {
+        if (!editor) {
             emit('update:modelValue', valorActual + texto)
             return
         }
 
-        const inicio = textarea.selectionStart ?? valorActual.length
-        const fin = textarea.selectionEnd ?? valorActual.length
-        const nuevoValor = valorActual.slice(0, inicio) + texto + valorActual.slice(fin)
-
-        emit('update:modelValue', nuevoValor)
-
-        nextTick(() => {
-            textarea.focus()
-            const nuevaPosicion = inicio + texto.length
-            textarea.selectionStart = nuevaPosicion
-            textarea.selectionEnd = nuevaPosicion
-        })
+        editor.insertarTexto(texto)
     }
 </script>
 
@@ -158,6 +157,18 @@
                 required
                 v-model="nombreDocumento"
             />
+            <InputRegular
+                label="Tipo"
+                type="text"
+                placeholder="Ej. markdown"
+                required
+                v-model="tipoDocumento"
+            />
+            <p>Estatus</p>
+            <Selector v-model="estatusDocumento">
+                <option value="borrador">Borrador</option>
+                <option value="publicado">Publicado</option>
+            </Selector>
             <p>Etiqueta</p>
             <Selector v-model="etiquetaSeleccionada">
                 <option value="">Selecciona una etiqueta</option>
@@ -167,13 +178,12 @@
             </Selector>
             <p>Contenido</p>
             <HerramientasEdicion @insertar-texto="insertarTextoEnEditor" />
-            <textarea
-                ref="textareaRef"
-                spellcheck="false"
-                name="contenido"
-                :value="contenidoActual"
-                @input="actualizarContenido"
-            ></textarea>
+            <EditorMarkdown
+                :key="`${modo}-${documentoParaEditar?.id ?? 'nuevo'}`"
+                ref="editorMarkdownRef"
+                :model-value="contenidoActual"
+                @update:model-value="actualizarContenido"
+            />
             <BtnPrincipal :texto="guardando ? 'Guardando...' : 'Guardar'" :disabled="guardando" />
             <p v-if="mensaje" :class="{ error }" role="status">{{ mensaje }}</p>
         </form>
@@ -182,30 +192,11 @@
 </template>
 
 <style scoped>
-    h2, p, textarea {
+    h2, p {
         color: var(--negro);
     }
     #seccion_editar {
         padding: 2em 0;
-        textarea {
-            field-sizing: content;
-            width: 100%;
-            min-height: 300px;
-            padding: 1em;
-            font-family: inherit;
-            font-size: 1em;
-            resize: none;
-            box-sizing: border-box;
-            border: none;
-            border-radius: 0 0 10px 10px;
-            background-color: var(--blanco);
-            transition: border-left 0.01s, border-radius 0.3s;
-            &:focus {
-                outline: none;
-                border-left: 5px solid var(--azul);
-                border-radius: 0 0 10px 0;
-            }
-        }
     }
 
     .error {

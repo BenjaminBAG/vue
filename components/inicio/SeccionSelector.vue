@@ -1,5 +1,5 @@
 <script setup>
-    import { onMounted } from 'vue'
+    import { computed, onMounted } from 'vue'
     import { MousePointerClick } from 'lucide-vue-next'
     import { useSheetSelector } from '../../composables/useSheetSelector.ts'
     import SeccionFiltro from '../../components/inicio/SeccionFiltro.vue'
@@ -23,14 +23,24 @@
             nombre: ['nombre'],
             tipo: ['tipo'],
             contenidoMarkdown: ['contenidomarkdown'],
-            idEtiqueta: ['idetiqueta']
+            idEtiqueta: ['idetiqueta'],
+            estatus: ['estatus']
         },
         errorMessage: 'No se pudieron cargar los documentos.',
         logMessage: 'Error al cargar los documentos',
         onSelected: (item) => emit('documento-seleccionado', item)
     })
 
-    onMounted(cargarDocumentos)
+    const documentosPublicados = computed(() =>
+        documentosFiltrados.value.filter(
+            (documento) => String(documento.estatus ?? '').trim().toLowerCase() === 'publicado'
+        )
+    )
+
+    const cargarDocumentosActualizados = () => cargarDocumentos()
+
+    onMounted(cargarDocumentosActualizados)
+    defineExpose({ cargarDocumentos: cargarDocumentosActualizados })
 </script>
 
 <template>
@@ -39,7 +49,7 @@
         <SeccionFiltro @filtros-cambiados="actualizarFiltros" />
         <Busqueda @buscar="actualizarBusqueda" />
         
-        <ChipUnico v-if="documentosFiltrados.length" v-for="item in documentosFiltrados"
+        <ChipUnico v-if="documentosPublicados.length" v-for="item in documentosPublicados"
         :docSeleccionado="documentoSeleccionado"
         :item="item"
         @click="seleccionarDocumento(item)"

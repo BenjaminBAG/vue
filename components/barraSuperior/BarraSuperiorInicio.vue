@@ -32,8 +32,8 @@
 <template>
     <header id="barra_superior">
         <section id="seccion_titulo">
-        <img src="../../assets/logos/logo_blanco/MG_BAG_Principal_SinTagline/MG_BAG_Principal_SinTagline.png" alt="Logo BAG Group" width="auto" height="80px" />
-        <h1>Portal Empresarial</h1>
+            <img src="../../assets/logos/logo_blanco/MG_BAG_Principal_SinTagline/MG_BAG_Principal_SinTagline.png" alt="Logo BAG Group" width="auto" height="80px" />
+            <h1>Portal Empresarial</h1>
         </section>
         
         <div id="seccion_botones">
@@ -71,7 +71,7 @@
             flex-direction: row;
             justify-content: flex-start;
             align-items: center;
-            font-size: 0.8em;
+            font-size: 2em;
             min-width: 0;
         }
         #seccion_botones {

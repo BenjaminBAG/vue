@@ -5,12 +5,21 @@
         activo: {
             type: Boolean,
             default: false
+        },
+        deshabilitado: {
+            type: Boolean,
+            default: false
         }
     })
 </script>
 
 <template>
-    <button :class="{ 'is-active': activo }">
+    <button
+        type="button"
+        :class="{ 'is-active': activo }"
+        :disabled="deshabilitado"
+        :title="deshabilitado ? 'Selecciona un registro para editar' : 'Editar registro'"
+    >
         <Pencil />
     </button>
 </template>
@@ -37,12 +46,16 @@
             border: none;
         }
     }
-    button:hover { 
+    button:hover:not(:disabled) { 
         background-color: var(--verde); 
         transform: rotate(7deg) scale(1.1);
         svg {
             color: var(--blanco); 
         }
+    }
+    button:disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
     }
     button.is-active {
         background-color: var(--negro);

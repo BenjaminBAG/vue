@@ -2,7 +2,7 @@
     <button
         type="button"
         :class="{ 'is-active': activo }"
-        :disabled="!ruta"
+        :disabled="deshabilitado || !ruta"
         :title="ruta ? 'Abrir documento' : 'Selecciona un documento'"
         @click="abrirDocumento"
     >
@@ -21,6 +21,10 @@
         ruta: {
             type: String,
             default: ''
+        },
+        deshabilitado: {
+            type: Boolean,
+            default: false
         }
     })
 
@@ -48,12 +52,16 @@
             border: none;
         }
     }
-    button:hover { 
+    button:hover:not(:disabled) { 
         background-color: var(--rojo); 
         transform: rotate(7deg) scale(1.1);
         svg {
             color: var(--blanco); 
         }
+    }
+    button:disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
     }
     button.is-active {
         background-color: var(--negro);

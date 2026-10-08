@@ -1,6 +1,9 @@
 <template>
     <AreaDesplazamiento id="contenedor_panel_central_inicio">
-        <div id="panel_central_inicio">
+        <div
+            id="panel_central_inicio"
+            :key="`${vistaActiva}-${documento?.id ?? 'nuevo'}-${documentoEnEdicion.length}`"
+        >
             <div id="contenedor_documento" v-html="contenidoRenderizado"></div>
         </div>
     </AreaDesplazamiento>
@@ -31,25 +34,25 @@
         components: {
             AreaDesplazamiento
         },
+        data() {
+            return {
+                temporizadorMermaid: null
+            };
+        },
         mounted() {
-            this.$nextTick(() => {
-                inicializarMarkdownEnPagina(this.$el.querySelector('#contenedor_documento'));
-            });
+            this.programarRenderizadoMermaid();
         },
         updated() {
-            this.$nextTick(() => {
-                inicializarMarkdownEnPagina(this.$el.querySelector('#contenedor_documento'));
-            });
+            this.programarRenderizadoMermaid();
         },
         methods: {
-            renderizarMermaid() {
-                if (typeof window !== 'undefined' && window.mermaid) {
-                    window.mermaid.initialize({
-                        startOnLoad: false,
-                        securityLevel: 'loose',
-                        theme: 'default'
+            programarRenderizadoMermaid() {
+                clearTimeout(this.temporizadorMermaid);
+                this.temporizadorMermaid = setTimeout(() => {
+                    this.$nextTick(() => {
+                        inicializarMarkdownEnPagina(this.$el.querySelector('#contenedor_documento'));
                     });
-                }
+                }, 350);
             }
         },
         computed: {
@@ -75,9 +78,7 @@
             }
         },
         beforeUnmount() {
-            if (typeof window !== 'undefined' && window.mermaid) {
-                window.mermaid.initialize({ startOnLoad: false });
-            }
+            clearTimeout(this.temporizadorMermaid);
         }
     };
 </script>

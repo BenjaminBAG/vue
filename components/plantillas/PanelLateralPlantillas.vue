@@ -4,6 +4,7 @@
     import BtnCircularEditar from '../botones/BtnCircularEditar.vue'
     import BtnCircularLlenar from '../botones/BtnCircularLlenar.vue'
     import BtnCircularNuevo from '../botones/BtnCircularNuevo.vue'
+    import BtnCircularBorrar from '../botones/BtnCircularBorrar.vue'
     import BtnCircularExternalLink from '../botones/BtnCircularLink.vue'
     import BtnCopiar from '../botones/BtnCopiar.vue'
     import SeccionSelector from './SeccionSelector.vue'
@@ -11,12 +12,15 @@
     import SeccionLlenar from './SeccionLlenar.vue'
     import SeccionNuevo from './SeccionNuevo.vue'
     import AreaDesplazamiento from '../otros/AreaDesplazamiento.vue'
+    import { useSheets } from '../../composables/useSheets.ts'
 
     const emit = defineEmits(['documento-seleccionado', 'vista-cambiada', 'contenido-editor-cambiado'])
 
     const vistaActiva = ref('selector')
     const contenidoEditor = ref('')
     const selectorVersion = ref(0)
+    const borrando = ref(false)
+    const { deleteRow } = useSheets()
 
     const actualizarListaPlantillas = () => {
         selectorVersion.value += 1
@@ -57,6 +61,28 @@
         emit('documento-seleccionado', documento)
     }
 
+    const borrarPlantillaSeleccionada = async () => {
+        const plantilla = documentoSeleccionado.value
+        if (!plantilla?.id || borrando.value) return
+
+        if (!window.confirm(`¿Borrar la plantilla "${plantilla.nombre}"?`)) return
+
+        borrando.value = true
+        try {
+            await deleteRow('plantillas', plantilla.id)
+            documentoSeleccionado.value = null
+            contenidoEditor.value = ''
+            selectorVersion.value += 1
+            emit('documento-seleccionado', null)
+            emit('contenido-editor-cambiado', '')
+        } catch (error) {
+            console.error('Error al borrar la plantilla:', error)
+            window.alert('No se pudo borrar la plantilla. Comprueba la conexión con Google Sheets.')
+        } finally {
+            borrando.value = false
+        }
+    }
+
     defineProps({
         titulos: {
             type: Array,
@@ -70,11 +96,40 @@
         <header class="botones_seleccion">
             <!-- Pasamos true o false si la vista coincide -->
             <BtnCircularSelector :activo="vistaActiva === 'selector'" @click="cambiarVista('selector')" />
-            <BtnCircularEditar :activo="vistaActiva === 'editar'" @click="cambiarVista('editar')" />
-            <BtnCircularLlenar :activo="vistaActiva === 'llenar'" @click="cambiarVista('llenar')" />
             <BtnCircularNuevo  :activo="vistaActiva === 'nuevo'"  @click="cambiarVista('nuevo')" />
-            <BtnCircularExternalLink :ruta="documentoSeleccionado?.urlDocumento || ''" />
-            <BtnCopiar :ruta="documentoSeleccionado?.urlDocumento || ''" />
+            <Transition name="boton-disponible" mode="out-in">
+                <BtnCircularEditar
+                    v-if="documentoSeleccionado?.id"
+                    :activo="vistaActiva === 'editar'"
+                    @click="cambiarVista('editar')"
+                />
+            </Transition>
+            <Transition name="boton-disponible" mode="out-in">
+                <BtnCircularLlenar
+                    v-if="documentoSeleccionado?.id"
+                    :activo="vistaActiva === 'llenar'"
+                    @click="cambiarVista('llenar')"
+                />
+            </Transition>
+            <Transition name="boton-disponible" mode="out-in">
+                <BtnCircularBorrar
+                    v-if="documentoSeleccionado?.id"
+                    :deshabilitado="borrando"
+                    @borrar="borrarPlantillaSeleccionada"
+                />
+            </Transition>
+            <Transition name="boton-disponible" mode="out-in">
+                <BtnCircularExternalLink
+                    v-if="documentoSeleccionado?.urlDocumento"
+                    :ruta="documentoSeleccionado.urlDocumento"
+                />
+            </Transition>
+            <Transition name="boton-disponible" mode="out-in">
+                <BtnCopiar
+                    v-if="documentoSeleccionado?.urlDocumento"
+                    :ruta="documentoSeleccionado.urlDocumento"
+                />
+            </Transition>
         </header>
         <KeepAlive>
             <AreaDesplazamiento v-if="vistaActiva === 'selector'"
@@ -136,6 +191,20 @@
             & > * {
                 flex-shrink: 0;
             }
+        }
+        .boton-disponible-enter-active,
+        .boton-disponible-leave-active {
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        .boton-disponible-enter-from,
+        .boton-disponible-leave-to {
+            opacity: 0;
+            transform: scale(0.75);
+        }
+        .boton-disponible-enter-to,
+        .boton-disponible-leave-from {
+            opacity: 1;
+            transform: scale(1);
         }
         .contenedor_secciones {
             flex: 1 1 auto;

@@ -23,7 +23,7 @@
         <ul v-if="titulos.length > 0">
                         <li
                             v-for="item in titulos"
-                            :key="item.slug"
+                            :key="`${item.slug}-${item.nivel}`"
               :style="{ paddingLeft: `${(item.nivel - 1) * 1.2}rem` }"
             >
                 <a :href="`#${item.slug}`" @click.prevent="irASeccion(item.slug)">

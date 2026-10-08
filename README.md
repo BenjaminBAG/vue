@@ -85,3 +85,9 @@ configuración de API de Google Sheets en [este enlace](https://console.cloud.go
 npm install googleapis
 
 npx nuxi module add ui
+
+
+npm install @codemirror/commands @codemirror/lang-markdown @codemirror/language @codemirror/state @codemirror/view
+
+
+npm install mermaid@^12.1.0

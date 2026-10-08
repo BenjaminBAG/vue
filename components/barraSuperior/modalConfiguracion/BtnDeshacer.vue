@@ -1,21 +1,29 @@
 <script setup>
     import { Undo } from 'lucide-vue-next'
-    import { ref } from 'vue'
 
-    const estaDesactivado = ref(false)
-    const deshacer = () => {
-        estaDesactivado.value = true
-    }
+    defineProps({
+        deshabilitado: {
+            type: Boolean,
+            default: false
+        },
+        cargando: {
+            type: Boolean,
+            default: false
+        }
+    })
+
+    const emit = defineEmits(['deshacer'])
 </script>
 
 <template>
     <button
-    class="btn-deshacer"
-    @click="deshacer"
-    :disabled="estaDesactivado"
+        class="btn-deshacer"
+        type="button"
+        :disabled="deshabilitado || cargando"
+        @click="emit('deshacer')"
     >
         <Undo />
-        Deshacer
+        {{ cargando ? 'Deshaciendo...' : 'Deshacer' }}
     </button>
 </template>
 

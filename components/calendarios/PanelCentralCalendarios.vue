@@ -68,13 +68,14 @@ export default {
                 getTable('calendarios')
             ]);
 
-            const coloresPorCalendario = new Map(datosCalendarios
+            const calendariosPorId = new Map(datosCalendarios
                 .map((item, index) => buildEntity(item, {
                     id: ['id'],
+                    nombre: ['nombre', 'titulo'],
                     color: ['color']
                 }, index))
-                .map((calendario) => [String(calendario.id).trim(), calendario.color]));
-            const idsCalendariosPermitidos = new Set(coloresPorCalendario.keys());
+                .map((calendario) => [String(calendario.id).trim(), calendario]));
+            const idsCalendariosPermitidos = new Set(calendariosPorId.keys());
 
             this.hitos = datosHitos
                 .map((item, index) => buildEntity(item, {
@@ -88,7 +89,8 @@ export default {
                 .map((hito) => ({
                     ...hito,
                     fecha: this.normalizarFecha(hito.fecha),
-                    colorCalendario: coloresPorCalendario.get(String(hito.id_calendario).trim()) || ''
+                    nombreCalendario: calendariosPorId.get(String(hito.id_calendario).trim())?.nombre || '',
+                    colorCalendario: calendariosPorId.get(String(hito.id_calendario).trim())?.color || ''
                 }))
                 .filter((hito) =>
                     hito.nombre &&
