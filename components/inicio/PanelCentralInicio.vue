@@ -46,6 +46,20 @@
             this.programarRenderizadoMermaid();
         },
         methods: {
+            emitirTitulosDesdeDom() {
+                this.$nextTick(() => {
+                    const contenedor = this.$el?.querySelector('#contenedor_documento');
+                    const titulos = Array.from(contenedor?.querySelectorAll('h1, h2, h3, h4, h5, h6') || [])
+                        .filter((elemento) => elemento.id && elemento.textContent?.trim())
+                        .map((elemento) => ({
+                            texto: elemento.textContent.trim(),
+                            slug: elemento.id,
+                            nivel: Number(elemento.tagName.replace('H', ''))
+                        }));
+
+                    this.$emit('titulos-extraidos', titulos);
+                });
+            },
             programarRenderizadoMermaid() {
                 clearTimeout(this.temporizadorMermaid);
                 this.temporizadorMermaid = setTimeout(() => {
@@ -70,11 +84,16 @@
             );
             },
             contenidoRenderizado() {
-                return procesarMarkdown(this.textoMarkdown, (titulos) => {
-                    this.$nextTick(() => {
-                    this.$emit('titulos-extraidos', titulos);
-                    });
-                });
+                return procesarMarkdown(this.textoMarkdown);
+            }
+        },
+        watch: {
+            contenidoRenderizado: {
+                immediate: true,
+                flush: 'post',
+                handler() {
+                    this.emitirTitulosDesdeDom();
+                }
             }
         },
         beforeUnmount() {
@@ -109,7 +128,7 @@
         padding: 3em 6em;
         /* box-shadow: 0 0 0.5em 0.2em var(--beige);
         background-color: var(--blanco); */
-        font-size: 1em;
+        font-size: var(--tamanno-markdown);
         max-width: 100%;
         box-sizing: border-box;
     }

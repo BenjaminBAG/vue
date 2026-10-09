@@ -7,6 +7,7 @@
     import { useAuth } from '../../../composables/useAuth.ts'
     import { useSheets } from '../../../composables/useSheets.ts'
     import { buildEntity, getFieldValue } from '../../../composables/useSheetData.ts'
+    import slidebar from '../../otros/slidebar.vue'
 
     const { usuario: usuarioSesion } = useAuth()
     const { getTable } = useSheets()
@@ -96,6 +97,17 @@
                 <p v-else-if="errorMensaje">{{ errorMensaje }}</p>
                 <p v-else-if="!cargando">No tienes permisos asignados.</p>
             </div>
+            <h3>Preferencias</h3>
+            <slidebar
+                etiqueta="Tamaño del contenido de la página"
+                almacenamiento="portal-tamanno-regular"
+                variable-css="--tamanno-regular"
+            />
+            <slidebar
+                etiqueta="Tamaño del contenido Markdown"
+                almacenamiento="portal-tamanno-markdown"
+                variable-css="--tamanno-markdown"
+            />
         </div>
     </AreaDesplazamiento>
 </template>

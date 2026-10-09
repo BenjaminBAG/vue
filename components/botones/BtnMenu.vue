@@ -25,6 +25,7 @@
         height: 3em;
         cursor: pointer;
         border: none;
+        font-size: 1em;
         transition: background-color 0.2s, box-shadow 0.2s, padding-bottom 0.2s ease;
     }
 

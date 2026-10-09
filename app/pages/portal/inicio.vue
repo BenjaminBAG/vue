@@ -14,7 +14,6 @@
     }
     const actualizarVista = (nuevaVista) => {
         vistaActiva.value = nuevaVista
-        titulos.value = []
     }
     const actualizarDocumentoSeleccionado = (documento) => {
         documentoSeleccionado.value = documento
@@ -24,7 +23,6 @@
     }
     const actualizarContenidoEnEdicion = (nuevoTexto) => {
         documentoEnEdicion.value = nuevoTexto
-        titulos.value = []
     }
 </script>
 

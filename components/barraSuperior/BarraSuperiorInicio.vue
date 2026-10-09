@@ -71,7 +71,7 @@
             flex-direction: row;
             justify-content: flex-start;
             align-items: center;
-            font-size: 2em;
+            font-size: 1em;
             min-width: 0;
         }
         #seccion_botones {

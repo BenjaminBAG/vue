@@ -18,10 +18,11 @@
       padding-left: 3em;
       display: flex;
       justify-content: space-between;
-      background-image: url('../../assets/imagenes/SJ_terraza abierta.jpg');
+      /* background-image: url('../../assets/imagenes/SJ_terraza abierta.jpg');
       background-position: top left;
       background-repeat: no-repeat;
-      background-size: 100% auto;
+      background-size: 100% auto; */
+      background-color: var(--negro);
   }
     #seccion_titulo_login img {
     }

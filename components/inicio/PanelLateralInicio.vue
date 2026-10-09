@@ -141,10 +141,7 @@
                 key="indice"
                 :altura-max="'calc(100vh - 12em)'"
             >
-                <SeccionIndice
-                    :key="`${documentoSeleccionado?.id ?? 'nuevo'}-${vistaActiva}`"
-                    :titulos="titulos"
-                />
+                <SeccionIndice :titulos="titulos" />
             </AreaDesplazamiento>
             <AreaDesplazamiento v-else-if="vistaActiva === 'editar'"
                 id="contenedor_secciones"

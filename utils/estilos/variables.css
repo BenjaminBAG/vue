@@ -22,5 +22,6 @@
     --fuente-mono: 'Ibm Plex Mono', sans-serif;
     --fuente-estilizada: 'Stardos Stencil', sans-serif;
 
-    --tamanno-regular: '14px'
+    --tamanno-regular: 14px;
+    --tamanno-markdown: 16px;
 }

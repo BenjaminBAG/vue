@@ -68,7 +68,9 @@ function convertirCalloutsGitHub(texto = '') {
 function reemplazarIconosInline(texto = '') {
   if (!texto) return '';
 
-  return texto.replace(/:([a-zA-Z0-9_-]+):/g, (total, nombre) => {
+  return texto.replace(/^:::\s*(?:info|warning|danger|success|note|tip|important|details)\b[^\r\n]*|:([a-zA-Z0-9_-]+):/gm, (total, nombre) => {
+    if (!nombre) return total;
+
     const clave = nombre.toLowerCase();
     const icono = ICONOS_MAP[clave] || clave;
     return `<img class="md-icon md-icon--${clave}" src="https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/${icono}.svg" alt="${nombre}" loading="lazy" />`;
@@ -147,10 +149,10 @@ function registrarContenedor(md, nombre) {
 
       if (token.nesting === 1) {
         if (nombre === 'details') {
-          return `<details class="md-container md-container--details"><summary>${md.utils.escapeHtml(titulo)}</summary><div class="md-container__content">\n`;
+          return `<details class="md-container md-container--details"><summary>${reemplazarIconosInline(md.utils.escapeHtml(titulo))}</summary><div class="md-container__content">\n`;
         }
 
-        return `<div class="md-container md-container--${nombre}"><p class="md-container__title">${md.utils.escapeHtml(titulo)}</p><div class="md-container__content">\n`;
+        return `<div class="md-container md-container--${nombre}"><p class="md-container__title">${reemplazarIconosInline(md.utils.escapeHtml(titulo))}</p><div class="md-container__content">\n`;
       }
 
       return nombre === 'details' ? '</div></details>\n' : '</div></div>\n';
@@ -279,6 +281,23 @@ function crearInstanciaMarkdown() {
   return md;
 }
 
+function extraerTitulosHtml(html) {
+  const patrones = /<h([1-6])\b[^>]*\s+id=(['"])(.*?)\2[^>]*>([\s\S]*?)<\/h\1>/gi;
+  const titulos = [];
+
+  for (const coincidencia of html.matchAll(patrones)) {
+    const nivel = Number(coincidencia[1]);
+    const slug = coincidencia[3]?.trim();
+    const texto = coincidencia[4]?.replace(/<[^>]+>/g, '').trim();
+
+    if (slug && texto) {
+      titulos.push({ texto, slug, nivel });
+    }
+  }
+
+  return titulos;
+}
+
 export function procesarMarkdown(texto, onTitulosExtraidos) {
   const titulos = [];
   const md = crearInstanciaMarkdown();
@@ -305,6 +324,11 @@ export function procesarMarkdown(texto, onTitulosExtraidos) {
   });
 
   const html = md.render(textoPreparado);
+  const titulosHtml = extraerTitulosHtml(html);
+
+  if (titulosHtml.length > 0) {
+    titulos.push(...titulosHtml.filter((titulo) => !titulos.some((existente) => existente.slug === titulo.slug)));
+  }
 
   if (typeof onTitulosExtraidos === 'function') {
     onTitulosExtraidos(titulos);
