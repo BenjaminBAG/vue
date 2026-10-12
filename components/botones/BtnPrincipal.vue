@@ -33,43 +33,41 @@
         width: 100%;
         display: flex;
         justify-content: right;
-    }
-    .boton_principal {
-        width: auto;
-        margin: 1em 0;
-        padding: 0.5em 3em;
-        text-transform: uppercase;
-        background-color: transparent;
-        border-radius: 10px;
-        font-weight: bold;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        transition: background-color 0.3s ease;
-    }
-    .boton_principal:disabled {
-        opacity: 0.7;
-        cursor: not-allowed;
-    }
-    .boton_principal:hover {
-        background-color: var(--beige);
-    }
-    .boton_principal .icono {
-        transition: transform 0.3s ease;
-    }
-    .boton_principal:hover .icono {
-        transform: rotate(7deg) scale(1.1);
-    }
-    .boton_principal p {
-        transition: transform 0.3s ease;
-    }
-    .boton_principal:hover p {
-        transform: scale(1.1);
-    }
-    .boton_principal .icono {
-        height: 2em;
-        width: 2em;
-        padding-right: 0.5em;
+        .boton_principal {
+            width: auto;
+            margin: 1em 0;
+            padding: 0.5em 3em;
+            text-transform: uppercase;
+            background-color: transparent;
+            border-radius: 10px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s ease;
+            .icono {
+                transition: transform 0.3s ease;
+                height: 2em;
+                width: 2em;
+                padding-right: 0.5em;
+            }
+            &:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+            }
+            &:hover {
+                background-color: var(--beige);
+                .icono {
+                    transform: rotate(7deg) scale(1.1);
+                }
+                p {
+                    transform: scale(1.1);
+                }
+            }
+            p {
+                transition: transform 0.3s ease;
+            }
+        }
     }
 </style>

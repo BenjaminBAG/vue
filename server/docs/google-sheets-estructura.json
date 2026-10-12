@@ -108,7 +108,8 @@
             { "name": "id", "type": "string", "required": true },
             { "name": "nombre", "type": "string" },
             { "name": "tipo", "type": "string" },
-            { "name": "url_documento", "type": "string" },
+            { "name": "id_drive_documento", "type": "string", "required": true },
+            { "name": "id_drive_carpeta", "type": "string", "required": true },
             { "name": "id_etiqueta", "type": "string", "foreignKey": "etiquetas.id" }
         ]
     },

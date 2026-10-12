@@ -35,29 +35,26 @@
         color: var(--negro);
         cursor: pointer;
         transition: transform 0.3s ease;
-    }
-
-    button:hover:not(:disabled) {
-        background-color: var(--verde);
-        transform: rotate(7deg) scale(1.1);
-    }
-
-    button:hover:not(:disabled) svg,
-    button.is-active svg {
-        color: var(--blanco);
-    }
-
-    button:disabled {
-        cursor: not-allowed;
-        opacity: 0.45;
-    }
-
-    button.is-active {
-        background-color: var(--negro);
-    }
-
-    button svg {
-        width: 70%;
-        height: auto;
+        svg {
+            width: 70%;
+            height: auto;
+        }
+        &:hover:not(:disabled) {
+            background-color: var(--verde);
+            transform: rotate(7deg) scale(1.1);
+            svg {
+                color: var(--blanco);
+            }
+        }
+        &:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+        }
+        &.is-active {
+            background-color: var(--negro);
+            svg {
+                color: var(--blanco);
+            }
+        }
     }
 </style>

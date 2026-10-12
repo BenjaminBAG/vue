@@ -56,7 +56,7 @@
                     backgroundColor: 'var(--blanco)',
                     border: 'none',
                     borderLeft: '2px solid transparent',
-                    borderRadius: '10px 10px 10px 10px',
+                    borderRadius: '0px 0px 10px 10px',
                     fontSize: '1em',
                     transition: 'border-radius 0.3s',
                 },
@@ -140,6 +140,6 @@
     .editor-markdown {
         width: 100%;
         min-width: 0;
-        border-radius: 10px;
+        border-radius: 0 0 10px 10px;
     }
 </style>

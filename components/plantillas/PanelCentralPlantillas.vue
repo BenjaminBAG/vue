@@ -2,7 +2,7 @@
     <div id="panel_central_plantilla">
         <iframe 
             id="contenedor_documento" 
-            :src="urlPlantilla" 
+            :src="'https://docs.google.com/document/d/' + idPlantilla + '/preview'"
             frameborder="0"
             >
         </iframe>
@@ -27,7 +27,7 @@
             }
         },
         computed: {
-            urlPlantilla() {
+            idPlantilla() {
                 if (this.vistaActiva === 'nuevo') return this.documentoEnEdicion || '';
                 return this.documento?.urlDocumento || this.documentoEnEdicion || '';
             },

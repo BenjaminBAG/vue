@@ -198,7 +198,6 @@
     #seccion_editar {
         padding: 2em 0;
     }
-
     .error {
         color: #a12622;
     }

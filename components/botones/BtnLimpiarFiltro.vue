@@ -38,19 +38,17 @@
         align-items: center;
         display: flex;
         gap: 0.5em;
-    }
-
-    .boton-limpiar-filtro:disabled {
-        display: none;
-    }
-
-    .boton-limpiar-filtro:not(:disabled):hover {
-        transform: translateY(-2px);
-        background-color: var(--negro);
-        color: var(--blanco)
-    }
-    .boton-limpiar-filtro .icono {
-        height: auto;
-        width: 15px;
+        .icono {
+            height: auto;
+            width: 15px;
+        }
+        &:disabled {
+            display: none;
+        }
+        &:not(:disabled):hover {
+            transform: translateY(-2px);
+            background-color: var(--negro);
+            color: var(--blanco)
+        }
     }
 </style>

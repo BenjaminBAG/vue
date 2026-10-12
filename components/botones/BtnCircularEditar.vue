@@ -45,22 +45,22 @@
             height: auto;
             border: none;
         }
-    }
-    button:hover:not(:disabled) { 
-        background-color: var(--verde); 
-        transform: rotate(7deg) scale(1.1);
-        svg {
-            color: var(--blanco); 
+        &:hover:not(:disabled) { 
+            background-color: var(--verde); 
+            transform: rotate(7deg) scale(1.1);
+            svg {
+                color: var(--blanco); 
+            }
         }
-    }
-    button:disabled {
-        cursor: not-allowed;
-        opacity: 0.45;
-    }
-    button.is-active {
-        background-color: var(--negro);
-    }
-    button.is-active svg {
-        color: var(--blanco);
+        &:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+        }
+        &.is-active {
+            background-color: var(--negro);
+            svg {
+                color: var(--blanco);
+            }
+        }
     }
 </style>
