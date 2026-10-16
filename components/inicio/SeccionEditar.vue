@@ -4,7 +4,7 @@
     import BtnPrincipal from '../botones/BtnPrincipal.vue'
     import { Pencil } from 'lucide-vue-next'
     import HerramientasEdicion from '../otros/HerramientasEdicion.vue'
-    import Selector from '../otros/Selector.vue'
+    import Selector from '../otros/selector.vue'
     import EditorMarkdown from '../otros/EditorMarkdown.vue'
     import { useSheets } from '../../composables/useSheets.ts'
     import { buildEntity } from '../../composables/useSheetData.ts'

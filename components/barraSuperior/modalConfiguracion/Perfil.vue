@@ -7,7 +7,7 @@
     import { useAuth } from '../../../composables/useAuth.ts'
     import { useSheets } from '../../../composables/useSheets.ts'
     import { buildEntity, getFieldValue } from '../../../composables/useSheetData.ts'
-    import slidebar from '../../otros/slidebar.vue'
+    import slidebar from '../../otros/Slidebar.vue'
 
     const { usuario: usuarioSesion } = useAuth()
     const { getTable } = useSheets()
