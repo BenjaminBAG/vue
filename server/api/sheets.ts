@@ -286,8 +286,12 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    const credentialValue = String(serviceAccountKey).trim()
+    const authCredentials = credentialValue.startsWith('{')
+      ? { credentials: JSON.parse(credentialValue) }
+      : { keyFile: credentialValue }
     const auth = new google.auth.GoogleAuth({
-      keyFile: serviceAccountKey,
+      ...authCredentials,
       scopes: ['https://www.googleapis.com/auth/spreadsheets']
     })
     const sheets = google.sheets({ version: 'v4', auth })
