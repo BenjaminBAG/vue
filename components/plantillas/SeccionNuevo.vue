@@ -6,6 +6,7 @@
     import TituloSeccion from '../otros/TituloSeccion.vue'
     import { useSheets } from '../../composables/useSheets.ts'
     import { buildEntity } from '../../composables/useSheetData.ts'
+    import { getGoogleDriveId } from '../../utils/googleDrive'
 
     const emit = defineEmits(['plantilla-guardada', 'url-documento-cambiada'])
     const { getTable, saveRow, saveRows } = useSheets()
@@ -18,15 +19,16 @@
     const idPlantillaPendiente = ref('')
 
     watch(
-        () => datosPlantilla.value.urlDocumento,
-        (urlDocumento) => emit('url-documento-cambiada', String(urlDocumento ?? '')),
+        () => datosPlantilla.value.idDriveDocumento,
+        (idDriveDocumento) => emit('url-documento-cambiada', getGoogleDriveId(idDriveDocumento)),
         { immediate: true }
     )
 
     const camposPlantilla = [
         { id: 'nombre', nombre: 'Nombre de la plantilla', tipo: 'text', requerido: true },
         { id: 'tipo', nombre: 'Tipo', tipo: 'text', placeholder: 'Ej. contrato, informe' },
-        { id: 'urlDocumento', nombre: 'URL del documento', tipo: 'url', requerido: true },
+        { id: 'idDriveDocumento', nombre: 'ID o URL del documento de Google Drive', tipo: 'text', requerido: true },
+        { id: 'idDriveCarpeta', nombre: 'ID o URL de la carpeta de Google Drive', tipo: 'text', requerido: true },
         { id: 'idEtiqueta', nombre: 'Etiqueta', tipo: 'select', opciones: [] }
     ]
 
@@ -64,7 +66,7 @@
             etiquetas.value = filas
                 .map((item, index) => buildEntity(item, { id: ['id'], nombre: ['nombre'] }, index))
                 .filter((item) => item.nombre)
-            camposPlantilla[3].opciones = etiquetas.value.map((item) => ({ value: item.id, label: item.nombre }))
+            camposPlantilla[4].opciones = etiquetas.value.map((item) => ({ value: item.id, label: item.nombre }))
         } catch (loadError) {
             console.error('Error al cargar las etiquetas de plantillas:', loadError)
         }
@@ -82,7 +84,8 @@
                     id,
                     nombre: datosPlantilla.value.nombre,
                     tipo: datosPlantilla.value.tipo,
-                    url_documento: datosPlantilla.value.urlDocumento,
+                    id_drive_documento: getGoogleDriveId(datosPlantilla.value.idDriveDocumento),
+                    id_drive_carpeta: getGoogleDriveId(datosPlantilla.value.idDriveCarpeta),
                     id_etiqueta: datosPlantilla.value.idEtiqueta
                 })
                 idPlantillaPendiente.value = id
@@ -109,7 +112,8 @@
                 id,
                 nombre: datosPlantilla.value.nombre,
                 tipo: datosPlantilla.value.tipo,
-                urlDocumento: datosPlantilla.value.urlDocumento,
+                idDriveDocumento: getGoogleDriveId(datosPlantilla.value.idDriveDocumento),
+                idDriveCarpeta: getGoogleDriveId(datosPlantilla.value.idDriveCarpeta),
                 idEtiqueta: datosPlantilla.value.idEtiqueta
             })
             datosPlantilla.value = {}

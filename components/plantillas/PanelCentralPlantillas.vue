@@ -1,15 +1,19 @@
 <template>
     <div id="panel_central_plantilla">
-        <iframe 
+        <iframe
+            v-if="idPlantilla"
             id="contenedor_documento" 
             :src="'https://docs.google.com/document/d/' + idPlantilla + '/preview'"
             frameborder="0"
             >
         </iframe>
+        <p v-else id="mensaje_sin_documento">Selecciona una plantilla para ver el documento.</p>
     </div>
 </template>
 
 <script>
+    import { getGoogleDriveId } from '../../utils/googleDrive'
+
     export default {
         name: 'PanelCentralPlantillas',
         props: {
@@ -28,8 +32,10 @@
         },
         computed: {
             idPlantilla() {
-                if (this.vistaActiva === 'nuevo') return this.documentoEnEdicion || '';
-                return this.documento?.urlDocumento || this.documentoEnEdicion || '';
+                const value = this.vistaActiva === 'nuevo'
+                    ? this.documentoEnEdicion
+                    : this.documento?.idDriveDocumento || this.documento?.urlDocumento || this.documentoEnEdicion
+                return getGoogleDriveId(value)
             },
         }
     }
@@ -48,6 +54,12 @@
             box-shadow: 0 0 0.5em 0.2em var(--beige);
             background-color: var(--blanco);
             overflow: auto;
+        }
+        #mensaje_sin_documento {
+            grid-column: 2;
+            grid-row: 2;
+            align-self: center;
+            justify-self: center;
         }
     }
     @media (max-width: 768px) {

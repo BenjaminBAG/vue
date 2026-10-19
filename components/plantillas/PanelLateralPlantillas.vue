@@ -13,6 +13,7 @@
     import SeccionNuevo from './SeccionNuevo.vue'
     import AreaDesplazamiento from '../otros/AreaDesplazamiento.vue'
     import { useSheets } from '../../composables/useSheets.ts'
+    import { getGoogleDocUrl } from '../../utils/googleDrive'
 
     const emit = defineEmits(['documento-seleccionado', 'vista-cambiada', 'contenido-editor-cambiado'])
 
@@ -28,7 +29,7 @@
 
     const actualizarPlantillaSeleccionada = (plantilla) => {
         documentoSeleccionado.value = plantilla
-        contenidoEditor.value = plantilla?.urlDocumento || ''
+        contenidoEditor.value = plantilla?.idDriveDocumento || ''
         selectorVersion.value += 1
         emit('documento-seleccionado', plantilla)
     }
@@ -120,14 +121,14 @@
             </Transition>
             <Transition name="boton-disponible" mode="out-in">
                 <BtnCircularExternalLink
-                    v-if="documentoSeleccionado?.urlDocumento"
-                    :ruta="documentoSeleccionado.urlDocumento"
+                    v-if="documentoSeleccionado?.idDriveDocumento || documentoSeleccionado?.urlDocumento"
+                    :ruta="getGoogleDocUrl(documentoSeleccionado.idDriveDocumento || documentoSeleccionado.urlDocumento)"
                 />
             </Transition>
             <Transition name="boton-disponible" mode="out-in">
                 <BtnCopiar
-                    v-if="documentoSeleccionado?.urlDocumento"
-                    :ruta="documentoSeleccionado.urlDocumento"
+                    v-if="documentoSeleccionado?.idDriveDocumento || documentoSeleccionado?.urlDocumento"
+                    :ruta="getGoogleDocUrl(documentoSeleccionado.idDriveDocumento || documentoSeleccionado.urlDocumento)"
                 />
             </Transition>
         </header>

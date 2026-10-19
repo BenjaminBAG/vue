@@ -21,7 +21,7 @@
     }
     const actualizarDocumentoSeleccionado = (documento) => {
         documentoSeleccionado.value = documento
-        documentoEnEdicion.value = documento?.contenidoMarkdown || documento?.contenido || ''
+        documentoEnEdicion.value = documento?.idDriveDocumento || documento?.urlDocumento || ''
         menuAbierto.value = false
     }
     const actualizarContenidoEnEdicion = (nuevoTexto) => {

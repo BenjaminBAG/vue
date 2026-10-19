@@ -6,6 +6,7 @@
     import TituloSeccion from '../otros/TituloSeccion.vue'
     import { useSheets } from '../../composables/useSheets.ts'
     import { buildEntity } from '../../composables/useSheetData.ts'
+    import { getGoogleDriveId } from '../../utils/googleDrive'
 
     const props = defineProps({
         documentoParaEditar: {
@@ -24,7 +25,8 @@
     const campos = ref([
         { id: 'nombre', nombre: 'Nombre de la plantilla', tipo: 'text', requerido: true },
         { id: 'tipo', nombre: 'Tipo', tipo: 'text', placeholder: 'Ej. contrato, informe' },
-        { id: 'urlDocumento', nombre: 'URL del documento', tipo: 'url', requerido: true },
+        { id: 'idDriveDocumento', nombre: 'ID o URL del documento de Google Drive', tipo: 'text', requerido: true },
+        { id: 'idDriveCarpeta', nombre: 'ID o URL de la carpeta de Google Drive', tipo: 'text', requerido: true },
         { id: 'idEtiqueta', nombre: 'Etiqueta', tipo: 'select', opciones: [] }
     ])
 
@@ -34,7 +36,8 @@
             datos.value = {
                 nombre: plantilla?.nombre ?? '',
                 tipo: plantilla?.tipo ?? '',
-                urlDocumento: plantilla?.urlDocumento ?? plantilla?.url_documento ?? '',
+                idDriveDocumento: plantilla?.idDriveDocumento ?? plantilla?.urlDocumento ?? plantilla?.url_documento ?? plantilla?.id_drive_documento ?? '',
+                idDriveCarpeta: plantilla?.idDriveCarpeta ?? plantilla?.id_drive_carpeta ?? '',
                 idEtiqueta: String(plantilla?.idEtiqueta ?? plantilla?.id_etiqueta ?? '')
             }
             mensaje.value = ''
@@ -49,7 +52,7 @@
             etiquetas.value = filas
                 .map((item, index) => buildEntity(item, { id: ['id'], nombre: ['nombre'] }, index))
                 .filter((item) => item.nombre)
-            campos.value[3].opciones = etiquetas.value.map((item) => ({ value: item.id, label: item.nombre }))
+            campos.value[4].opciones = etiquetas.value.map((item) => ({ value: item.id, label: item.nombre }))
         } catch (loadError) {
             console.error('Error al cargar las etiquetas para editar la plantilla:', loadError)
         }
@@ -68,7 +71,8 @@
                 id,
                 nombre: datos.value.nombre,
                 tipo: datos.value.tipo,
-                url_documento: datos.value.urlDocumento,
+                id_drive_documento: getGoogleDriveId(datos.value.idDriveDocumento),
+                id_drive_carpeta: getGoogleDriveId(datos.value.idDriveCarpeta),
                 id_etiqueta: datos.value.idEtiqueta
             })
 
@@ -76,7 +80,8 @@
                 ...props.documentoParaEditar,
                 nombre: datos.value.nombre,
                 tipo: datos.value.tipo,
-                urlDocumento: datos.value.urlDocumento,
+                idDriveDocumento: getGoogleDriveId(datos.value.idDriveDocumento),
+                idDriveCarpeta: getGoogleDriveId(datos.value.idDriveCarpeta),
                 idEtiqueta: datos.value.idEtiqueta
             }
             emit('plantilla-actualizada', plantillaActualizada)

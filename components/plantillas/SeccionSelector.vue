@@ -22,7 +22,8 @@
             id: ['id'],
             nombre: ['nombre', 'titulo', 'documento', 'title'],
             tipo: ['tipo', 'categoria', 'clasificacion'],
-            urlDocumento: ['urldocumento', 'url', 'documento', 'contenido'],
+            idDriveDocumento: ['id_drive_documento', 'urldocumento', 'url_documento', 'url', 'documento', 'contenido'],
+            idDriveCarpeta: ['id_drive_carpeta'],
             idEtiqueta: ['idetiqueta', 'etiqueta', 'tag']
         },
         errorMessage: 'No se pudieron cargar las plantillas.',
