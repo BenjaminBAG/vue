@@ -27,6 +27,53 @@ type SheetResponse = {
 
 type SheetsClient = ReturnType<typeof google.sheets>
 
+type ServiceAccountCredentials = {
+  client_email: string
+  private_key: string
+}
+
+const isServiceAccountCredentials = (value: unknown): value is ServiceAccountCredentials =>
+  typeof value === 'object' &&
+  value !== null &&
+  !Array.isArray(value) &&
+  'client_email' in value &&
+  typeof value.client_email === 'string' &&
+  'private_key' in value &&
+  typeof value.private_key === 'string'
+
+const getGoogleAuthCredentials = (value: unknown) => {
+  let credentials: unknown = value
+
+  if (typeof value === 'string') {
+    const credentialValue = value.trim()
+    if (!credentialValue) {
+      throw createError({ statusCode: 500, statusMessage: 'La credencial de Google está vacía.' })
+    }
+
+    if (!credentialValue.startsWith('{')) return { keyFile: credentialValue }
+
+    try {
+      credentials = JSON.parse(credentialValue)
+    } catch {
+      throw createError({ statusCode: 500, statusMessage: 'La credencial de Google no contiene un JSON válido.' })
+    }
+  }
+
+  if (!isServiceAccountCredentials(credentials)) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'La credencial de Google debe incluir client_email y private_key.'
+    })
+  }
+
+  return {
+    credentials: {
+      ...credentials,
+      private_key: credentials.private_key.replace(/\\n/g, '\n')
+    }
+  }
+}
+
 const normalizeKey = (value: string) =>
   String(value ?? '').trim().toLowerCase().replace(/[^a-z0-9]/g, '')
 
@@ -286,12 +333,8 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const credentialValue = String(serviceAccountKey).trim()
-    const authCredentials = credentialValue.startsWith('{')
-      ? { credentials: JSON.parse(credentialValue) }
-      : { keyFile: credentialValue }
     const auth = new google.auth.GoogleAuth({
-      ...authCredentials,
+      ...getGoogleAuthCredentials(serviceAccountKey),
       scopes: ['https://www.googleapis.com/auth/spreadsheets']
     })
     const sheets = google.sheets({ version: 'v4', auth })
